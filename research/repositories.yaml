@@ -1,26 +1,26 @@
-schema_version: 1
-updated_at: '2026-07-17T05:02:24Z'
-roles:
+schema_version: 2
+updated_at: '2026-07-17T05:43:36Z'
+repositories:
   control:
     path: /root/autodl-tmp/dreamerv3-reproduction
     remote: https://github.com/sixun-liu/dreamerv3-reproduction.git
-    branch: main
     commit_source: git-rev-parse-head
+    required_clean: true
   runtime:
     path: /root/autodl-tmp/dreamerv3
     remote: https://github.com/danijar/dreamerv3.git
-    branch: main
     commit: e3f02248693a79dc8b0ebd62c93683888ddaccfe
-    tracked_clean_at_import: true
-    worktree_note: Historical untracked control files remain to preserve frozen paths.
+    required_clean: true
   workflow:
     path: /root/autodl-tmp/research-agent-kit
     remote: https://github.com/sixun-liu/research-agent-kit.git
-    commit: 3a5bd50
-    version: v0.1.1
-  artifact_store:
-    runs_root: /root/autodl-tmp/runs
-    artifacts_root: /root/autodl-tmp/artifacts/dreamerv3
+    commit: f3a120e5ce6d3037af7b378ed0eede4e6da1ba17
+    version: v0.2.0
+    required_clean: true
+third_party: {}
+stores:
+  runs: /root/autodl-tmp/runs
+  artifacts: /root/autodl-tmp/artifacts/dreamerv3
   staging:
     path: /root/autodl-tmp/dreamerv3/docs_from_claude
     tracked: false

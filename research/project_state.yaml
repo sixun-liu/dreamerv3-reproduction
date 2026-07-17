@@ -1,6 +1,8 @@
-schema_version: 3
+schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-07-16T21:41:16Z'
+updated_at: '2026-07-17T05:43:36Z'
+updated_by: codex
+approved_by: user
 language: zh-CN
 stage: reproduction
 north_star: 理解DreamerV3的关键机制，并在冻结协议下复现DMC walker_walk的代表性论文结果。
@@ -21,6 +23,7 @@ stage_exit_gates:
 - 用户人工复核EXP-0001同坐标曲线并记录确认
 - 核对官方DMC JSON的代码版本与评估生成协议
 - 决定是否扩seed或保持单seed部分复现结论
+repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/dreamerv3
   branch: main
