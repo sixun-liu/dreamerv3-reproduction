@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-07-17T05:43:36Z'
+updated_at: '2026-07-17T05:47:34Z'
 repositories:
   control:
     path: /root/autodl-tmp/dreamerv3-reproduction
@@ -14,8 +14,8 @@ repositories:
   workflow:
     path: /root/autodl-tmp/research-agent-kit
     remote: https://github.com/sixun-liu/research-agent-kit.git
-    commit: f3a120e5ce6d3037af7b378ed0eede4e6da1ba17
-    version: v0.2.0
+    commit: ffc2d665b477d7be0d20ec230aeb6f828552ed82
+    version: v0.2.1
     required_clean: true
 third_party: {}
 stores:
