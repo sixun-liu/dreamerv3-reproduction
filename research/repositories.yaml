@@ -16,8 +16,8 @@ roles:
   workflow:
     path: /root/autodl-tmp/research-agent-kit
     remote: https://github.com/sixun-liu/research-agent-kit.git
-    commit: e656c16
-    version: v0.1.0
+    commit: 3a5bd50
+    version: v0.1.1
   artifact_store:
     runs_root: /root/autodl-tmp/runs
     artifacts_root: /root/autodl-tmp/artifacts/dreamerv3

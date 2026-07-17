@@ -1,5 +1,9 @@
 # RESULTS_SCOREBOARD
 
+> Updated: 2026-07-17T05:26:23Z
+> Maintainer: codex
+> Source of truth: research/experiments.jsonl and research/artifacts.jsonl
+
 只收录协议一致、可比较的 formal 结果；probe/oracle/instrumentation 不进入正式表。
 
 | Experiment | Protocol | Primary | Tail | Mapping/Visual | Verdict |

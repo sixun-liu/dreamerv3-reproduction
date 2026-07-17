@@ -1,6 +1,10 @@
 # CURRENT_STATE
 
-> 机器状态请运行 `researchctl.py status`；本文只保存人工综合。
+> Updated: 2026-07-17T05:26:23Z
+> Maintainer: codex
+> Source of truth: research/project_state.yaml and research/experiments.jsonl
+
+机器状态请运行 `researchctl status`；本文只保存人工综合。
 
 ## 一句话判断
 
