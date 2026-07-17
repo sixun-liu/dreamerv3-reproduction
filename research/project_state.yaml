@@ -1,0 +1,31 @@
+schema_version: 3
+project_id: dreamerv3-paper-reproduction
+updated_at: '2026-07-16T21:41:16Z'
+language: zh-CN
+stage: reproduction
+north_star: 理解DreamerV3的关键机制，并在冻结协议下复现DMC walker_walk的代表性论文结果。
+primary_problem: 解释walker_walk前半程落后而约400K后进入官方包络的证据缺口，先核对代码与评估谱系。
+active_experiment_id: null
+active_candidate: null
+canonical_baseline:
+  id: DV3-NATURE-DMCP-WALKER-12M
+  name: DreamerV3 Nature-era DMC proprio walker_walk 12M
+  repo_commit: e3f02248693a79dc8b0ebd62c93683888ddaccfe
+  config: configs=dmc_proprio,size12m; task=dmc_walker_walk; steps=250000 agent decisions; repeat=2; envs=16; train_ratio=512; seed=0
+  evaluation_protocol: 训练episode/score按repeat=2映射到environment steps，每10K environment steps分箱，与scores/dmc_proprio-dreamerv3.json.gz的seeds 0-4比较。
+parked_lanes:
+- Crafter scaling
+- DMC visual/full suite
+- Minecraft
+stage_exit_gates:
+- 用户人工复核EXP-0001同坐标曲线并记录确认
+- 核对官方DMC JSON的代码版本与评估生成协议
+- 决定是否扩seed或保持单seed部分复现结论
+canonical_repo:
+  path: /root/autodl-tmp/dreamerv3
+  branch: main
+  commit: e3f02248693a79dc8b0ebd62c93683888ddaccfe
+  tracked_clean_at_snapshot: true
+human_review:
+  root: /root/autodl-tmp/artifacts/dreamerv3/review
+  latest: /root/autodl-tmp/artifacts/dreamerv3/review/LATEST.md

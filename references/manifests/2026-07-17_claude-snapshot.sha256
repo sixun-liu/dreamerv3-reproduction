@@ -1,0 +1,7 @@
+# source_sha256  destination  source
+614f1938e69bfc1939b3f367b99fb32de94486f9fc0d0ac925d9ad35f8d8e60d  references/papers/text/1312.5602.txt  docs_from_claude/_papers/1312.5602.txt
+d7fea6a80a5d0c7f1600d83e235427764b59a155ec65f10a244bebae59587fb9  references/papers/text/2301.04104.txt  docs_from_claude/_papers/2301.04104.txt
+f31a8fdf81f5c62d8a0282dbe5096b71737af03f2714678eaba86063ef819acd  references/understanding/claude/代码走读_官方码与torch对标.md  docs_from_claude/_研读/代码走读_官方码与torch对标.md
+203822bc604b378e4262dc9c2afa89e6e003ddd6607e7c6f694f01797a0c2b39  references/understanding/claude/前置桥_DQN到DreamerV3.md  docs_from_claude/_研读/前置桥_DQN到DreamerV3.md
+13befdbdc79b475e3e8fd0ed3dd22fc75077ef1e4816e6efef914344f1af08b7  references/understanding/claude/研读报告_DreamerV3.md  docs_from_claude/_研读/研读报告_DreamerV3.md
+d065eea3517bc0edf02b15029ed8a329cc1083c1df5089ac0f82ec13e29f01ec  discussion/claude/2026-07-17_kit-and-replication-card.md  docs_from_claude/协同对齐_kit与复现卡.md

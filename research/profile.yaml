@@ -1,0 +1,12 @@
+schema_version: 1
+domain: paper-reproduction
+primary_metrics:
+- walker_walk episode score versus official 5-seed envelope
+tail_metrics:
+- 数值稳定性、失败 episode 尾部与 checkpoint 可恢复性
+forbidden_inputs:
+- freeze 后依据结果更换协议、seed 或验收阈值
+promotion_gates:
+- 单 seed 仅可 promising_unresolved；多 seed、协议与参考曲线闭环后才可 promote
+review_requirements:
+- 用户查看同坐标曲线后确认

@@ -1,0 +1,26 @@
+schema_version: 1
+enabled: true
+mode: advisory
+discussion_root: discussion/scheduler
+thresholds:
+  valid_negative_streak: 3
+  no_progress_cycles: 3
+  no_progress_wall_hours: 3.0
+  no_progress_compute_hours: 2.0
+  active_no_progress_wall_hours: 2.0
+  active_no_progress_compute_hours: 1.5
+  theory_only_streak: 2
+  practice_only_streak: 3
+  cycles_without_synthesis: 5
+  pending_human_reviews: 2
+stage_thresholds: {}
+priorities:
+  INTEGRITY: P0
+  BREAKTHROUGH: P1
+  REFLECT: P2
+  INTUITION: P3
+  PRACTICE_SYNC: P2
+  THEORY_SYNC: P2
+  SYNTHESIS: P3
+  EFFICIENCY_REVIEW: P3
+  HUMAN_REVIEW: P4
