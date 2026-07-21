@@ -1,34 +1,111 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-07-21T13:14:12Z'
+updated_at: '2026-07-21T14:23:20Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
-stage: reproduction
-north_star: 理解DreamerV3的关键机制，并在冻结协议下复现DMC walker_walk的代表性论文结果。
-primary_problem: 解释walker_walk前半程落后而约400K后进入官方包络的证据缺口，先核对代码与评估谱系。
+stage: exploration
+north_star: 在可审计的受控实验中理解DreamerV3关键机制，并区分论文原消融与当前runtime上的机制扩展。
+primary_problem: 在匹配agent与DMC环境随机源的walker_walk上，区分free bits本身与KL balance对表征和性能的作用。
 active_experiment_id: null
-active_candidate: null
+active_candidate: 'EXP-0006 KL mechanism matrix: baseline versus E1 versus reconstructed P4'
 canonical_baseline:
-  id: DV3-NATURE-DMCP-WALKER-12M
-  name: DreamerV3 Nature-era DMC proprio walker_walk 12M
-  repo_commit: e3f02248693a79dc8b0ebd62c93683888ddaccfe
-  config: configs=dmc_proprio,size12m; task=dmc_walker_walk; steps=250000 agent decisions; repeat=2; envs=16; train_ratio=512; seed=0
-  evaluation_protocol: 训练episode/score按repeat=2映射到environment steps，每10K environment steps分箱，与scores/dmc_proprio-dreamerv3.json.gz的seeds 0-4比较。
+  id: DV3-2026-DMCP-WALKER-KL-CONTROL
+  name: DreamerV3 2026 runtime seeded walker_walk KL control
+  repo_commit: 2b3841f50feb446ff2628944747e710f734c2977
+  config: runtime ad49802; size12m; ratio512; repeat2; 16 envs; 250K agent decisions=500K environment steps; env.dmc.use_seed=True; free_nats=1; dyn=1; rep=0.1
+  evaluation_protocol: 对每个arm使用agent/env seeds 0和1配对；训练score按environment steps分箱，报告0-250K与250-500K AUC及final-30K；同时比较raw KL、KL阈值比例、prior/posterior entropy与reconstruction losses；终点checkpoint做固定eval seed10000的随机连续策略评估并与训练口径分列。
 parked_lanes:
-- Crafter scaling
-- DMC visual/full suite
-- Minecraft
+- Figure 17完整14任务论文消融矩阵
+- Crafter scaling与DMC visual/full suite
+- 旧runtime早期曲线谱系归因
+- E2-E5横向机制扩展
 stage_exit_gates:
-- 用户人工复核EXP-0001同坐标曲线并记录确认
-- 核对官方DMC JSON的代码版本与评估生成协议
-- 决定是否扩seed或保持单seed部分复现结论
+- baseline、E1、P4各两个配对seed均自然完成500K environment steps且完整性门通过。
+- raw KL、低KL比例、prior/posterior entropy、reconstruction loss、score AUC与final-window形成同坐标对照。
+- 结论明确限制在2026作者重实现、seeded DMC walker_walk与重构P4配置，不外推为Figure 6/17数值复现。
 repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/dreamerv3-reproduction
-  branch: exp/EXP-0005-runtime-2411
-  commit: b77b4a115a6ed1f506511e67e396f46bf6d099a3
+  branch: exp/EXP-0006-kl-mechanism
+  commit: 2b3841f50feb446ff2628944747e710f734c2977
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dreamerv3/review
   latest: /root/autodl-tmp/artifacts/dreamerv3/review/LATEST.md
+repository_snapshots:
+  control:
+    repo: /root/autodl-tmp/dreamerv3-reproduction
+    branch: exp/EXP-0006-kl-mechanism
+    commit: 2b3841f50feb446ff2628944747e710f734c2977
+    tracked_clean: true
+    worktree_clean: true
+    untracked_count: 0
+    remote: https://github.com/sixun-liu/dreamerv3-reproduction.git
+    role: control
+    declared_path: /root/autodl-tmp/dreamerv3-reproduction
+    declared_remote: https://github.com/sixun-liu/dreamerv3-reproduction.git
+    expected_commit: null
+    commit_matches_manifest: true
+    required_clean: true
+    version: null
+  runtime:
+    repo: /root/autodl-tmp/dreamerv3
+    branch: fix/eval-only-log-image
+    commit: 5168475b7a4413f9575933b4580e7073caea2114
+    tracked_clean: true
+    worktree_clean: false
+    untracked_count: 13
+    remote: https://github.com/danijar/dreamerv3
+    role: runtime
+    declared_path: /root/autodl-tmp/dreamerv3
+    declared_remote: https://github.com/danijar/dreamerv3.git
+    expected_commit: 5168475b7a4413f9575933b4580e7073caea2114
+    commit_matches_manifest: true
+    required_clean: true
+    version: null
+  runtime_2411:
+    repo: /root/autodl-tmp/dreamerv3-2411f7d
+    branch: fix/jax06-sm120
+    commit: 6642b941f578cd72147bc2be3c3343d5bc72931c
+    tracked_clean: true
+    worktree_clean: true
+    untracked_count: 0
+    remote: https://github.com/danijar/dreamerv3.git
+    role: runtime_2411
+    declared_path: /root/autodl-tmp/dreamerv3-2411f7d
+    declared_remote: https://github.com/danijar/dreamerv3.git
+    expected_commit: 6642b941f578cd72147bc2be3c3343d5bc72931c
+    commit_matches_manifest: true
+    required_clean: true
+    version: null
+  runtime_exp0006:
+    repo: /root/autodl-tmp/dreamerv3-exp0006
+    branch: exp/EXP-0006-kl-mechanism-runtime
+    commit: ad49802bf7051d36be318a9db742a3e1a9255622
+    tracked_clean: true
+    worktree_clean: true
+    untracked_count: 0
+    remote: https://github.com/danijar/dreamerv3.git
+    role: runtime_exp0006
+    declared_path: /root/autodl-tmp/dreamerv3-exp0006
+    declared_remote: https://github.com/danijar/dreamerv3.git
+    expected_commit: ad49802bf7051d36be318a9db742a3e1a9255622
+    commit_matches_manifest: true
+    required_clean: true
+    version: null
+  workflow:
+    repo: /root/autodl-tmp/research-agent-kit
+    branch: main
+    commit: ffc2d665b477d7be0d20ec230aeb6f828552ed82
+    tracked_clean: true
+    worktree_clean: true
+    untracked_count: 0
+    remote: https://github.com/sixun-liu/research-agent-kit.git
+    role: workflow
+    declared_path: /root/autodl-tmp/research-agent-kit
+    declared_remote: https://github.com/sixun-liu/research-agent-kit.git
+    expected_commit: ffc2d665b477d7be0d20ec230aeb6f828552ed82
+    commit_matches_manifest: true
+    required_clean: true
+    version: v0.2.1

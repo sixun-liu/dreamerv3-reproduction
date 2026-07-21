@@ -1,12 +1,15 @@
 schema_version: 1
-domain: paper-reproduction
+domain: dreamerv3-mechanism-study
 primary_metrics:
-- walker_walk episode score versus official 5-seed envelope
+- 逐seed配对的raw KL时序、KL<0.1/0.5/1.0比例与final-30K episode score。
+- 0-250K和250-500K environment-step training-score AUC。
 tail_metrics:
-- 数值稳定性、失败 episode 尾部与 checkpoint 可恢复性
+- NaN/Inf、失败episode尾部、raw-KL离散度、prior/posterior entropy和checkpoint可恢复性。
 forbidden_inputs:
-- freeze 后依据结果更换协议、seed 或验收阈值
+- freeze后不得依据中途或最终分数改变arm、seed、预算、P4语义或验收指标。
+- 不得把同环境seed描述为相同轨迹；策略分化后的轨迹仍会不同。
 promotion_gates:
-- 单 seed 仅可 promising_unresolved；多 seed、协议与参考曲线闭环后才可 promote
+- 至少baseline/E1/P4各两个配对seed完整500K，且预期中间机制指标在两个seed方向一致，才形成supported working claim。
+- 任何结论仅适用于当前runtime和walker任务；不得称论文Figure 6/17已数值复现。
 review_requirements:
-- 用户查看同坐标曲线后确认
+- 用户查看三臂同坐标KL、entropy/reconstruction和score图后确认。

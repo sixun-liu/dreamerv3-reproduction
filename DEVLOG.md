@@ -121,3 +121,11 @@
 - Next: 人工图审和独立复算后，在“转入论文理解”和“补两个旧runtime重复验证500K终值稳定性”之间裁决；谱系曲线归因park。
 - Approval: user批准本次单run；scientific human review pending
 - Git: control freeze `b77b4a1`；runtime upstream `2411f7d` + compatibility `6642b94`
+
+### 2026-07-21T14:23:46Z | protocol | EXP-0006-kl-mechanism
+
+- Actor: codex
+- Summary: 用户批准进入机制探索；冻结三臂设计为 seeded walker baseline、只关 free bits 的 E1、以及去 free bits 并把 representation KL 权重从 0.1 恢复到 1.0 的 P4-reconstructed。
+- Evidence: runtime `ad49802`；patch SHA256 `db249897...78ca`；bundle SHA256 `dbf7cb61...394b`
+- Next: baseline/E1/P4 各顺序运行 seeds 0、1 至 500K environment steps，比较 raw KL、表征指标与性能。
+- Approval: user

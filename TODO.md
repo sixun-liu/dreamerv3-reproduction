@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-07-21T13:14:00Z
+> Updated: 2026-07-21T14:23:46Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,10 +8,11 @@
 
 ## Now
 
-- [ ] [claude] 独立复算`EXP-0005`的250K与final-30K聚合；trigger: ART-0016/ART-0017已登记。
-- [ ] [user] 审查`EXP-0005`主图；trigger: ART-0018已生成。
-- [ ] [user] 裁决当前证据是否足够，或补旧runtime两个独立重复只验证500K终值稳定性；trigger: 图审与独立复算完成。
+- [ ] [codex] 预注册并冻结 `EXP-0006` 三臂两 seed 矩阵；trigger: runtime smoke 与 hash 已通过。
+- [ ] [codex] 顺序完成六条 500K run；trigger: GPU 空闲且所有 freeze/started 信标就绪。
+- [ ] [codex] 生成 raw-KL、entropy/reconstruction、score/AUC 配对图表并闭环实验。
 
 ## Waiting
 
-- 曲线谱系归因与配对环境seed实验已park；后续 GPU 实验不自动续跑。
+- [ ] [user] 审查 `EXP-0006` 紧凑主图；trigger: 六条主 run 与分析完成。
+- 第三配对 seed 仅在主矩阵闭环、磁盘与时间预算允许时启动。

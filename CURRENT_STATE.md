@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-07-21T13:14:00Z
+> Updated: 2026-07-21T14:23:46Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,18 +8,17 @@
 
 ## 一句话判断
 
-旧版作者 runtime `2411f7d` 的单 run 已完整结束：final-30K mean `930.72` 对齐官方 `935.75`，
-但 250K median `658.26` 低于官方下限 `826.85`。当前证据支持“终值性能量级可复现”，不支持
-“旧代码谱系单独恢复了论文早期样本效率”，也不构成稳定多 seed 数值复现。
+DreamerV3 已完成代表性结果复现，当前经用户批准进入机制探索：在显式控制 DMC 环境随机源的
+`walker_walk` 上比较 baseline、只关 free bits 的 E1，以及同时去掉 KL balance 与 free bits 的
+重构 P4，回答两种 KL 手术分别如何影响表征和性能。
 
 ## 当前主要矛盾
 
-`EXP-0005` 在100K明显快于2026 runtime三seed，但250K与2026最佳seed0基本相同，并在约370K后
-才持续进入官方包络。代码代际影响了局部轨迹和终值，但不足以解释官方曲线的整体领先；主要
-不确定性转为未受控DMC环境随机性、历史dm-control/MuJoCo版本和官方score导出流水线。
+论文 Figure 6/17 只给出组合臂与跨任务聚合，公开仓库没有完整 ablation config。当前实验因此
+追求受控机制证据，不声称复现原图数值；P4 使用代码语义恢复，最终结论必须限定在 2026 runtime、
+seeded DMC 和 walker 任务。
 
 ## 下一项决策
 
-停止自动新增GPU计算。复现主验收回到500K固定预算终值和重复稳定性，曲线形状只作诊断。先人工
-审查并独立复算；之后只需在“当前单run证据足够转入论文理解”和“补旧runtime两个独立重复验证
-终值稳定性”之间裁决。配对environment seed的谱系归因降为可选研究问题。
+先完成三臂各两个配对 seed 的 500K environment-step 主矩阵。只有六条 run、raw-KL 仪器、终点
+checkpoint 和同坐标分析全部通过后，才根据剩余预算决定是否补第三个配对 seed。
