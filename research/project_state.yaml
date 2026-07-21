@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-07-21T14:33:09Z'
+updated_at: '2026-07-21T14:34:31Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -28,7 +28,7 @@ repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/dreamerv3-reproduction
   branch: exp/EXP-0006-kl-mechanism
-  commit: 2b3841f50feb446ff2628944747e710f734c2977
+  commit: 1f1cb2b4d7eb94f98b9f7b5c363bac2e9904fb73
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dreamerv3/review
