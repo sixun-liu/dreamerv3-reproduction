@@ -131,7 +131,6 @@ def main():
         final_stats = stats(final_values)
 
         bins = aggregate_curve(train_rows, analysis_x)
-        first_entry = None
         bin_250k = None
         for row in bins:
             ref_index = int(np.argmin(np.abs(ref_x - row["step"])))
@@ -147,11 +146,20 @@ def main():
                 "median_inside_reference_range": bool(
                     np.min(ref_values) <= row["median"] <= np.max(ref_values)),
             })
-            if first_entry is None and row["median_inside_reference_range"]:
-                first_entry = int(row["step"])
             if row["step"] == 250_000:
                 bin_250k = dict(row)
             curve_rows.append(row)
+
+        transient_entries = [
+            int(row["step"]) for row in bins
+            if row["median_inside_reference_range"]]
+        first_transient_entry = transient_entries[0] if transient_entries else None
+        persistent_entry = None
+        for index, row in enumerate(bins):
+            if all(later["median_inside_reference_range"]
+                   for later in bins[index:]):
+                persistent_entry = int(row["step"])
+                break
 
         frozen_path = (args.configs_dir /
                        f"exp0004_walker_s{seed:03d}_500k_env.yaml")
@@ -199,7 +207,10 @@ def main():
                 "final_mean_inside_official_seed_range": bool(
                     official_seed_min <= final_stats["mean"] <= official_seed_max),
                 "bin_250k": bin_250k,
-                "first_median_entry_into_official_curve_range": first_entry,
+                "curve_bin_count": len(bins),
+                "median_inside_official_curve_bin_count": len(transient_entries),
+                "first_transient_median_entry_step": first_transient_entry,
+                "persistent_median_entry_through_final_bin_step": persistent_entry,
             },
             "checkpoint_eval": {
                 **stats(eval_values),
@@ -290,8 +301,13 @@ def main():
             "final_30k_mean": row["train"]["final_30k"]["mean"],
             "final_30k_median": row["train"]["final_30k"]["median"],
             "final_30k_std_population": row["train"]["final_30k"]["std_population"],
-            "first_curve_entry_step": row["train"][
-                "first_median_entry_into_official_curve_range"],
+            "curve_bin_count": row["train"]["curve_bin_count"],
+            "median_inside_official_curve_bin_count": row["train"][
+                "median_inside_official_curve_bin_count"],
+            "first_transient_curve_entry_step": row["train"][
+                "first_transient_median_entry_step"],
+            "persistent_curve_entry_step": row["train"][
+                "persistent_median_entry_through_final_bin_step"],
             "eval_count": row["checkpoint_eval"]["count"],
             "eval_mean": row["checkpoint_eval"]["mean"],
             "eval_median": row["checkpoint_eval"]["median"],
