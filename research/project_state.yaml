@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-07-21T06:21:39Z'
+updated_at: '2026-07-21T06:22:48Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -27,7 +27,7 @@ repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/dreamerv3-reproduction
   branch: exp/EXP-0004-walker-three-seed
-  commit: 9571d972cee1b91c7aeda9d2ee9d25cf1b9fd387
+  commit: 08ab2d9e349713d9679eb9ed1981225b5514308e
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dreamerv3/review
