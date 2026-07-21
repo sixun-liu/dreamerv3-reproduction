@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-07-21T06:11:00Z
+> Updated: 2026-07-21T10:20:00Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,8 +8,9 @@
 
 ## Now
 
-- [ ] [codex] 冻结并顺序运行三个 clean seeds；trigger: `EXP-0003` final-checkpoint smoke 已通过。
+- [ ] [codex] 对账2023 score对应代码/config与2026 runtime、环境/seed语义；trigger: `EXP-0004`三seed性能门失败。
 - [ ] [claude] 独立核对 2023 DMC 配置与 Table 4 聚合；trigger: 读取 `references/DMC_SCORE_PROTOCOL_AUDIT.md`。
+- [ ] [user] 审查`EXP-0004`两张主图；trigger: ART-0013/ART-0014已生成。
 
 ## Waiting
 

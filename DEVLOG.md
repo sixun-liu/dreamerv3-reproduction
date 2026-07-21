@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-21T06:11:00Z
+> Updated: 2026-07-21T10:20:00Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -104,3 +104,11 @@
 - Evidence: EVT-0013--EVT-0014；ART-0009--ART-0010；runtime `5168475`
 - Next: 冻结并顺序运行walker_walk seeds 0、1、2的500K environment-step replication。
 - Approval: user；smoke score禁止用于性能结论
+
+### 2026-07-21T10:19:02Z | result | EXP-0004
+
+- Actor: codex
+- Summary: 三个clean seeds全部自然完成且完整性门通过；final-30K aggregate 785.53±90.34，较官方935.75低16.05%，仅1/3 seed进入官方逐seed范围，预注册性能门失败，裁决`negative`。
+- Evidence: EVT-0016--EVT-0019；ART-0011--ART-0015；runtime `5168475`
+- Next: 离线对账2023参考曲线代码/配置与2026 runtime、dm-control/MuJoCo及seed语义；不直接进入消融或盲目加seed。
+- Approval: user批准三seed自主运行；human visual review pending

@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-07-21T06:11:00Z
+> Updated: 2026-07-21T10:20:00Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,17 +8,17 @@
 
 ## 一句话判断
 
-DreamerV3 旧 checkpoint 独立评估和自然结束 final-checkpoint smoke 均已通过。论文表值仍是五 seed
-training-return 聚合，不与固定 seed checkpoint eval 混用；现在进入 seeds 0、1、2 的 clean
-500K environment-step replication。
+DreamerV3 `walker_walk` 三 seed clean replication 已完成：工程与checkpoint/eval完整性全绿，但
+final-30K aggregate `785.53±90.34` 低于官方 `935.75±25.90`，预注册性能门失败。当前结论是
+post-Nature作者重实现的有效负复现，不是工程失败或整篇论文否定。
 
 ## 当前主要矛盾
 
-官方 score 可追溯到 2023，而本地 runtime 是 2026 post-Nature 作者重实现。训练回报语义、表格
-最后三点聚合、checkpoint保存和消费路径已经闭合；剩余主要不确定性是代码/环境代际、跨 seed
-方差和前期样本效率落后。
+三个本地seed均在250K显著落后官方，seed0末段追入，seed1/2未达到官方最终范围；独立checkpoint
+eval维持同样排序。主要不确定性已从“单seed偶然性”收敛为2023到2026代码/环境代际、seed语义和
+未公开score导出流水线的差异。
 
 ## 下一项决策
 
-冻结并顺序运行 seeds 0、1、2 的正式 replication，同时保存训练末段统计和 final-checkpoint 独立
-评估。三 seed 基线闭环前不启动消融。
+停止新增GPU计算，先离线恢复2023参考曲线对应runtime/config与dm-control/MuJoCo seed语义，找出
+能区分代码代际和环境协议的最便宜证据。人工审查两张EXP-0004主图后再决定是否需要旧代码pilot。
