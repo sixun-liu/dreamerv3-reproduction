@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-07-17T05:47:34Z'
+updated_at: '2026-07-21T05:53:24Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -25,9 +25,9 @@ stage_exit_gates:
 - 决定是否扩seed或保持单seed部分复现结论
 repository_manifest: research/repositories.yaml
 canonical_repo:
-  path: /root/autodl-tmp/dreamerv3
-  branch: main
-  commit: e3f02248693a79dc8b0ebd62c93683888ddaccfe
+  path: /root/autodl-tmp/dreamerv3-reproduction
+  branch: exp/EXP-0002-checkpoint-eval
+  commit: c5efe090a3f19247943be5e838bc0b7d3e588e3b
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dreamerv3/review

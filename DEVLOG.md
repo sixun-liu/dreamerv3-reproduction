@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-21T04:53:18Z
+> Updated: 2026-07-21T05:51:00Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -88,3 +88,11 @@
 - Next: 运行 462K checkpoint 的固定 `eval_only` 诊断，随后验证 final checkpoint 管道。
 - Approval: user
 - Git: runtime `e3f0224` (2026 post-Nature); reference score lineage `423291a` (2023)
+
+### 2026-07-21T05:50:39Z | result | EXP-0002
+
+- Actor: codex
+- Summary: 462K checkpoint 的固定 seed stochastic `eval_only` 自然完成；64 个 episode mean 893.48、median 915.44，预注册可用性门通过。两次得分前工程失败分别定位为 EGL 和多环境 `log/image`，均保留且未用于选分。
+- Evidence: EVT-0009--EVT-0011；ART-0006--ART-0008；runtime compatibility commit `b98e975`
+- Next: 补自然结束 final checkpoint 保存与 smoke，再冻结三个训练 seed；独立 eval 与论文 training-return 表值继续分列。
+- Approval: user；human visual review pending

@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-07-21T04:53:18Z
+> Updated: 2026-07-21T05:51:00Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,11 +8,10 @@
 
 ## Now
 
-- [ ] [codex] 运行并关闭 462K checkpoint `eval_only` 诊断；trigger: score 聚合协议已闭合。
 - [ ] [codex] 验证自然结束 final checkpoint 和独立评估管道；trigger: eval-only 诊断完成。
 - [ ] [claude] 独立核对 2023 DMC 配置与 Table 4 聚合；trigger: 读取 `references/DMC_SCORE_PROTOCOL_AUDIT.md`。
 
 ## Waiting
 
-- [ ] [codex] 冻结并顺序运行三个 clean seeds；trigger: checkpoint/eval smoke 通过。
+- [ ] [codex] 冻结并顺序运行三个 clean seeds；trigger: final-checkpoint smoke 通过。
 - 后续 GPU 实验不自动续跑。
