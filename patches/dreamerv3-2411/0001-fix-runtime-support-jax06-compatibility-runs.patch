@@ -1,0 +1,105 @@
+From 6642b941f578cd72147bc2be3c3343d5bc72931c Mon Sep 17 00:00:00 2001
+From: sixun-liu <sixun-liu@users.noreply.github.com>
+Date: Tue, 21 Jul 2026 19:49:03 +0800
+Subject: [PATCH] fix(runtime): support jax06 compatibility runs
+
+---
+ dreamerv3/configs.yaml           |  2 ++
+ dreamerv3/main.py                | 10 ++++++----
+ embodied/core/checkpoint.py      |  4 +++-
+ embodied/run/train.py            |  2 ++
+ embodied/tests/run/test_train.py |  1 +
+ 5 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/dreamerv3/configs.yaml b/dreamerv3/configs.yaml
+index 44020c4..6b12372 100644
+--- a/dreamerv3/configs.yaml
++++ b/dreamerv3/configs.yaml
+@@ -6,6 +6,7 @@ defaults:
+   logdir: /dev/null
+   eval_dir: ''
+   filter: 'score|length|fps|ratio|train/.*_loss$|train/rand/.*/mean'
++  tensorboard: True
+   tensorboard_videos: True
+ 
+   replay:
+@@ -46,6 +47,7 @@ defaults:
+     expl_until: 0
+     log_every: 120
+     save_every: 900
++    save_at_end: False
+     eval_every: 180
+     eval_initial: True
+     eval_eps: 1
+diff --git a/dreamerv3/main.py b/dreamerv3/main.py
+index 1c492a5..025b405 100644
+--- a/dreamerv3/main.py
++++ b/dreamerv3/main.py
+@@ -122,14 +122,16 @@ def make_logger(config):
+   step = embodied.Counter()
+   logdir = config.logdir
+   multiplier = config.env.get(config.task.split('_')[0], {}).get('repeat', 1)
+-  logger = embodied.Logger(step, [
++  outputs = [
+       embodied.logger.TerminalOutput(config.filter, 'Agent'),
+       embodied.logger.JSONLOutput(logdir, 'metrics.jsonl'),
+       embodied.logger.JSONLOutput(logdir, 'scores.jsonl', 'episode/score'),
+-      embodied.logger.TensorBoardOutput(
+-          logdir, config.run.log_video_fps, config.tensorboard_videos),
+       # embodied.logger.WandbOutput(logdir.name, ...),
+-  ], multiplier)
++  ]
++  if config.tensorboard:
++    outputs.append(embodied.logger.TensorBoardOutput(
++        logdir, config.run.log_video_fps, config.tensorboard_videos))
++  logger = embodied.Logger(step, outputs, multiplier)
+   return logger
+ 
+ 
+diff --git a/embodied/core/checkpoint.py b/embodied/core/checkpoint.py
+index fa659dc..b55f25f 100644
+--- a/embodied/core/checkpoint.py
++++ b/embodied/core/checkpoint.py
+@@ -47,13 +47,15 @@ class Checkpoint:
+       print('Did not find any checkpoint.')
+     return exists
+ 
+-  def save(self, filename=None, keys=None):
++  def save(self, filename=None, keys=None, wait=False):
+     assert self._filename or filename
+     filename = path.Path(filename or self._filename)
+     printing.print_(f'Writing checkpoint: {filename}')
+     if self._parallel:
+       self._promise and self._promise.result()
+       self._promise = self._worker.submit(self._save, filename, keys)
++      if wait:
++        self._promise.result()
+     else:
+       self._save(filename, keys)
+ 
+diff --git a/embodied/run/train.py b/embodied/run/train.py
+index d38856b..fae7551 100644
+--- a/embodied/run/train.py
++++ b/embodied/run/train.py
+@@ -123,4 +123,6 @@ def train(make_agent, make_replay, make_env, make_logger, args):
+     if should_save(step):
+       checkpoint.save()
+ 
++  if args.save_at_end:
++    checkpoint.save(wait=True)
+   logger.close()
+diff --git a/embodied/tests/run/test_train.py b/embodied/tests/run/test_train.py
+index 717ba7e..64d363a 100644
+--- a/embodied/tests/run/test_train.py
++++ b/embodied/tests/run/test_train.py
+@@ -64,6 +64,7 @@ class TestTrain:
+         steps=2e4,
+         log_every=3,
+         save_every=5,
++        save_at_end=True,
+         train_ratio=32.0,
+         train_fill=100,
+         batch_size=8,
+-- 
+2.34.1
+

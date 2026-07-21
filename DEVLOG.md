@@ -112,3 +112,12 @@
 - Evidence: EVT-0016--EVT-0019；ART-0011--ART-0015；runtime `5168475`
 - Next: 离线对账2023参考曲线代码/配置与2026 runtime、dm-control/MuJoCo及seed语义；不直接进入消融或盲目加seed。
 - Approval: user批准三seed自主运行；human visual review pending
+
+### 2026-07-21T13:14:12Z | result | EXP-0005
+
+- Actor: codex
+- Summary: 作者旧runtime `2411f7d`单run自然完成；final-30K mean930.72对齐官方935.75，终值门通过；250K median658.26低于官方下限826.85，早期曲线诊断门失败。裁决`promising_unresolved`，曲线形状不作为论文复现总验收。
+- Evidence: EVT-0024--EVT-0025；ART-0016--ART-0019；runtime `6642b94`
+- Next: 人工图审和独立复算后，在“转入论文理解”和“补两个旧runtime重复验证500K终值稳定性”之间裁决；谱系曲线归因park。
+- Approval: user批准本次单run；scientific human review pending
+- Git: control freeze `b77b4a1`；runtime upstream `2411f7d` + compatibility `6642b94`
