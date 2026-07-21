@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-07-21T06:17:28Z'
+updated_at: '2026-07-21T06:20:30Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -26,8 +26,8 @@ stage_exit_gates:
 repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/dreamerv3-reproduction
-  branch: exp/EXP-0003-final-checkpoint-smoke
-  commit: 7c92ba1f49d564aa55e02f908bd3066cf8e6f197
+  branch: exp/EXP-0004-walker-three-seed
+  commit: f829ef544b8aaf7406dd19fa8fab40cf1d7008c5
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dreamerv3/review
