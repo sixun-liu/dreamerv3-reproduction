@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-07-21T02:40:00Z
+> Updated: 2026-07-21T04:53:18Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,18 +8,17 @@
 
 ## 一句话判断
 
-DreamerV3 `walker_walk` 与 Nature DQN Breakout 均已完成当前单任务、单 seed 预算，并在后期达到
-论文/官方曲线的分数量级。两项裁决均为 `promising_unresolved`：工程链路和部分数值证据成立，
-但不宣称多 seed、严格历史协议或整篇论文复现。
+DreamerV3 `EXP-0001` 已确认完成训练并在后期进入官方包络，但按恢复的论文统计口径，本地最后
+30K episode mean 为 891.7，论文五 seed 最后三点均值为 935.8。用户已批准先做 checkpoint
+独立评估，再运行三个 clean seeds；`EXP-0001` 保留为 `promising_unresolved` 历史证据。
 
 ## 当前主要矛盾
 
-DreamerV3 本地曲线约 400K 后才进入官方包络；当前证据不能区分代码代际、dm-control/MuJoCo
-版本、训练回报与官方评估生成口径对早期样本效率差异的贡献。新增计算的边际价值低于先完成论文
-理解和人工图审，因此两条实验路线均停止自动续跑。
+官方 score 可追溯到 2023，而本地 runtime 是 2026 post-Nature 作者重实现。训练回报语义和表格
+最后三点聚合已经闭合；剩余主要不确定性是代码/环境代际、单 seed 方差、前期样本效率落后以及
+终点 checkpoint 缺失。
 
 ## 下一项决策
 
-用户先复核 DreamerV3 与 DQN 两张主图，再按 DQN 的 Bellman/replay/target network 到 DreamerV3
-的 RSSM/latent imagination/actor-critic 顺序进入研读。完整阶段性口径见
-`reports/TWO_PAPER_REPRODUCTION_SUMMARY.md`；新 seed 与消融保持 parked。
+先用 462K checkpoint 跑固定 `eval_only` 并验证保存/加载；随后冻结三个 seeds 的正式 replication，
+同时保存训练末段统计和 final-checkpoint 独立评估。三 seed 基线闭环前不启动消融。

@@ -1,6 +1,6 @@
 # DreamerV3 Claim-Protocol Matrix
 
-Updated: 2026-07-17
+Updated: 2026-07-21
 
 This document separates paper facts, code-lineage facts, available reference artifacts, and unresolved reproduction choices. Unknown fields are not filled from repository defaults without evidence.
 
@@ -10,16 +10,16 @@ This document separates paper facts, code-lineage facts, available reference art
 |---|---|---|
 | DreamerV3 paper | arXiv `2301.04104`; local PDF SHA256 `d0385798e8bada8e81b915c1743be81d9ce8776f12ed937e09351995e099ce37` | available |
 | DreamerV3 source | Local arXiv source SHA256 `012b1d12794056d746027e1d371328fc827f04d9ddfd0a1468644cdfb8b7dc19` | available |
-| Runtime code | `danijar/dreamerv3` commit `e3f02248693a79dc8b0ebd62c93683888ddaccfe` | available |
+| Runtime code | `danijar/dreamerv3` commit `e3f02248693a79dc8b0ebd62c93683888ddaccfe`，2026-05 post-Nature snapshot | available |
 | Code lineage | Author-maintained public reimplementation based on DreamerV2; repository README says it is unrelated to Google or DeepMind | must be reported explicitly |
-| Version relation | Current code is the Nature-era author public reimplementation and differs from the 2023 implementation lineage | target fixed to Nature-era result with explicit lineage drift |
+| Version relation | DMC score 于 2023 commit `423291a` 加入；当前 runtime 是 2026 作者公开重实现 | `author_reimplementation`，显式记录三年代际漂移 |
 | DQN bridge paper | arXiv `1312.5602`; local PDF SHA256 `8db04120cace173151c77e0faa6f3eaa4207009da66b9417597dc70bfee56d9c` | reading material available |
 
 ## Candidate Result Claims
 
 | Candidate | Paper/reference evidence | Local protocol evidence | Blocking mismatch | Decision |
 |---|---|---|---|---|
-| DMC proprioceptive `walker_walk` | `scores/dmc_proprio-dreamerv3.json.gz`, 5 seeds, reference x-axis 10K--490K; paper Table 4 reports 500K budget and score 936 | Runtime overrides current defaults with `size12m`, DMC repeat 2, 16 envs, ratio 512 and 250K agent decisions = 500K environment steps | Author public reimplementation is newer than the paper code; paper table's 12M recurrent width 1024 conflicts with its own 8d rule and runtime width 2048 | selected first replication; single seed can at most be `promising_unresolved` |
+| DMC proprioceptive `walker_walk` | `scores/dmc_proprio-dreamerv3.json.gz`, 5 seeds, 10K--490K；最后 3 点跨 seed mean `935.752 -> 936` | `EXP-0001` 完成 500K；最后 30K raw episode mean `891.713`；后期进入官方包络 | 2026 runtime、单 seed、同步 episode bins、无终点 checkpoint | `promising_unresolved`；进入三 seed clean replication |
 | DMC visual `walker_walk` | `scores/dmc_vision-dreamerv3.json.gz`, reference curves near 1M | Current `dmc_vision` defaults to the large model, 1.1M steps, replay ratio 256, repeat 1 | Paper table reports 12M model, action repeat 2, replay ratio 512; reference file contains more runs than the paper's stated 5 seeds | secondary candidate |
 | Crafter scaling | Paper Figure 4c/4d reports model-size and replay-ratio scaling | Stopped 200M/ratio-512 pilot is healthy and recoverable | Repository has no `crafter*.json.gz`; one configuration cannot reproduce a scaling claim | parked |
 | Full DMC suite mean/median | Paper tables and official JSON exist | Environment support exists | Requires many tasks and repeated seeds; cost is not appropriate for the first target | convergence-stage expansion |
@@ -34,13 +34,13 @@ This document separates paper facts, code-lineage facts, available reference art
 - [x] Environment: `dm-control==1.0.43`, MuJoCo 3.10.0, vector proprioception, repeat 2, seed 0, 16 envs.
 - [x] Budget semantics: logger counter counts agent decisions across envs and multiplies by repeat for output; 250K decisions = 500K environment steps. Replay ratio 512 gives 0.5 gradient updates/decision for batch 16x64.
 - [x] Model mapping: runtime `size12m` (deter 2048, hidden/units 256, classes/depth 16); the paper's 1024 recurrent-width cell is recorded as an internal table inconsistency.
-- [x] Evaluation: current `script=train` records undiscounted training episode score; compare 10K environment-step bins to the supplied per-seed reference curves. It is not an independent deterministic evaluation.
+- [x] Evaluation: 当前和 2023 `script=train` 均记录 undiscounted training episode score；论文表值为官方五 seed 最后 3 个 10K 点的 mean。独立 deterministic evaluation 另列，不混用。
 - [x] Repetitions: seed 0 only in the 12-hour cycle; official reference has seeds 0--4. No failed seed replacement.
 - [x] Acceptance envelope: engineering success requires healthy metrics/checkpoint; partial scientific success requires an increasing curve entering the official seed envelope. A single seed cannot support `promote`.
-- [ ] Cost: paper reports 0.3 A100 GPU-day; local 5090 throughput, memory, checkpoint size and ETA will be measured at the first 10K environment-step checkpoint before continuation.
+- [x] Cost: `EXP-0001` 实测约 1.1 GPU h、显存约 25.6 GB；三 seed clean replication 预计 3--4 GPU h。
 
 ## Current Recommendation
 
-Freeze DMC proprioceptive `walker_walk` as the first replication. Start the full target configuration with a
-10K-environment-step pilot gate; continue only if measured ETA fits the remaining wall-time budget. Report
-training-return comparability and code-lineage drift explicitly.
+先对 `EXP-0001` 的 462K checkpoint 做固定 `eval_only` 诊断；随后从 clean provenance 运行三个
+预注册 seeds，主指标为每 seed 最后 30K environment-step episode mean 及跨 seed mean/std。每个 run
+自然结束时必须保存 final checkpoint，并对 final checkpoint 运行独立评估。暂不进入消融。

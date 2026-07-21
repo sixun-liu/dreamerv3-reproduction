@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-07-21T02:40:00Z
+> Updated: 2026-07-21T04:53:18Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,11 +8,11 @@
 
 ## Now
 
-- [ ] [user] 复核 DreamerV3 `EXP-0001` 与 DQN `EXP-0004` 主图；trigger: 打开双论文总结的证据入口。
-- [ ] [codex] 核对官方 DMC JSON 生成协议；trigger: 无需 GPU，可与人工复核并行。
-- [ ] [claude] 将双论文总结与论文研读稿交叉核验；trigger: 读取 `reports/TWO_PAPER_REPRODUCTION_SUMMARY.md`。
+- [ ] [codex] 运行并关闭 462K checkpoint `eval_only` 诊断；trigger: score 聚合协议已闭合。
+- [ ] [codex] 验证自然结束 final checkpoint 和独立评估管道；trigger: eval-only 诊断完成。
+- [ ] [claude] 独立核对 2023 DMC 配置与 Table 4 聚合；trigger: 读取 `references/DMC_SCORE_PROTOCOL_AUDIT.md`。
 
 ## Waiting
 
-- [ ] [codex] 预注册 seed 扩展或消融；trigger: 人工复核后用户明确要求提升证据权限。
+- [ ] [codex] 冻结并顺序运行三个 clean seeds；trigger: checkpoint/eval smoke 通过。
 - 后续 GPU 实验不自动续跑。

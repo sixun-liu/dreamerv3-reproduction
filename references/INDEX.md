@@ -1,12 +1,13 @@
 # Reference Index
 
-Updated: 2026-07-17
+Updated: 2026-07-21
 
 ## Primary Sources
 
 - DreamerV3 paper, arXiv `2301.04104`: see `papers/INDEX.md`.
 - DQN paper, arXiv `1312.5602`: see `papers/INDEX.md`.
 - DreamerV3 official reference score JSON: runtime `/root/autodl-tmp/dreamerv3/scores/`, indexed by the claim-protocol matrix.
+- DMC score lineage and Table 4 final-three-point aggregation: `DMC_SCORE_PROTOCOL_AUDIT.md`.
 
 ## Understanding Snapshots
 

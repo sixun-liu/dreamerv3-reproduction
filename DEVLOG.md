@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-21T02:40:00Z
+> Updated: 2026-07-21T04:53:18Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -79,3 +79,12 @@
 - Evidence: DreamerV3 EXP-0001 / ART-0001--ART-0005；DQN EXP-0004 / ART-0019--ART-0027；`reports/TWO_PAPER_REPRODUCTION_SUMMARY.md`
 - Next: 用户复核两张主图；Claude 交叉核验研读材料；DMC 官方参考曲线生成谱系继续离线取证。
 - Approval: DQN autonomous option 2 approved；human visual review pending
+
+### 2026-07-21T04:53:18Z | protocol | dmc-table4-aggregation
+
+- Actor: codex
+- Summary: 恢复 DMC proprio Table 4 聚合为官方五 seed 曲线最后 3 个 10K 点的 mean；18 个任务 RMSE 0.30，walker `935.752 -> 936`。用户批准先评估旧 checkpoint，再运行三个 clean seeds。
+- Evidence: `references/DMC_SCORE_PROTOCOL_AUDIT.md`；score SHA256 `8182860a...cc7f4`；author commits `423291a`, `2411f7d`
+- Next: 运行 462K checkpoint 的固定 `eval_only` 诊断，随后验证 final checkpoint 管道。
+- Approval: user
+- Git: runtime `e3f0224` (2026 post-Nature); reference score lineage `423291a` (2023)

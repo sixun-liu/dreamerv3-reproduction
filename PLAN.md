@@ -1,28 +1,28 @@
 # PLAN
 
-> Updated: 2026-07-21T02:40:00Z
+> Updated: 2026-07-21T04:53:18Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml
 
 - Stage: `reproduction`
 - 北极星：理解 DreamerV3 的关键机制，并在冻结协议下复现至少一个论文结果。
-- 当前主要矛盾：在不夸大单 seed 证据的前提下，把已跑通的 DQN 基础与 DreamerV3 世界模型机制
-  连接起来，完成导师要求的理解与复现叙事。
+- 当前主要矛盾：用三个 clean seeds 区分 `EXP-0001` 的延迟学习是 seed 偶然还是 2026 作者重实现
+  的系统性样本效率差异，并补齐终点 checkpoint 与独立评估。
 
 ## 阶段退出门
 
 - [x] 目标论文版本、代码谱系、首个 target 和参考产物已固定。
 - [x] `EXP-0001` 完成 500K environment steps 并形成同坐标对照。
 - [ ] 用户完成 `EXP-0001` 曲线人工复核。
-- [ ] 官方 DMC JSON 的代码版本和评估生成协议完成取证。
-- [ ] 根据协议取证决定补 seed 或在当前部分复现处停止。
+- [x] 官方 DMC JSON 的代码版本、training-return 语义和 Table 4 最后三点聚合完成取证。
+- [x] 用户批准当前作者实现的三个 seeds replication，预计 3--4 GPU h。
 - [x] Nature DQN Breakout 完成 10M-decision 单 seed 部分数值复现，并与 DreamerV3 形成中文总结。
 
 ## 活动路线
 
-1. 用户复核 DreamerV3 `EXP-0001` 与 DQN `EXP-0004` 证据图，分别登记人工判断。
-2. 结合 `docs/understanding/DREAMERV3_REPRODUCTION_GUIDE.md` 和双论文总结进入论文研读。
-3. 离线核对官方 DMC JSON 的 lineage、环境和训练/评估语义；当前不启动补 seed 或消融。
+1. 对 `EXP-0001` 的 462K checkpoint 做固定 `eval_only`，验证可用模型与评估语义。
+2. 增加并 smoke 自然结束 final checkpoint 与固定评估管道。
+3. 运行三个 clean seeds，按最后 30K training-return mean 和独立评估双口径关闭基线。
 
 ## Parked Lanes
 
