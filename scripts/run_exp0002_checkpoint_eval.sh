@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
-readonly OUTPUT=/root/autodl-tmp/runs/EXP-0002__walker_walk__eval-s10000__40k-dec__20260721T051931Z
+readonly OUTPUT=/root/autodl-tmp/runs/EXP-0002__walker_walk__eval-s10000__40k-dec__20260721T053900Z
 readonly RUNTIME=/root/autodl-tmp/dreamerv3
 readonly PYTHON=/root/miniconda3/envs/dv3/bin/python
 readonly CHECKPOINT=/root/autodl-tmp/runs/dv3_dmcp_walker_500k_s0_0717/ckpt/20260717T021720F580890
