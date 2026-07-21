@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-07-21T10:20:00Z
+> Updated: 2026-07-21T13:14:00Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,17 +8,18 @@
 
 ## 一句话判断
 
-DreamerV3 `walker_walk` 三 seed clean replication 已完成：工程与checkpoint/eval完整性全绿，但
-final-30K aggregate `785.53±90.34` 低于官方 `935.75±25.90`，预注册性能门失败。当前结论是
-post-Nature作者重实现的有效负复现，不是工程失败或整篇论文否定。
+旧版作者 runtime `2411f7d` 的单 run 已完整结束：final-30K mean `930.72` 对齐官方 `935.75`，
+但 250K median `658.26` 低于官方下限 `826.85`。当前证据支持“终值性能量级可复现”，不支持
+“旧代码谱系单独恢复了论文早期样本效率”，也不构成稳定多 seed 数值复现。
 
 ## 当前主要矛盾
 
-三个本地seed均在250K显著落后官方，seed0末段追入，seed1/2未达到官方最终范围；独立checkpoint
-eval维持同样排序。主要不确定性已从“单seed偶然性”收敛为2023到2026代码/环境代际、seed语义和
-未公开score导出流水线的差异。
+`EXP-0005` 在100K明显快于2026 runtime三seed，但250K与2026最佳seed0基本相同，并在约370K后
+才持续进入官方包络。代码代际影响了局部轨迹和终值，但不足以解释官方曲线的整体领先；主要
+不确定性转为未受控DMC环境随机性、历史dm-control/MuJoCo版本和官方score导出流水线。
 
 ## 下一项决策
 
-停止新增GPU计算，先离线恢复2023参考曲线对应runtime/config与dm-control/MuJoCo seed语义，找出
-能区分代码代际和环境协议的最便宜证据。人工审查两张EXP-0004主图后再决定是否需要旧代码pilot。
+停止自动新增GPU计算。复现主验收回到500K固定预算终值和重复稳定性，曲线形状只作诊断。先人工
+审查并独立复算；之后只需在“当前单run证据足够转入论文理解”和“补旧runtime两个独立重复验证
+终值稳定性”之间裁决。配对environment seed的谱系归因降为可选研究问题。

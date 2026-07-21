@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-07-21T10:20:00Z
+> Updated: 2026-07-21T13:14:00Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,10 +8,10 @@
 
 ## Now
 
-- [ ] [codex] 对账2023 score对应代码/config与2026 runtime、环境/seed语义；trigger: `EXP-0004`三seed性能门失败。
-- [ ] [claude] 独立核对 2023 DMC 配置与 Table 4 聚合；trigger: 读取 `references/DMC_SCORE_PROTOCOL_AUDIT.md`。
-- [ ] [user] 审查`EXP-0004`两张主图；trigger: ART-0013/ART-0014已生成。
+- [ ] [claude] 独立复算`EXP-0005`的250K与final-30K聚合；trigger: ART-0016/ART-0017已登记。
+- [ ] [user] 审查`EXP-0005`主图；trigger: ART-0018已生成。
+- [ ] [user] 裁决当前证据是否足够，或补旧runtime两个独立重复只验证500K终值稳定性；trigger: 图审与独立复算完成。
 
 ## Waiting
 
-- 后续 GPU 实验不自动续跑。
+- 曲线谱系归因与配对环境seed实验已park；后续 GPU 实验不自动续跑。
