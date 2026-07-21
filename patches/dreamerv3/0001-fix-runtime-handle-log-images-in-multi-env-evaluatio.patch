@@ -1,0 +1,116 @@
+From b98e97517aba78f69651014947f6c1af1289459d Mon Sep 17 00:00:00 2001
+From: sixun-liu <sixun-liu@users.noreply.github.com>
+Date: Tue, 21 Jul 2026 13:37:24 +0800
+Subject: [PATCH 1/2] fix(runtime): handle log images in multi-env evaluation
+
+---
+ embodied/run/eval_only.py        |  5 +-
+ embodied/tests/test_eval_only.py | 80 ++++++++++++++++++++++++++++++++
+ 2 files changed, 83 insertions(+), 2 deletions(-)
+ create mode 100644 embodied/tests/test_eval_only.py
+
+diff --git a/embodied/run/eval_only.py b/embodied/run/eval_only.py
+index 5b71b55..590bc0c 100644
+--- a/embodied/run/eval_only.py
++++ b/embodied/run/eval_only.py
+@@ -32,8 +32,9 @@ def eval_only(make_agent, make_env, make_logger, args):
+     episode.add('rewards', tran['reward'], agg='stack')
+     for key, value in tran.items():
+       isimage = (value.dtype == np.uint8) and (value.ndim == 3)
+-      if isimage and worker == 0:
+-        episode.add(f'policy_{key}', value, agg='stack')
++      if isimage:
++        if worker == 0:
++          episode.add(f'policy_{key}', value, agg='stack')
+       elif key.startswith('log/'):
+         assert value.ndim == 0, (key, value.shape, value.dtype)
+         episode.add(key + '/avg', value, agg='avg')
+diff --git a/embodied/tests/test_eval_only.py b/embodied/tests/test_eval_only.py
+new file mode 100644
+index 0000000..cb1f02a
+--- /dev/null
++++ b/embodied/tests/test_eval_only.py
+@@ -0,0 +1,80 @@
++import elements
++import embodied
++import numpy as np
++
++from embodied.envs import dummy
++
++
++class DummyWithLogImage(dummy.Dummy):
++
++  @property
++  def obs_space(self):
++    return {
++        **super().obs_space,
++        'log/image': elements.Space(np.uint8, self.size + (3,)),
++    }
++
++  def step(self, action):
++    obs = super().step(action)
++    obs['log/image'] = np.zeros(self.size + (3,), np.uint8)
++    return obs
++
++
++class DummyAgent:
++
++  def __init__(self, act_space):
++    self.act_space = act_space
++    self.env_steps = 0
++    self.loads = 0
++
++  def init_policy(self, batch_size):
++    return ()
++
++  def policy(self, carry, obs, mode='train'):
++    batch_size = len(obs['is_first'])
++    self.env_steps += batch_size
++    acts = {
++        key: np.stack([space.sample() for _ in range(batch_size)])
++        for key, space in self.act_space.items() if key != 'reset'}
++    return carry, acts, {}
++
++  def save(self):
++    return {}
++
++  def load(self, data):
++    self.loads += 1
++
++
++def test_multiple_workers_ignore_nonzero_log_images(tmpdir):
++  def make_env(index):
++    del index
++    return DummyWithLogImage('disc', size=(8, 8), length=4)
++
++  env = make_env(0)
++  agent = DummyAgent(env.act_space)
++  env.close()
++
++  checkpoint = elements.Checkpoint(tmpdir / 'source')
++  checkpoint.agent = agent
++  checkpoint.save()
++  checkpoint_path = tmpdir / 'source' / (
++      tmpdir / 'source' / 'latest').read_text()
++
++  args = elements.Config(
++      from_checkpoint=str(checkpoint_path),
++      usage=dict(psutil=True),
++      log_every=-1,
++      envs=2,
++      debug=True,
++      logdir=str(tmpdir / 'eval'),
++      steps=40,
++  )
++  def make_logger():
++    return elements.Logger(elements.Counter(), [
++        elements.logger.JSONLOutput(tmpdir / 'eval'),
++    ])
++
++  embodied.run.eval_only(lambda: agent, make_env, make_logger, args)
++
++  assert agent.loads == 1
++  assert agent.env_steps == 40
+-- 
+2.34.1
+
