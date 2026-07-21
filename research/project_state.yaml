@@ -1,13 +1,13 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-07-21T14:34:31Z'
+updated_at: '2026-07-21T21:47:25Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在可审计的受控实验中理解DreamerV3关键机制，并区分论文原消融与当前runtime上的机制扩展。
 primary_problem: 在匹配agent与DMC环境随机源的walker_walk上，区分free bits本身与KL balance对表征和性能的作用。
-active_experiment_id: EXP-0006
+active_experiment_id: null
 active_candidate: 'EXP-0006 KL mechanism matrix: baseline versus E1 versus reconstructed P4'
 canonical_baseline:
   id: DV3-2026-DMCP-WALKER-KL-CONTROL
