@@ -1,13 +1,13 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-07-21T06:22:48Z'
+updated_at: '2026-07-21T10:24:37Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: reproduction
 north_star: 理解DreamerV3的关键机制，并在冻结协议下复现DMC walker_walk的代表性论文结果。
 primary_problem: 解释walker_walk前半程落后而约400K后进入官方包络的证据缺口，先核对代码与评估谱系。
-active_experiment_id: EXP-0004
+active_experiment_id: null
 active_candidate: null
 canonical_baseline:
   id: DV3-NATURE-DMCP-WALKER-12M
