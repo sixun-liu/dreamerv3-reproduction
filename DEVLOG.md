@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-17T05:47:34Z
+> Updated: 2026-07-21T02:40:00Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -69,3 +69,13 @@
 - Next: 下一控制动作直接指向 `human_review:EXP-0001`。
 - Approval: user
 - Git: workflow `ffc2d66` (`v0.2.1`)
+
+## 2026-07-21
+
+### 2026-07-21T02:40:00Z | result | two-paper-synthesis
+
+- Actor: codex
+- Summary: DreamerV3 walker 与 Nature DQN Breakout 均完成单任务单 seed 部分数值复现；新增计算停止，交付重心转为人工图审和论文理解。
+- Evidence: DreamerV3 EXP-0001 / ART-0001--ART-0005；DQN EXP-0004 / ART-0019--ART-0027；`reports/TWO_PAPER_REPRODUCTION_SUMMARY.md`
+- Next: 用户复核两张主图；Claude 交叉核验研读材料；DMC 官方参考曲线生成谱系继续离线取证。
+- Approval: DQN autonomous option 2 approved；human visual review pending
