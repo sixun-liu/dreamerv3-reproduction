@@ -1,0 +1,83 @@
+config_schema_version: 1
+experiment_id: EXP-0006
+title: DreamerV3 walker_walk KL mechanism matrix
+scope: conceptual mechanism study on the 2026 author reimplementation
+output_root: /root/autodl-tmp/runs/EXP-0006__walker-kl__matrix-2seed__20260721T142500Z
+runtime:
+  path: /root/autodl-tmp/dreamerv3-exp0006
+  upstream_commit: 5168475b7a4413f9575933b4580e7073caea2114
+  experiment_commit: ad49802bf7051d36be318a9db742a3e1a9255622
+  patch_sha256: db249897b27a5a8c997feba34992ee55bade194ad8855b9a98eb2600b96878ca
+  bundle_sha256: dbf7cb61db7a178f8e1728eb1b468fe786508653b660b2f5e0f94d73eb19394b
+environment:
+  python: 3.12.13
+  jax: 0.6.2
+  dm_control: 1.0.43
+  mujoco: 3.10.0
+  accelerator: NVIDIA GeForce RTX 5090
+shared_protocol:
+  task: dmc_walker_walk
+  observations: proprioceptive
+  model: size12m
+  action_repeat: 2
+  environment_workers: 16
+  replay_ratio: 512
+  total_agent_decisions: 250000
+  total_environment_steps: 500000
+  use_dmc_environment_seed: true
+  train_seeds: [0, 1]
+  eval_seed: 10000
+  eval_agent_decisions: 40000
+  checkpoint_step: 250000
+arms:
+  baseline:
+    free_nats: 1.0
+    dynamics_kl_scale: 1.0
+    representation_kl_scale: 0.1
+  e1:
+    free_nats: 0.0
+    dynamics_kl_scale: 1.0
+    representation_kl_scale: 0.1
+  p4:
+    free_nats: 0.0
+    dynamics_kl_scale: 1.0
+    representation_kl_scale: 1.0
+    provenance: reconstructed_from_public_code_semantics
+run_order:
+- baseline:s000
+- e1:s000
+- p4:s000
+- p4:s001
+- e1:s001
+- baseline:s001
+configs:
+  baseline_s000_train: {path: docs/reproduction/configs/exp0006_baseline_s000_train.yaml, sha256: 039d47f3d409471753f36f956264619602ac97fac37b6de07ddf96ace32cd3f1}
+  baseline_s000_eval: {path: docs/reproduction/configs/exp0006_baseline_s000_eval.yaml, sha256: ebf1760ac0af3de6c3c60092c121f3d49239450f5346bdd0651ca3dcbebe370f}
+  baseline_s001_train: {path: docs/reproduction/configs/exp0006_baseline_s001_train.yaml, sha256: 39406aab845740bfffd6f1efd5b3a569c86705258352c2833b17dd9d0b721d50}
+  baseline_s001_eval: {path: docs/reproduction/configs/exp0006_baseline_s001_eval.yaml, sha256: 6752a422062a347603075704329eaa4e567f6f84fdaaaee5cc32518a1c8aa00e}
+  e1_s000_train: {path: docs/reproduction/configs/exp0006_e1_s000_train.yaml, sha256: a6bacdd8863531244753cee55caa6ae1673aba6c87be793647de72b8053886dc}
+  e1_s000_eval: {path: docs/reproduction/configs/exp0006_e1_s000_eval.yaml, sha256: 0155a6691169376e073723b11a73ec3cc023015dbdc0d8f8e093af0bcd9c6cc3}
+  e1_s001_train: {path: docs/reproduction/configs/exp0006_e1_s001_train.yaml, sha256: af9a5ac72033f4db88b09952512e79b577d4bc0d289f31707b356bacbe63d6ea}
+  e1_s001_eval: {path: docs/reproduction/configs/exp0006_e1_s001_eval.yaml, sha256: b026b2085c63e415b51971ec6eade41ee827f690dfee3dd335b2a323193a42c2}
+  p4_s000_train: {path: docs/reproduction/configs/exp0006_p4_s000_train.yaml, sha256: bd25b4b886a95d886fd8f913c07cdf36a4b715c5dc9a071134d76a79a8da5827}
+  p4_s000_eval: {path: docs/reproduction/configs/exp0006_p4_s000_eval.yaml, sha256: 1cec887af0efb4ab4cbe6a50311d8c4bb73b249fe5369dad461b45ec5c9829ee}
+  p4_s001_train: {path: docs/reproduction/configs/exp0006_p4_s001_train.yaml, sha256: c2f5e414b1e4c84a86e281f862a69a199b2562b0b4450addfe177f4d1c78802a}
+  p4_s001_eval: {path: docs/reproduction/configs/exp0006_p4_s001_eval.yaml, sha256: d8be56957aa0c56a058573fc0ce723d0a83644a127edd9e3cb8ad6ac4136dcb6}
+predictions:
+  e1_vs_baseline: late raw KL decreases and fixed-threshold low-KL fractions increase in both paired seeds
+  p4_vs_e1: late raw KL and/or posterior entropy decreases in both paired seeds
+  score: secondary and directionally open
+collapse_candidate:
+  late_raw_kl_below: 0.1
+  late_fraction_below_0p1_above: 0.9
+harmful_collapse:
+  paired_final_score_relative_drop: 0.2
+  paired_reconstruction_relative_increase: 0.2
+analysis_windows_environment_steps:
+  early: [0, 250000]
+  late: [400000, 500000]
+  final_score: [470000, 500000]
+completion:
+  required_runs: 6
+  required_eval_episodes_per_run: 64
+  exact_checkpoint_step: 250000
