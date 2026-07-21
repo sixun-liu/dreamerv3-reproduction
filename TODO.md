@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-07-21T14:23:46Z
+> Updated: 2026-07-21T21:45:00Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,11 +8,9 @@
 
 ## Now
 
-- [ ] [codex] 预注册并冻结 `EXP-0006` 三臂两 seed 矩阵；trigger: runtime smoke 与 hash 已通过。
-- [ ] [codex] 顺序完成六条 500K run；trigger: GPU 空闲且所有 freeze/started 信标就绪。
-- [ ] [codex] 生成 raw-KL、entropy/reconstruction、score/AUC 配对图表并闭环实验。
+- 无活动计算；`EXP-0006` 六条主 run、分析和 agent 图审均已完成。
 
 ## Waiting
 
 - [ ] [user] 审查 `EXP-0006` 紧凑主图；trigger: 六条主 run 与分析完成。
-- 第三配对 seed 仅在主矩阵闭环、磁盘与时间预算允许时启动。
+- 下一实验须在用户选择“恢复原 P4 配置”或“第二代表任务”后重新预注册；不得自动补第三seed。
