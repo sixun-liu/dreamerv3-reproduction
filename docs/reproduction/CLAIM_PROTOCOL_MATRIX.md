@@ -19,7 +19,7 @@ This document separates paper facts, code-lineage facts, available reference art
 
 | Candidate | Paper/reference evidence | Local protocol evidence | Blocking mismatch | Decision |
 |---|---|---|---|---|
-| DMC proprioceptive `walker_walk` | `scores/dmc_proprio-dreamerv3.json.gz`, 5 seeds, 10K--490K；最后 3 点跨 seed mean `935.752 -> 936` | `EXP-0001` 最后30K mean `891.713`；`EXP-0002` 旧checkpoint eval通过；`EXP-0003`终点保存/加载通过 | 2026 runtime、单正式训练 seed、同步 episode bins；历史run无终点checkpoint | 仪器门已闭合；进入三 seed clean replication |
+| DMC proprioceptive `walker_walk` | `scores/dmc_proprio-dreamerv3.json.gz`, 5 seeds；最后3点mean `935.752 -> 936` | `EXP-0004` seeds0/1/2 final-30K means `909.21/695.94/751.43`；aggregate `785.53±90.34` | 2026 runtime与2023 score代码代际；本地原始episode window与官方导出点非完全同构 | `negative`；完整性门通过，aggregate和individual两项性能门失败 |
 | DMC visual `walker_walk` | `scores/dmc_vision-dreamerv3.json.gz`, reference curves near 1M | Current `dmc_vision` defaults to the large model, 1.1M steps, replay ratio 256, repeat 1 | Paper table reports 12M model, action repeat 2, replay ratio 512; reference file contains more runs than the paper's stated 5 seeds | secondary candidate |
 | Crafter scaling | Paper Figure 4c/4d reports model-size and replay-ratio scaling | Stopped 200M/ratio-512 pilot is healthy and recoverable | Repository has no `crafter*.json.gz`; one configuration cannot reproduce a scaling claim | parked |
 | Full DMC suite mean/median | Paper tables and official JSON exist | Environment support exists | Requires many tasks and repeated seeds; cost is not appropriate for the first target | convergence-stage expansion |
@@ -35,12 +35,11 @@ This document separates paper facts, code-lineage facts, available reference art
 - [x] Budget semantics: logger counter counts agent decisions across envs and multiplies by repeat for output; 250K decisions = 500K environment steps. Replay ratio 512 gives 0.5 gradient updates/decision for batch 16x64.
 - [x] Model mapping: runtime `size12m` (deter 2048, hidden/units 256, classes/depth 16); the paper's 1024 recurrent-width cell is recorded as an internal table inconsistency.
 - [x] Evaluation: 当前和 2023 `script=train` 均记录 undiscounted training episode score；论文表值为官方五 seed 最后 3 个 10K 点的 mean。`eval_only` 仍采样连续动作，固定 seed checkpoint 评估另列，不混用或称 deterministic。
-- [x] Repetitions: 已有 `EXP-0001` seed 0；下一 replication 预注册三个 seeds 且不替换失败 seed；官方参考为 seeds 0--4。
-- [x] Acceptance envelope: engineering success requires healthy metrics/checkpoint; partial scientific success requires an increasing curve entering the official seed envelope. A single seed cannot support `promote`.
+- [x] Repetitions: `EXP-0004` clean seeds 0、1、2全部完成且未替换；官方参考为 seeds 0--4。
+- [x] Acceptance envelope: 预注册aggregate range `[883.942,987.562]`且至少2/3 seed进入官方range；实际aggregate`785.527`、1/3，失败。
 - [x] Cost: `EXP-0001` 实测约 1.1 GPU h、显存约 25.6 GB；三 seed clean replication 预计 3--4 GPU h。
 
 ## Current Recommendation
 
-`EXP-0002` 和 `EXP-0003` 已关闭checkpoint消费与终点保存缺口。下一步从clean provenance运行三个
-预注册seeds，主指标为每seed最后30K environment-step episode mean及跨seed mean/std，final
-checkpoint固定seed stochastic评估另列。暂不进入消融。
+`EXP-0004` 已给出有效负复现：工程链闭合但三seed性能包络未复现。下一步只做2023 score对应代码、
+配置、dm-control/MuJoCo与seed语义的离线谱系审计；在解释代码/环境漂移前不进入算法消融或新增seed。
