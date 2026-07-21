@@ -136,7 +136,7 @@ jax:
   policy_devices: [0]
   prealloc: true
   train_devices: [0]
-logdir: /root/autodl-tmp/runs/EXP-0002__walker_walk__eval-s10000__40k-dec__20260721T050407Z
+logdir: /root/autodl-tmp/runs/EXP-0002__walker_walk__eval-s10000__40k-dec__20260721T051931Z
 logger:
   filter: score|length|fps|ratio|train/loss/|train/rand/
   fps: 15
