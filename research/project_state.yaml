@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-07-21T05:13:55Z'
+updated_at: '2026-07-21T05:23:44Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -27,7 +27,7 @@ repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/dreamerv3-reproduction
   branch: exp/EXP-0002-checkpoint-eval
-  commit: 51c28b8386f3c62f228cd721631431bce5d69928
+  commit: 4e68b7e2e876dbae0a390b9f1aa602cc009ec4c0
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dreamerv3/review
