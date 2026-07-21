@@ -1,0 +1,83 @@
+From ad49802bf7051d36be318a9db742a3e1a9255622 Mon Sep 17 00:00:00 2001
+From: sixun-liu <sixun-liu@users.noreply.github.com>
+Date: Tue, 21 Jul 2026 22:21:24 +0800
+Subject: [PATCH] exp(EXP-0006): add seeded DMC KL instrumentation
+
+---
+ dreamerv3/configs.yaml |  2 +-
+ dreamerv3/rssm.py      |  6 ++++++
+ embodied/envs/dmc.py   | 10 +++++++---
+ 3 files changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/dreamerv3/configs.yaml b/dreamerv3/configs.yaml
+index 65e30d1..0be53e9 100644
+--- a/dreamerv3/configs.yaml
++++ b/dreamerv3/configs.yaml
+@@ -33,7 +33,7 @@ defaults:
+     atari100k: {size: [64, 64], repeat: 4, sticky: False, gray: False, actions: needed, lives: unused, noops: 30, autostart: False, resize: pillow, clip_reward: False}
+     dmlab: {size: [64, 64], repeat: 4, episodic: True, use_seed: True}
+     minecraft: {size: [64, 64], break_speed: 100.0, logs: False, length: 36000}
+-    dmc: {size: [64, 64], repeat: 1, proprio: True, image: True, camera: -1}
++    dmc: {size: [64, 64], repeat: 1, proprio: True, image: True, camera: -1, use_seed: False}
+     loconav: {size: [64, 64], repeat: 1, camera: -1}
+ 
+   replay:
+diff --git a/dreamerv3/rssm.py b/dreamerv3/rssm.py
+index 44b8e9c..960453b 100644
+--- a/dreamerv3/rssm.py
++++ b/dreamerv3/rssm.py
+@@ -124,10 +124,16 @@ class RSSM(nj.Module):
+     post = feat['logit']
+     dyn = self._dist(sg(post)).kl(self._dist(prior))
+     rep = self._dist(post).kl(self._dist(sg(prior)))
++    raw_kl = dyn
+     if self.free_nats:
+       dyn = jnp.maximum(dyn, self.free_nats)
+       rep = jnp.maximum(rep, self.free_nats)
+     losses = {'dyn': dyn, 'rep': rep}
++    metrics['kl_raw'] = raw_kl.mean()
++    metrics['kl_raw_std'] = raw_kl.std()
++    metrics['kl_below_0p1'] = (raw_kl < 0.1).mean()
++    metrics['kl_below_0p5'] = (raw_kl < 0.5).mean()
++    metrics['kl_below_1p0'] = (raw_kl < 1.0).mean()
+     metrics['dyn_ent'] = self._dist(prior).entropy().mean()
+     metrics['rep_ent'] = self._dist(post).entropy().mean()
+     return carry, entries, losses, feat, metrics
+diff --git a/embodied/envs/dmc.py b/embodied/envs/dmc.py
+index 1a6ec39..5bd0221 100644
+--- a/embodied/envs/dmc.py
++++ b/embodied/envs/dmc.py
+@@ -19,7 +19,8 @@ class DMC(embodied.Env):
+   )
+ 
+   def __init__(
+-      self, env, repeat=1, size=(64, 64), proprio=True, image=True, camera=-1):
++      self, env, repeat=1, size=(64, 64), proprio=True, image=True, camera=-1,
++      seed=None):
+     if 'MUJOCO_GL' not in os.environ:
+       os.environ['MUJOCO_GL'] = 'egl'
+     if isinstance(env, str):
+@@ -29,15 +30,18 @@ class DMC(embodied.Env):
+       if domain == 'cup':  # Only domain with multiple words.
+         domain = 'ball_in_cup'
+       if domain == 'manip':
+-        env = manipulation.load(task + '_vision')
++        env = manipulation.load(task + '_vision', seed=seed)
+       elif domain == 'rodent':
++        if seed is not None:
++          raise ValueError('Seeded rodent tasks are not supported by this wrapper.')
+         # camera 0: topdown map
+         # camera 2: shoulder
+         # camera 4: topdown tracking
+         # camera 5: eyes
+         env = getattr(basic_rodent_2020, task)()
+       else:
+-        env = suite.load(domain, task)
++        task_kwargs = {'random': seed} if seed is not None else None
++        env = suite.load(domain, task, task_kwargs=task_kwargs)
+     self._dmenv = env
+     self._env = from_dm.FromDM(self._dmenv)
+     self._env = embodied.wrappers.ActionRepeat(self._env, repeat)
+-- 
+2.34.1
+
