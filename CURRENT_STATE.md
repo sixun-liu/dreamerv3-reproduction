@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-07-21T13:14:00Z
+> Updated: 2026-07-21T21:45:00Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,18 +8,17 @@
 
 ## 一句话判断
 
-旧版作者 runtime `2411f7d` 的单 run 已完整结束：final-30K mean `930.72` 对齐官方 `935.75`，
-但 250K median `658.26` 低于官方下限 `826.85`。当前证据支持“终值性能量级可复现”，不支持
-“旧代码谱系单独恢复了论文早期样本效率”，也不构成稳定多 seed 数值复现。
+DreamerV3 已完成首个两seed受控机制实验：只关 free bits 的 E1 未在两个seed一致降低 raw KL，
+但性能均下降；在 E1 上把 representation KL 权重恢复为1的 P4-reconstructed 在两个seed都把
+late KL 压低到 baseline/E1 的约1.6%--4.0%，同时重构损失和性能明显恶化。
 
 ## 当前主要矛盾
 
-`EXP-0005` 在100K明显快于2026 runtime三seed，但250K与2026最佳seed0基本相同，并在约370K后
-才持续进入官方包络。代码代际影响了局部轨迹和终值，但不足以解释官方曲线的整体领先；主要
-不确定性转为未受控DMC环境随机性、历史dm-control/MuJoCo版本和官方score导出流水线。
+P4 的强效应在两个seed方向一致，但 posterior entropy 绝对值有明显seed差异；E1 raw-KL方向也
+不一致。论文 Figure 6/17 的完整 ablation config 仍未恢复，因此当前证据只支持 2026 runtime、
+seeded DMC、walker_walk 下的代码语义机制结论，不支持原图数值或跨任务主张。
 
 ## 下一项决策
 
-停止自动新增GPU计算。复现主验收回到500K固定预算终值和重复稳定性，曲线形状只作诊断。先人工
-审查并独立复算；之后只需在“当前单run证据足够转入论文理解”和“补旧runtime两个独立重复验证
-终值稳定性”之间裁决。配对environment seed的谱系归因降为可选研究问题。
+计算已停止。先由用户审查 `EXP-0006` 两张主图；下一判别问题是：在恢复论文原 P4 配置或选择
+第二个代表任务后，E1→P4 的低 KL、重构恶化与性能下降是否仍能跨任务复现。不得自动补第三seed。
