@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-21T05:51:00Z
+> Updated: 2026-07-21T06:11:00Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -96,3 +96,11 @@
 - Evidence: EVT-0009--EVT-0011；ART-0006--ART-0008；runtime compatibility commit `b98e975`
 - Next: 补自然结束 final checkpoint 保存与 smoke，再冻结三个训练 seed；独立 eval 与论文 training-return 表值继续分列。
 - Approval: user；human visual review pending
+
+### 2026-07-21T06:11:06Z | result | EXP-0003
+
+- Actor: codex
+- Summary: 默认关闭的 `run.save_at_end` 在2048-decision smoke显式开启后保存精确终点checkpoint；独立eval成功加载并完成16个有限episodes，仪器门通过。
+- Evidence: EVT-0013--EVT-0014；ART-0009--ART-0010；runtime `5168475`
+- Next: 冻结并顺序运行walker_walk seeds 0、1、2的500K environment-step replication。
+- Approval: user；smoke score禁止用于性能结论

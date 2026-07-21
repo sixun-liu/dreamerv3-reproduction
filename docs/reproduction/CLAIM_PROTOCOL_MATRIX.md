@@ -10,7 +10,7 @@ This document separates paper facts, code-lineage facts, available reference art
 |---|---|---|
 | DreamerV3 paper | arXiv `2301.04104`; local PDF SHA256 `d0385798e8bada8e81b915c1743be81d9ce8776f12ed937e09351995e099ce37` | available |
 | DreamerV3 source | Local arXiv source SHA256 `012b1d12794056d746027e1d371328fc827f04d9ddfd0a1468644cdfb8b7dc19` | available |
-| Runtime code | Author snapshot `e3f0224` plus local eval-only compatibility commit `b98e975`，2026 post-Nature lineage | available；算法语义未改 |
+| Runtime code | Author snapshot `e3f0224` plus opt-in instrumentation commits through `5168475`，2026 post-Nature lineage | available；算法语义未改；EGL由runner设置 |
 | Code lineage | Author-maintained public reimplementation based on DreamerV2; repository README says it is unrelated to Google or DeepMind | must be reported explicitly |
 | Version relation | DMC score 于 2023 commit `423291a` 加入；当前 runtime 是 2026 作者公开重实现 | `author_reimplementation`，显式记录三年代际漂移 |
 | DQN bridge paper | arXiv `1312.5602`; local PDF SHA256 `8db04120cace173151c77e0faa6f3eaa4207009da66b9417597dc70bfee56d9c` | reading material available |
@@ -19,7 +19,7 @@ This document separates paper facts, code-lineage facts, available reference art
 
 | Candidate | Paper/reference evidence | Local protocol evidence | Blocking mismatch | Decision |
 |---|---|---|---|---|
-| DMC proprioceptive `walker_walk` | `scores/dmc_proprio-dreamerv3.json.gz`, 5 seeds, 10K--490K；最后 3 点跨 seed mean `935.752 -> 936` | `EXP-0001` 最后 30K raw episode mean `891.713`；`EXP-0002` 462K checkpoint eval mean `893.481`/64 episodes | 2026 runtime、单训练 seed、同步 episode bins、无终点 checkpoint | checkpoint 可用性门通过；进入三 seed clean replication |
+| DMC proprioceptive `walker_walk` | `scores/dmc_proprio-dreamerv3.json.gz`, 5 seeds, 10K--490K；最后 3 点跨 seed mean `935.752 -> 936` | `EXP-0001` 最后30K mean `891.713`；`EXP-0002` 旧checkpoint eval通过；`EXP-0003`终点保存/加载通过 | 2026 runtime、单正式训练 seed、同步 episode bins；历史run无终点checkpoint | 仪器门已闭合；进入三 seed clean replication |
 | DMC visual `walker_walk` | `scores/dmc_vision-dreamerv3.json.gz`, reference curves near 1M | Current `dmc_vision` defaults to the large model, 1.1M steps, replay ratio 256, repeat 1 | Paper table reports 12M model, action repeat 2, replay ratio 512; reference file contains more runs than the paper's stated 5 seeds | secondary candidate |
 | Crafter scaling | Paper Figure 4c/4d reports model-size and replay-ratio scaling | Stopped 200M/ratio-512 pilot is healthy and recoverable | Repository has no `crafter*.json.gz`; one configuration cannot reproduce a scaling claim | parked |
 | Full DMC suite mean/median | Paper tables and official JSON exist | Environment support exists | Requires many tasks and repeated seeds; cost is not appropriate for the first target | convergence-stage expansion |
@@ -41,6 +41,6 @@ This document separates paper facts, code-lineage facts, available reference art
 
 ## Current Recommendation
 
-`EXP-0002` 已确认 462K checkpoint 可独立加载并通过固定 seed stochastic 评估门。下一步补自然结束
-final checkpoint 保存并 smoke；通过后从 clean provenance 运行三个预注册 seeds，主指标为每 seed
-最后 30K environment-step episode mean 及跨 seed mean/std，final checkpoint 独立评估另列。暂不进入消融。
+`EXP-0002` 和 `EXP-0003` 已关闭checkpoint消费与终点保存缺口。下一步从clean provenance运行三个
+预注册seeds，主指标为每seed最后30K environment-step episode mean及跨seed mean/std，final
+checkpoint固定seed stochastic评估另列。暂不进入消融。
