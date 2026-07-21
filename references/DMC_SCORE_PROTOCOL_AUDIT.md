@@ -10,7 +10,7 @@
 对表中 18 个任务逐项复算，预测值与论文整数表值的 RMSE 为 `0.30`；`walker_walk` 为
 `935.752 -> 936`。因此 936 的聚合口径视为已闭合，不再列为 unknown。
 
-公开曲线高度可能是 training episode return，而非独立 deterministic evaluation：2023 代码的
+公开曲线高度可能是 training episode return，而非独立 checkpoint evaluation：2023 代码的
 `dmc_proprio` 使用默认 `script=train`，对应训练循环对每个 episode 的 reward 求和并记录
 `episode/score`。当前代码的 `script=train` 保留相同的人读指标语义。仓库未提供从原始日志导出
 JSON 的完整脚本，因此保留“导出流水线未公开”这一限制。
@@ -79,6 +79,6 @@ score(task, n) = mean(seed 0..4, final n curve points)
 4. JSON 的原始日志导出脚本未公开；“training episode return”有强代码证据，但不是完整 artifact。
 
 后续 multi-seed replication 的主指标使用每 seed 最后 30K environment-step 完整 episode mean，
-再跨预注册 seeds 汇总 mean/std；同时单独报告固定 checkpoint `eval_only`，不把 deterministic
-evaluation 与论文 training-return 表值混为同一指标。
-
+再跨预注册 seeds 汇总 mean/std；同时单独报告固定 checkpoint `eval_only`。当前作者代码的
+`mode='eval'` 仍采样连续动作，因此该结果是固定 seed 的 stochastic-policy evaluation，不与论文
+training-return 表值混为同一指标，也不称为 deterministic evaluation。

@@ -34,7 +34,7 @@ This document separates paper facts, code-lineage facts, available reference art
 - [x] Environment: `dm-control==1.0.43`, MuJoCo 3.10.0, vector proprioception, repeat 2, seed 0, 16 envs.
 - [x] Budget semantics: logger counter counts agent decisions across envs and multiplies by repeat for output; 250K decisions = 500K environment steps. Replay ratio 512 gives 0.5 gradient updates/decision for batch 16x64.
 - [x] Model mapping: runtime `size12m` (deter 2048, hidden/units 256, classes/depth 16); the paper's 1024 recurrent-width cell is recorded as an internal table inconsistency.
-- [x] Evaluation: 当前和 2023 `script=train` 均记录 undiscounted training episode score；论文表值为官方五 seed 最后 3 个 10K 点的 mean。独立 deterministic evaluation 另列，不混用。
+- [x] Evaluation: 当前和 2023 `script=train` 均记录 undiscounted training episode score；论文表值为官方五 seed 最后 3 个 10K 点的 mean。`eval_only` 仍采样连续动作，固定 seed checkpoint 评估另列，不混用或称 deterministic。
 - [x] Repetitions: seed 0 only in the 12-hour cycle; official reference has seeds 0--4. No failed seed replacement.
 - [x] Acceptance envelope: engineering success requires healthy metrics/checkpoint; partial scientific success requires an increasing curve entering the official seed envelope. A single seed cannot support `promote`.
 - [x] Cost: `EXP-0001` 实测约 1.1 GPU h、显存约 25.6 GB；三 seed clean replication 预计 3--4 GPU h。
