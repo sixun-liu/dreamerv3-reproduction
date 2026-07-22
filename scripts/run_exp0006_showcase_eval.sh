@@ -21,7 +21,7 @@ readonly PYTHON=/root/miniconda3/envs/dv3/bin/python
 readonly EVAL_SEED=10000
 readonly TRAIN_SEED=1
 readonly EVAL_ENVS=1
-readonly EVAL_ENV_STEPS=1200
+readonly EVAL_ENV_STEPS=1400
 
 if [[ -e "${ROOT}" || -e "${ROOT}.started" || -e "${ROOT}.freeze" ]]; then
   echo "Refusing duplicate launch: ${ROOT} already exists" >&2
@@ -144,7 +144,7 @@ for arm in baseline e1 p4; do
     --env.dmc.repeat 2 \
     --run.envs "${EVAL_ENVS}" \
     --run.steps "${EVAL_ENV_STEPS}" \
-    --run.log_every 0.1 \
+    --run.log_every 1 \
     --run.from_checkpoint "${CHECKPOINTS[${arm}]}" \
     "${arm_overrides[@]}" \
     > "${output}/stdout.log" 2>&1 || fail $? "eval_${arm}"
