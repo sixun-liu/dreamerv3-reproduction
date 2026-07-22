@@ -21,7 +21,7 @@ readonly PYTHON=/root/miniconda3/envs/dv3/bin/python
 readonly EVAL_SEED=10000
 readonly TRAIN_SEED=1
 readonly EVAL_ENVS=1
-readonly EVAL_AGENT_STEPS=520
+readonly EVAL_ENV_STEPS=1200
 
 if [[ -e "${ROOT}" || -e "${ROOT}.started" || -e "${ROOT}.freeze" ]]; then
   echo "Refusing duplicate launch: ${ROOT} already exists" >&2
@@ -73,7 +73,7 @@ workflow_commit=$(git -C /root/autodl-tmp/research-agent-kit rev-parse HEAD)
   printf '  "train_seed": %d,\n' "${TRAIN_SEED}"
   printf '  "eval_seed": %d,\n' "${EVAL_SEED}"
   printf '  "eval_envs": %d,\n' "${EVAL_ENVS}"
-  printf '  "eval_agent_steps": %d,\n' "${EVAL_AGENT_STEPS}"
+  printf '  "eval_environment_steps": %d,\n' "${EVAL_ENV_STEPS}"
   printf '  "task": "dmc_walker_walk",\n'
   printf '  "checkpoint_agent_sha256": {\n'
   printf '    "baseline": "%s",\n' "$(sha256sum "${CHECKPOINTS[baseline]}/agent.pkl" | cut -d' ' -f1)"
@@ -143,8 +143,8 @@ for arm in baseline e1 p4; do
     --env.dmc.use_seed True \
     --env.dmc.repeat 2 \
     --run.envs "${EVAL_ENVS}" \
-    --run.steps "${EVAL_AGENT_STEPS}" \
-    --run.log_every 1 \
+    --run.steps "${EVAL_ENV_STEPS}" \
+    --run.log_every 0.1 \
     --run.from_checkpoint "${CHECKPOINTS[${arm}]}" \
     "${arm_overrides[@]}" \
     > "${output}/stdout.log" 2>&1 || fail $? "eval_${arm}"
@@ -168,4 +168,3 @@ printf \
   "${EXPERIMENT}" "${TAG}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
   > "${ROOT}.completed"
 cp "${ROOT}.completed" "${ROOT}/.completed"
-
