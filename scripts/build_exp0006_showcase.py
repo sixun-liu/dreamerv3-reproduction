@@ -20,6 +20,8 @@ ROOT = Path("/root/autodl-tmp")
 MATRIX = ROOT / "runs/EXP-0006__walker-kl__matrix-2seed__20260721T142500Z"
 SOURCE_ARTIFACTS = ROOT / "artifacts/dreamerv3/EXP-0006"
 SOURCE_REVIEW = ROOT / "artifacts/dreamerv3/review/EXP-0006-walker-kl-three-arm"
+EXP5_ARTIFACTS = ROOT / "artifacts/dreamerv3/EXP-0005"
+EXP5_REVIEW = ROOT / "artifacts/dreamerv3/review/EXP-0005-runtime-2411-walker"
 FONT = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")
 FONT_BOLD = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")
 
@@ -325,7 +327,7 @@ def render_world_model_pipeline(output: Path):
     ax.text(0.7, 2.65, "IMAGINATION", fontsize=13, weight="bold", color=COLORS["muted"])
     box(ax, (2.2, 1.0), 2.7, 1.25, "Imagine latent\ntrajectories", "#334b5e")
     box(ax, (6.4, 1.0), 2.2, 1.25, "Actor\nchoose actions", COLORS["e1"], fontsize=14)
-    box(ax, (10.1, 1.0), 2.2, 1.25, "Critic\nestimate returns", COLORS["baseline"], fontsize=14)
+    box(ax, (10.1, 1.0), 2.2, 1.25, "Critic\nestimate returns", COLORS["baseline"], fontsize=12)
     box(ax, (13.2, 1.0), 2.1, 1.25, "Act in the\nreal world", COLORS["p4"], fontsize=14)
     arrow(ax, (4.9, 1.62), (6.4, 1.62))
     arrow(ax, (8.6, 1.62), (10.1, 1.62))
@@ -442,12 +444,50 @@ def render_headline(summary, output: Path):
     plt.close(fig)
 
 
+def render_reproduction_status(output: Path):
+    summary = load_json(EXP5_ARTIFACTS / "summary.json")
+    official = summary["official_final"]["mean"]
+    local = summary["final_30k"]["mean"]
+    delta = (local / official - 1) * 100
+    checkpoint = summary["checkpoints"]["250000"]
+    fig, ax = setup_slide_ax("Paper-result check: terminal value aligns, early learning speed does not")
+    ax.text(0.7, 7.55, "EXP-0005 | DMC Walker Walk | author lineage 2411f7d", fontsize=16, color=COLORS["muted"], weight="bold")
+    box(ax, (0.7, 5.25), 4.3, 1.7, f"Official final\n{official:.2f}\n5-seed aggregate", "#27313b", fontsize=17)
+    box(ax, (5.75, 5.25), 4.3, 1.7, f"Local final-30K\n{local:.2f}\none complete run", COLORS["baseline"], fontsize=17)
+    box(ax, (10.8, 5.25), 4.3, 1.7, f"Terminal delta\n{delta:+.2f}%\nfinal gate passed", COLORS["p4"], fontsize=17)
+    ax.text(0.7, 4.35, "EARLY-CURVE CHECK AT 250K ENVIRONMENT STEPS", fontsize=15, color=COLORS["muted"], weight="bold")
+    box(ax, (0.7, 2.45), 5.2, 1.45, f"Local median\n{checkpoint['median']:.2f}", COLORS["e1"], fontsize=18)
+    box(
+        ax,
+        (6.65, 2.45),
+        5.2,
+        1.45,
+        f"Official seed range\n{checkpoint['official_min']:.2f} - {checkpoint['official_max']:.2f}",
+        "#5b6670",
+        fontsize=18,
+    )
+    box(ax, (12.6, 2.45), 2.5, 1.45, "Outside range\nearly gate failed", COLORS["red"], fontsize=14)
+    ax.text(0.7, 1.55, "Verdict: partial numerical reproduction, not stable replication", fontsize=23, weight="bold", color=COLORS["ink"])
+    ax.text(
+        0.7,
+        0.55,
+        "One local run and uncontrolled DMC environment randomness support lineage plausibility, not a multi-seed replication claim.",
+        fontsize=13,
+        color=COLORS["muted"],
+    )
+    fig.savefig(output / "figures/reproduction_status.png", bbox_inches="tight", facecolor=fig.get_facecolor())
+    plt.close(fig)
+
+
 def copy_sources(output: Path):
     shutil.copy2(SOURCE_REVIEW / "mechanism_timeseries.png", output / "figures/mechanism_timeseries.png")
     shutil.copy2(SOURCE_REVIEW / "representation_and_performance.png", output / "figures/representation_and_performance.png")
     shutil.copy2(SOURCE_ARTIFACTS / "summary.json", output / "data/summary.json")
     shutil.copy2(SOURCE_ARTIFACTS / "paired_comparisons.csv", output / "data/paired_comparisons.csv")
     shutil.copy2(SOURCE_ARTIFACTS / "per_run_summary.csv", output / "data/per_run_summary.csv")
+    shutil.copy2(EXP5_REVIEW / "curve_comparison.png", output / "figures/paper_curve_comparison.png")
+    shutil.copy2(EXP5_ARTIFACTS / "summary.json", output / "data/exp0005_summary.json")
+    shutil.copy2(EXP5_ARTIFACTS / "curve.csv", output / "data/exp0005_curve.csv")
 
 
 def main():
@@ -475,6 +515,7 @@ def main():
     render_world_model_pipeline(output)
     render_mechanism_chain(summary, output)
     render_headline(summary, output)
+    render_reproduction_status(output)
 
     freeze = load_json(args.eval_root.with_suffix(".freeze"))
     checkpoint_provenance = {
@@ -511,9 +552,37 @@ def main():
         json.dumps(demo_metadata, ensure_ascii=True, indent=2) + "\n",
         encoding="utf-8",
     )
+    copied_sources = {
+        "figures/paper_curve_comparison.png": EXP5_REVIEW / "curve_comparison.png",
+        "data/exp0005_summary.json": EXP5_ARTIFACTS / "summary.json",
+        "data/exp0005_curve.csv": EXP5_ARTIFACTS / "curve.csv",
+        "figures/mechanism_timeseries.png": SOURCE_REVIEW / "mechanism_timeseries.png",
+        "figures/representation_and_performance.png": SOURCE_REVIEW / "representation_and_performance.png",
+        "data/summary.json": SOURCE_ARTIFACTS / "summary.json",
+        "data/paired_comparisons.csv": SOURCE_ARTIFACTS / "paired_comparisons.csv",
+        "data/per_run_summary.csv": SOURCE_ARTIFACTS / "per_run_summary.csv",
+    }
+    source_manifest = {
+        "schema_version": 1,
+        "builder_script_sha256": file_sha256(Path(__file__).resolve()),
+        "fixed_eval_freeze_path": str(args.eval_root.with_suffix(".freeze")),
+        "fixed_eval_freeze_sha256": file_sha256(args.eval_root.with_suffix(".freeze")),
+        "copied_sources": [
+            {
+                "destination": destination,
+                "source_path": str(source),
+                "source_sha256": file_sha256(source),
+            }
+            for destination, source in copied_sources.items()
+        ],
+    }
+    (output / "provenance/source_manifest.json").write_text(
+        json.dumps(source_manifest, ensure_ascii=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
     showcase_summary = {
         "schema_version": 1,
-        "experiment_id": "EXP-0006",
+        "experiment_ids": ["EXP-0005", "EXP-0006"],
         "scope": summary["scope"],
         "integrity_passed": summary["integrity_passed"],
         "run_count": len(summary["runs"]),
@@ -521,6 +590,7 @@ def main():
         "seeds": [0, 1],
         "headline": "Stronger representation KL pressure reduced KL but worsened reconstruction and control in this local study.",
         "verdict": "promising_unresolved",
+        "exp0005_reproduction_status": "terminal gate passed; early-curve gate failed; single-run evidence",
     }
     (output / "data/showcase_summary.json").write_text(
         json.dumps(showcase_summary, ensure_ascii=True, indent=2) + "\n",
