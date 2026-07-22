@@ -303,13 +303,13 @@ def arrow(ax, start, end, color=None):
 
 def render_world_model_pipeline(output: Path):
     fig, ax = setup_slide_ax("DreamerV3: learn a world model, then improve behavior in imagination")
-    box(ax, (0.7, 5.7), 2.1, 1.05, "Observation\nx_t", COLORS["teal"])
-    box(ax, (0.7, 3.7), 2.1, 1.05, "Previous action\na_{t-1}", COLORS["gold"], text_color=COLORS["ink"])
+    box(ax, (0.7, 5.7), 2.1, 1.05, "Observation\nx_t", COLORS["teal"], fontsize=14)
+    box(ax, (0.7, 3.7), 2.1, 1.05, "Previous action\na_{t-1}", COLORS["gold"], fontsize=14, text_color=COLORS["ink"])
     box(ax, (3.6, 5.7), 2.2, 1.05, "Encoder\ne_t", COLORS["baseline"])
     box(ax, (6.6, 4.6), 2.7, 2.3, "RSSM latent state\nh_t deterministic\nz_t stochastic", "#334b5e")
     box(ax, (10.2, 6.0), 2.2, 0.9, "Decoder", COLORS["teal"])
     box(ax, (10.2, 4.85), 2.2, 0.9, "Reward head", COLORS["gold"], text_color=COLORS["ink"])
-    box(ax, (10.2, 3.7), 2.2, 0.9, "Continue head", COLORS["p4"])
+    box(ax, (10.2, 3.7), 2.2, 0.9, "Continue head", COLORS["p4"], fontsize=14)
     box(ax, (13.2, 4.6), 2.1, 2.3, "Learned\nworld model", "#27313b")
     arrow(ax, (2.8, 6.22), (3.6, 6.22))
     arrow(ax, (5.8, 6.22), (6.6, 6.1))
@@ -324,9 +324,9 @@ def render_world_model_pipeline(output: Path):
     ax.plot([0.65, 15.35], [3.05, 3.05], color="#cbd2d8", linewidth=1.5)
     ax.text(0.7, 2.65, "IMAGINATION", fontsize=13, weight="bold", color=COLORS["muted"])
     box(ax, (2.2, 1.0), 2.7, 1.25, "Imagine latent\ntrajectories", "#334b5e")
-    box(ax, (6.4, 1.0), 2.2, 1.25, "Actor\nchoose actions", COLORS["e1"])
-    box(ax, (10.1, 1.0), 2.2, 1.25, "Critic\nestimate returns", COLORS["baseline"])
-    box(ax, (13.2, 1.0), 2.1, 1.25, "Act in the\nreal environment", COLORS["p4"])
+    box(ax, (6.4, 1.0), 2.2, 1.25, "Actor\nchoose actions", COLORS["e1"], fontsize=14)
+    box(ax, (10.1, 1.0), 2.2, 1.25, "Critic\nestimate returns", COLORS["baseline"], fontsize=14)
+    box(ax, (13.2, 1.0), 2.1, 1.25, "Act in the\nreal world", COLORS["p4"], fontsize=14)
     arrow(ax, (4.9, 1.62), (6.4, 1.62))
     arrow(ax, (8.6, 1.62), (10.1, 1.62))
     arrow(ax, (12.3, 1.62), (13.2, 1.62))
@@ -353,45 +353,40 @@ def render_mechanism_chain(summary, output: Path):
     box(ax, (9.3, 5.3), 3.0, 1.5, "P4 reconstructed\nfree nats=0\nrep scale=1.0", COLORS["p4"])
     arrow(ax, (3.7, 6.05), (5.0, 6.05), COLORS["e1"])
     arrow(ax, (8.0, 6.05), (9.3, 6.05), COLORS["p4"])
-    ax.text(4.35, 6.55, "remove free bits", ha="center", fontsize=13, color=COLORS["e1"], weight="bold")
-    ax.text(8.65, 6.55, "10x representation KL pressure", ha="center", fontsize=13, color=COLORS["p4"], weight="bold")
+    ax.text(4.35, 7.05, "remove free bits", ha="center", fontsize=12, color=COLORS["e1"], weight="bold")
+    ax.text(8.65, 7.05, "10x representation KL pressure", ha="center", fontsize=12, color=COLORS["p4"], weight="bold")
 
     ax.text(0.8, 4.55, "Observed", fontsize=15, color=COLORS["muted"], weight="bold")
-    box(ax, (0.8, 2.85), 3.8, 1.35, "E1 raw-KL direction\nnot consistent across seeds\nperformance lower in both", "#734b40")
+    box(ax, (0.8, 2.85), 3.8, 1.35, "E1 raw-KL direction\nnot consistent\nacross two seeds\nscore lower in both", "#734b40", fontsize=12)
     box(
         ax,
         (5.0, 2.85),
         3.8,
         1.35,
-        f"P4 KL = {p4_kl[0]*100:.1f}% / {p4_kl[1]*100:.1f}% of E1\nreconstruction = {p4_rec[0]:.2f}x / {p4_rec[1]:.2f}x",
+        f"P4 KL: {p4_kl[0]*100:.1f}% / {p4_kl[1]*100:.1f}% of E1\nReconstruction:\n{p4_rec[0]:.2f}x / {p4_rec[1]:.2f}x",
         "#2e6650",
+        fontsize=12,
     )
     box(
         ax,
         (9.2, 2.85),
         3.8,
         1.35,
-        f"P4 final score\n{p4_score[0]:.1f}% / {p4_score[1]:.1f}% vs E1\nno strict collapse trigger",
+        f"P4 final score vs E1\n{p4_score[0]:.1f}% / {p4_score[1]:.1f}%\nNo strict collapse trigger",
         "#344b5e",
+        fontsize=12,
     )
     arrow(ax, (4.6, 3.52), (5.0, 3.52))
     arrow(ax, (8.8, 3.52), (9.2, 3.52))
 
     ax.text(0.8, 2.22, "Local mechanism supported by this task", fontsize=15, color=COLORS["muted"], weight="bold")
-    ax.text(
-        0.8,
-        1.45,
-        "stronger KL pressure",
-        fontsize=18,
-        color=COLORS["p4"],
-        weight="bold",
-    )
-    arrow(ax, (3.25, 1.60), (4.05, 1.60))
-    ax.text(4.2, 1.45, "posterior closer to prior", fontsize=18, color=COLORS["ink"], weight="bold")
-    arrow(ax, (7.2, 1.60), (8.0, 1.60))
-    ax.text(8.15, 1.45, "less usable detail", fontsize=18, color=COLORS["ink"], weight="bold")
-    arrow(ax, (10.75, 1.60), (11.55, 1.60))
-    ax.text(11.7, 1.45, "worse modeling + control", fontsize=18, color=COLORS["red"], weight="bold")
+    box(ax, (0.8, 1.05), 2.7, 1.0, "stronger KL\npressure", COLORS["p4"], fontsize=13)
+    box(ax, (4.1, 1.05), 2.7, 1.0, "posterior closer\nto prior", "#344b5e", fontsize=13)
+    box(ax, (7.4, 1.05), 2.7, 1.0, "less usable\ndetail", "#5b6670", fontsize=13)
+    box(ax, (10.7, 1.05), 3.2, 1.0, "worse modeling\nand control", COLORS["red"], fontsize=13)
+    arrow(ax, (3.5, 1.55), (4.1, 1.55))
+    arrow(ax, (6.8, 1.55), (7.4, 1.55))
+    arrow(ax, (10.1, 1.55), (10.7, 1.55))
     ax.text(
         0.8,
         0.45,
@@ -407,9 +402,9 @@ def render_headline(summary, output: Path):
     runs = {(item["arm"], item["seed"]): item for item in summary["runs"]}
     fig, ax = setup_slide_ax("DreamerV3 reproduction: from running the code to testing a mechanism")
     ax.text(0.7, 7.55, "DMC Walker Walk", fontsize=16, color=COLORS["muted"], weight="bold")
-    box(ax, (0.7, 5.0), 4.4, 2.1, "6 complete runs\n3 arms x 2 seeds\n500K env steps each", COLORS["baseline"], fontsize=21)
-    box(ax, (5.8, 5.0), 4.4, 2.1, "Baseline final-30K\n903.4 / 833.5\nusable walking policies", COLORS["teal"], fontsize=21)
-    box(ax, (10.9, 5.0), 4.4, 2.1, "P4 raw KL\n0.093 / 0.048\nlarge representation shift", COLORS["p4"], fontsize=21)
+    box(ax, (0.7, 5.0), 4.4, 2.1, "6 complete runs\n3 arms x 2 seeds\n500K env steps each", COLORS["baseline"], fontsize=17)
+    box(ax, (5.8, 5.0), 4.4, 2.1, "Baseline final-30K\n903.4 / 833.5\nusable walking policies", COLORS["teal"], fontsize=17)
+    box(ax, (10.9, 5.0), 4.4, 2.1, "P4 raw KL\n0.093 / 0.048\nlarge representation shift", COLORS["p4"], fontsize=17)
     ax.text(0.7, 4.15, "MAIN FINDING", fontsize=15, color=COLORS["muted"], weight="bold")
     ax.text(
         0.7,
