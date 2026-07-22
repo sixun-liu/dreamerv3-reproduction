@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import shutil
+from fractions import Fraction
 from pathlib import Path
 
 import av
@@ -82,7 +83,7 @@ def write_mp4(path: Path, frames, fps: float = 10.0):
     path.parent.mkdir(parents=True, exist_ok=True)
     first = frames[0]
     with av.open(str(path), mode="w", options={"movflags": "+faststart"}) as container:
-        stream = container.add_stream("libx264", rate=fps)
+        stream = container.add_stream("libx264", rate=Fraction(fps).limit_denominator(1000))
         stream.width = first.width
         stream.height = first.height
         stream.pix_fmt = "yuv420p"
@@ -500,6 +501,7 @@ def main():
         "schema_version": 1,
         "experiment_id": "EXP-0006",
         "purpose": "presentation artifacts derived from fixed-condition checkpoint evaluation",
+        "builder_script_sha256": file_sha256(Path(__file__).resolve()),
         "source_video_paths": {arm: str(path) for arm, path in video_paths.items()},
         "source_video_sha256": {arm: file_sha256(path) for arm, path in video_paths.items()},
         "comparison": comparison_meta,
