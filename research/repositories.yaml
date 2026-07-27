@@ -21,6 +21,11 @@ repositories:
     remote: https://github.com/danijar/dreamerv3.git
     commit: ad49802bf7051d36be318a9db742a3e1a9255622
     required_clean: true
+  runtime_exp0007:
+    path: /root/autodl-tmp/dreamerv3-exp0007
+    remote: https://github.com/danijar/dreamerv3.git
+    commit: cdb3d00c3d2614a43aa7a8c6c541c8a2e1a8fcf6
+    required_clean: true
   workflow:
     path: /root/autodl-tmp/research-agent-kit
     remote: https://github.com/sixun-liu/research-agent-kit.git

@@ -1,3 +1,13 @@
+# AutoDL Safety
+
+- 严禁在本机调用 `shutdown`、`poweroff`、`halt`、`reboot` 或 `init 0`，包括
+  `shutdown --show` 之类看似只读的查询形式。
+- AutoDL 将 `/usr/bin/shutdown` 替换成了忽略参数并通过终止 `supervisord` 停止容器的包装器；
+  因此查询参数同样会导致容器停止和会话中断。
+- 只能通过 AutoDL 控制面板、控制文件、日志、`/proc`、GPU 进程和服务启动时间检查容器状态。
+
+---
+
 # AGENTS.md · DreamerV3 复现项目契约（服务器侧）
 
 > 2026-07-16 由 Claude（沙盒侧）交接。本文件 = 服务器侧 agent（codex）的项目上下文 + 纪律 + 分工契约。
