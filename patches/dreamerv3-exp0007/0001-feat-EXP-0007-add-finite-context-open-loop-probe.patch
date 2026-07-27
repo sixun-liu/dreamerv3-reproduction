@@ -1,0 +1,137 @@
+From cdb3d00c3d2614a43aa7a8c6c541c8a2e1a8fcf6 Mon Sep 17 00:00:00 2001
+From: sixun-liu <sixun-liu@users.noreply.github.com>
+Date: Mon, 27 Jul 2026 12:07:09 +0800
+Subject: [PATCH] feat(EXP-0007): add finite-context open-loop probe
+
+---
+ dreamerv3/agent.py    | 77 +++++++++++++++++++++++++++++++++++++++++++
+ embodied/jax/agent.py | 18 ++++++++++
+ 2 files changed, 95 insertions(+)
+
+diff --git a/dreamerv3/agent.py b/dreamerv3/agent.py
+index 0cada34..1ccbc82 100644
+--- a/dreamerv3/agent.py
++++ b/dreamerv3/agent.py
+@@ -309,6 +309,83 @@ class Agent(embodied.jax.Agent):
+     carry = (*new_carry, {k: data[k][:, -1] for k in self.act_space})
+     return carry, metrics
+ 
++  def openloop(self, data, context):
++    """Predict proprio observations after a finite posterior warm-up."""
++    obs = {k: data[k] for k in self.obs_space}
++    actions = {k: data[k] for k in self.act_space}
++    B, T = obs['is_first'].shape
++    assert 0 < context < T, (context, T)
++    assert not self.dec.imgkeys, self.dec.imgkeys
++    horizon = T - context
++
++    # Every panel window is an independent sequence. The first observation is
++    # therefore reset explicitly instead of reusing replay-cached latent state.
++    reset = jnp.zeros((B, T), bool).at[:, 0].set(True)
++    enc_carry = self.enc.initial(B)
++    enc_carry, _, tokens = self.enc(
++        enc_carry, obs, reset, training=False)
++
++    zeros = {k: jnp.zeros_like(v[:, :1]) for k, v in actions.items()}
++    context_actions = {
++        k: jnp.concatenate([zeros[k], v[:, :context - 1]], 1)
++        for k, v in actions.items()}
++    rollout_actions = {
++        k: v[:, context - 1: context + horizon - 1]
++        for k, v in actions.items()}
++
++    dyn_carry = self.dyn.initial(B)
++    dyn_carry, _, _ = self.dyn.observe(
++        dyn_carry,
++        jax.tree.map(lambda x: x[:, :context], tokens),
++        context_actions,
++        reset[:, :context],
++        training=False)
++
++    target_tokens = jax.tree.map(lambda x: x[:, context:], tokens)
++    target_reset = jnp.zeros((B, horizon), bool)
++    _, _, postfeat = self.dyn.observe(
++        dyn_carry, target_tokens, rollout_actions, target_reset,
++        training=False)
++    _, priorfeat, _ = self.dyn.imagine(
++        dyn_carry, rollout_actions, horizon, training=False)
++
++    dec_carry = self.dec.initial(B)
++    _, _, prior_recons = self.dec(
++        dec_carry, priorfeat, target_reset, training=False)
++    _, _, post_recons = self.dec(
++        dec_carry, postfeat, target_reset, training=False)
++
++    targets = {k: obs[k][:, context:] for k in self.dec.veckeys}
++    rawpred = lambda out: nn.symexp(out.pred()) if self.dec.symlog else out.pred()
++    prior_pred = {k: rawpred(prior_recons[k]) for k in self.dec.veckeys}
++    post_pred = {k: rawpred(post_recons[k]) for k in self.dec.veckeys}
++    prior_loss = {
++        k: prior_recons[k].loss(targets[k]) for k in self.dec.veckeys}
++    post_loss = {
++        k: post_recons[k].loss(targets[k]) for k in self.dec.veckeys}
++
++    prior_inp = self.feat2tensor(priorfeat)
++    post_inp = self.feat2tensor(postfeat)
++    reward_target = obs['reward'][:, context:]
++    prior_reward = self.rew(prior_inp, 2)
++    post_reward = self.rew(post_inp, 2)
++    prior_dist = self.dyn._dist(priorfeat['logit'])
++    post_dist = self.dyn._dist(postfeat['logit'])
++
++    return {
++        'prior_pred': prior_pred,
++        'posterior_pred': post_pred,
++        'prior_decoder_loss': prior_loss,
++        'posterior_decoder_loss': post_loss,
++        'prior_reward_pred': prior_reward.pred(),
++        'posterior_reward_pred': post_reward.pred(),
++        'prior_reward_loss': prior_reward.loss(reward_target),
++        'posterior_reward_loss': post_reward.loss(reward_target),
++        'posterior_prior_kl': post_dist.kl(prior_dist),
++        'prior_entropy': prior_dist.entropy(),
++        'posterior_entropy': post_dist.entropy(),
++    }
++
+   def _apply_replay_context(self, carry, data):
+     (enc_carry, dyn_carry, dec_carry, prevact) = carry
+     carry = (enc_carry, dyn_carry, dec_carry)
+diff --git a/embodied/jax/agent.py b/embodied/jax/agent.py
+index ba90423..a8afc23 100644
+--- a/embodied/jax/agent.py
++++ b/embodied/jax/agent.py
+@@ -149,6 +149,11 @@ class Agent(embodied.Agent):
+         nj.pure(self.model.report), self.train_mesh,
+         (tp, tm, ts, ts), (ts, tm), ar,
+         first_outnums=(1,), **shared_kwargs)
++    if hasattr(self.model, 'openloop'):
++      self._openloop = transform.apply(
++          nj.pure(self.model.openloop), self.train_mesh,
++          (tp, tm, ts), (ts,), ar, single_output=True,
++          static_argnums=(3,), **shared_kwargs)
+     self._policy = transform.apply(
+         nj.pure(self.model.policy), self.policy_mesh,
+         (pp, pm, ps, ps), (ps, ps, ps), ar,
+@@ -323,6 +328,19 @@ class Agent(embodied.Agent):
+     mets['params/summary'] = self._summary()
+     return carry, mets
+ 
++  @elements.timer.section('jaxagent_openloop')
++  def openloop(self, data, context, seed_index=0):
++    if not hasattr(self, '_openloop'):
++      raise NotImplementedError('Model does not implement openloop(data, context)')
++    expected = set(self.obs_space) | set(self.act_space)
++    assert set(data) == expected, (sorted(data), sorted(expected))
++    data = internal.device_put(data, self.train_sharded)
++    seed = self._seeds(seed_index, self.train_mirrored)
++    with self.train_lock:
++      outs = self._openloop(self.params, seed, data, context)
++      outs = self._take_outs(internal.fetch_async(outs))
++    return outs
++
+   def stream(self, st):
+     def fn(data):
+       for key, value in data.items():
+-- 
+2.34.1
+

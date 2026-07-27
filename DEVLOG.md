@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-21T10:20:00Z
+> Updated: 2026-07-27T04:31:50Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -138,3 +138,14 @@
 - Next: 用户审查两张主图；随后在“恢复论文原P4配置”和“第二代表任务验证跨任务性”之间裁决，不自动补seed。
 - Approval: user批准12小时自主矩阵；scientific human review pending
 - Scope: 2026作者重实现、seeded DMC walker_walk与P4代码语义；不构成论文Figure6/17数值复现。
+
+## 2026-07-27
+
+### 2026-07-27T04:31:50Z | result | EXP-0007-openloop-prediction
+
+- Actor: codex
+- Summary: 六个 EXP-0006 checkpoint 在同一 576-window panel 上完成有限上下文预测。P4 相对 E1 在两个 seed 均表现为更低 H15 KL、更差 prior 和 teacher-forced NRMSE；独立 453 项复算零不一致。来源交叉矩阵同时显示三类模型均有 own-replay advantage，裁决 `promising_unresolved`。
+- Evidence: EVT-0038--EVT-0042；ART-0026--ART-0037；panel SHA256 `9fb6a644...36990f`
+- Next: 用户审查主图；若继续归因，只预注册能区分 representation specialization 与访问分布难度的匹配/交换分布实验，不自动追加计算。
+- Approval: experiment user-approved；scientific human review pending
+- Git: control audit `06115a0`；runtime `cdb3d00`

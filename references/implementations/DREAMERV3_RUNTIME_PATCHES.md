@@ -18,6 +18,20 @@ the author's upstream repository:
 
 `MUJOCO_GL=egl` is an executor environment setting and is intentionally not a runtime source patch.
 
+## Experiment-specific analysis overlays
+
+`EXP-0007` uses an evaluation-only overlay on top of the frozen `EXP-0006` runtime. It adds a finite-context
+posterior warm-up and real-action prior rollout API; it does not change training, checkpoints, losses, optimizer,
+or environment interaction.
+
+| Experiment | Base | Runtime head | Patch | Patch SHA256 | Complete bundle |
+|---|---|---|---|---|---|
+| `EXP-0007` | `ad49802bf7051d36be318a9db742a3e1a9255622` | `cdb3d00c3d2614a43aa7a8c6c541c8a2e1a8fcf6` | `patches/dreamerv3-exp0007/0001-feat-EXP-0007-add-finite-context-open-loop-probe.patch` | `70cbfe05c9bfd8ca293f76d4fad6a9fe809a354d18f86ac355805d250a6d49f2` | `/root/autodl-tmp/artifacts/dreamerv3/provenance/runtime-exp0007-cdb3d00.bundle` (SHA256 `2a56544a43df86489f232885c7896c5aa4ec392a12fc3d5ab9871622de29c577`) |
+
+Applying the `EXP-0007` patch to a clean `ad49802` checkout must produce tree
+`c37a92149a72d1484b5fbda5b0331f9b9dbfea17`. The bundle contains the complete reachable history and branch
+`exp/EXP-0007-openloop-prediction`; `git bundle verify` passed at closure.
+
 ## Recovery
 
 Starting from a clean checkout at the upstream base:
