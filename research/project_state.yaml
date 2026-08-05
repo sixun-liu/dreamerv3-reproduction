@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-05T16:20:50Z'
+updated_at: '2026-08-05T16:40:18Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -28,7 +28,7 @@ repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/dreamerv3-reproduction
   branch: exp/EXP-0008-cheetah-five-seed
-  commit: 43b4b7a595843d6cd118136df500e8e6be53677c
+  commit: e4663989080f298090f5d58138ab702b746f529e
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dreamerv3/review

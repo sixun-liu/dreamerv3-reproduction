@@ -8,7 +8,7 @@
 
 ## Now
 
-- [ ] [codex] 运行 2048-decision Cheetah smoke；trigger: `EVT-0043` 已冻结并推送。
+- [ ] [codex] 运行 16,384-decision Cheetah smoke；trigger: 修复后 `EVT-0044` 已重新冻结并推送。
 - [ ] [codex] detached 顺序启动 seeds 0--4；trigger: smoke 完整性、ETA 和磁盘门通过。
 - [ ] [codex] 完成官方同图、独立复算、artifact 登记、closure 与 strict audit；trigger: 五 seed 自然完成。
 

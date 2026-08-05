@@ -156,7 +156,7 @@
 
 - Actor: codex
 - Summary: 用户批准夜间无人值守补强论文结果证据；预注册 Cheetah Run 12M、500K environment steps、五 seed 的 Figure 14 / Table 11 作者重实现复现。健康正式运行不按中途分数或曲线终止。
-- Evidence: `research/cards/EXP-0008.md`；`docs/reproduction/EXP0008_CHEETAH_PROTOCOL.md`；score SHA256 `8182860a...cc7f4`；runtime `6642b94`
+- Evidence: `research/cards/EXP-0008.md`；`docs/reproduction/EXP0008_CHEETAH_PROTOCOL.md`；score SHA256 `8182860a...cc7f4`；runtime `6642b94`；修复后 freeze `EVT-0044`
 - Next: 提交推送后运行独立 smoke；通过完整性、ETA 和磁盘门再 detached 启动五 seed 顺序矩阵。
 - Approval: user
-- Git: protocol/runner commit `43b4b7a`；provenance freeze `EVT-0043`
+- Git: protocol/runner commit `43b4b7a`；integrity-gate fix `e466398`；`EVT-0044` supersedes `EVT-0043`
