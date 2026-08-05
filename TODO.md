@@ -8,7 +8,7 @@
 
 ## Now
 
-- [ ] [codex] detached 顺序启动 seeds 0--4；trigger: `EVT-0045`/`EVT-0046` 的 smoke 完整性、ETA 和磁盘门已通过。
+- [ ] [codex] named `screen` detached 顺序启动 seeds 0--4；trigger: replacement tag 已由 `EVT-0047` 冻结，smoke 门见 `EVT-0046`。
 - [ ] [codex] 完成官方同图、独立复算、artifact 登记、closure 与 strict audit；trigger: 五 seed 自然完成。
 
 ## Waiting

@@ -177,4 +177,4 @@
 - Evidence: `/root/autodl-tmp/runs/EXP-0008__cheetah-run__five-seed__500k-env__20260805T160000Z.{started,failed}`；GPU query empty；seed0 signal absent
 - Next: 只改变唯一 run tag 与 detached transport，重新提交/冻结；使用 named `screen` 启动相同五 seed 协议。
 - Approval: normal in-scope recovery；no training outcome observed
-- Git: replacement freeze pending
+- Git: replacement transport/tag commit `514b684`；replacement freeze `EVT-0047`
