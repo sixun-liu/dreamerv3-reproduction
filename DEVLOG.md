@@ -160,3 +160,12 @@
 - Next: 提交推送后运行独立 smoke；通过完整性、ETA 和磁盘门再 detached 启动五 seed 顺序矩阵。
 - Approval: user
 - Git: protocol/runner commit `43b4b7a`；integrity-gate fix `e466398`；`EVT-0044` supersedes `EVT-0043`
+
+### 2026-08-05T16:57:08Z | protocol | EXP-0008-smoke-gate
+
+- Actor: codex
+- Summary: 两个 smoke 均自然训练并写出精确终点 checkpoint，但原 runner 的完整性检查先后把“预算内无完整 episode”和空条件统计 NaN 误判为失败；失败产物完整保留。收紧检查语义后，16,384-decision smoke 离线复核通过，实际主损失 NaN 仍会失败。
+- Evidence: `EVT-0045`--`EVT-0046`；step16384 checkpoint SHA256 `56bdc1e4...16aa0`；steady FPS `72.78`；replay ratio `520`；`runs/STATUS.md`
+- Next: 按最终 freeze detached 启动五 seed matrix；健康运行不中途停止。
+- Approval: within user-approved autonomous run
+- Git: verifier fix `47d357b`；final freeze `EVT-0045`
