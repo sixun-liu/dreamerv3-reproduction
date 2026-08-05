@@ -149,3 +149,14 @@
 - Next: 用户审查主图；若继续归因，只预注册能区分 representation specialization 与访问分布难度的匹配/交换分布实验，不自动追加计算。
 - Approval: experiment user-approved；scientific human review pending
 - Git: control audit `06115a0`；runtime `cdb3d00`
+
+## 2026-08-05
+
+### 2026-08-05T16:06:22Z | protocol | EXP-0008-cheetah-five-seed
+
+- Actor: codex
+- Summary: 用户批准夜间无人值守补强论文结果证据；预注册 Cheetah Run 12M、500K environment steps、五 seed 的 Figure 14 / Table 11 作者重实现复现。健康正式运行不按中途分数或曲线终止。
+- Evidence: `research/cards/EXP-0008.md`；`docs/reproduction/EXP0008_CHEETAH_PROTOCOL.md`；score SHA256 `8182860a...cc7f4`；runtime `6642b94`
+- Next: 提交推送后运行独立 smoke；通过完整性、ETA 和磁盘门再 detached 启动五 seed 顺序矩阵。
+- Approval: user
+- Git: branch `exp/EXP-0008-cheetah-five-seed`；freeze commit pending

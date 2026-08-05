@@ -1,0 +1,57 @@
+config_schema_version: 1
+experiment_id: EXP-0008
+run_tag: EXP-0008__cheetah-run__five-seed__500k-env__20260805T160000Z
+runtime:
+  path: /root/autodl-tmp/dreamerv3-2411f7d
+  upstream_commit: 2411f7d136832378c0291c587cdbf2fca6506873
+  compatibility_commit: 6642b941f578cd72147bc2be3c3343d5bc72931c
+  python: /root/autodl-tmp/envs/dv3-2411/bin/python
+reference:
+  paper: arXiv:2301.04104v2
+  figure: 14
+  table: 11
+  score_path: /root/autodl-tmp/dreamerv3/scores/dmc_proprio-dreamerv3.json.gz
+  score_sha256: 8182860a8a56dc56836c319fde9b941376621e1e0d474141c7d174ab833cc7f4
+  paper_score: 614
+protocol:
+  task: dmc_cheetah_run
+  observation_type: proprioceptive
+  model: size12m
+  total_agent_steps_per_seed: 250000
+  total_env_steps_per_seed: 500000
+  action_repeat: 2
+  num_envs: 16
+  replay_ratio: 512
+  train_seeds: [0, 1, 2, 3, 4]
+  seed_order: [0, 1, 2, 3, 4]
+  dmc_environment_seed_controlled: false
+  final_local_window_env_steps: {lower_exclusive: 470000, upper_inclusive: 500000}
+  official_final_aggregation: mean of exported curve points at 470K, 480K, and 490K per seed
+acceptance:
+  integrity: all five runs complete naturally with finite logs and exact step-250000 checkpoints
+  primary: local five-seed final-window mean is within the official per-seed final range [583.995404, 651.095806]
+  secondary: at least four of five local seeds have higher second-half than first-half episode mean
+  interpretation_limit: local raw final-window episodes and official exported curve points are not sample-identical
+cost:
+  expected_wall_hours: [5.5, 6.5]
+  maximum_healthy_wall_hours: 8
+  expected_additional_disk_gib: 5.5
+  minimum_free_disk_gib: 8
+configs:
+  - seed: 0
+    path: docs/reproduction/configs/exp0008_cheetah_s000_500k_env.yaml
+    sha256: f23282658305b0deb1dae641f8fb2881a14ab99ffedfc8066d1f870aa244c83c
+  - seed: 1
+    path: docs/reproduction/configs/exp0008_cheetah_s001_500k_env.yaml
+    sha256: 254afd72c937eac46a85848a435d9afa0781dc29727680e1ec85dae8ab7479a8
+  - seed: 2
+    path: docs/reproduction/configs/exp0008_cheetah_s002_500k_env.yaml
+    sha256: 696b7f3718c946d84bf48b24506b29400d1df4f218276e77b558c90f2e099b63
+  - seed: 3
+    path: docs/reproduction/configs/exp0008_cheetah_s003_500k_env.yaml
+    sha256: c7a42ae1b978fb7bfecc03333c0d832d606ff514297a671509e095e592665725
+  - seed: 4
+    path: docs/reproduction/configs/exp0008_cheetah_s004_500k_env.yaml
+    sha256: f873c7eb9f25eca1a7f384d1eb72395c70bf12151c4613db8e6d1c3ab22b5c3d
+runner: scripts/run_exp0008_matrix.sh
+analysis: scripts/reproduce_exp0008_analysis.sh

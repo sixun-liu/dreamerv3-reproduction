@@ -1,6 +1,6 @@
 # DreamerV3 Claim-Protocol Matrix
 
-Updated: 2026-07-21
+Updated: 2026-08-05
 
 This document separates paper facts, code-lineage facts, available reference artifacts, and unresolved reproduction choices. Unknown fields are not filled from repository defaults without evidence.
 
@@ -21,6 +21,7 @@ This document separates paper facts, code-lineage facts, available reference art
 | Candidate | Paper/reference evidence | Local protocol evidence | Blocking mismatch | Decision |
 |---|---|---|---|---|
 | DMC proprioceptive `walker_walk` | `scores/dmc_proprio-dreamerv3.json.gz`, 5 seeds；最后3点mean `935.752 -> 936` | `EXP-0004`三seedaggregate `785.53±90.34`；`EXP-0005`旧runtime单run final-30K `930.72`、250K median `658.26` | 两个runtime在250K均落后官方；DMC env seed未受控；本地window与官方导出点非完全同构 | 2026 runtime三seed `negative`；旧runtime `promising_unresolved`，终值通过但早期门失败 |
+| DMC proprioceptive `cheetah_run` | arXiv v2 Figure 14 / Table 11；官方5 seeds末3点 `613.613 -> 614`；逐seed范围 `[583.995,651.096]` | `EXP-0008`预注册2411f7d lineage、12M、500K env、seeds0--4；expanded configs与score hash已冻结候选 | 2024作者重实现不是2023 exact artifact；DMC env RNG未受agent seed控制；官方导出流水线未公开 | active replication；结果前不裁决 |
 | DMC visual `walker_walk` | `scores/dmc_vision-dreamerv3.json.gz`, reference curves near 1M | Current `dmc_vision` defaults to the large model, 1.1M steps, replay ratio 256, repeat 1 | Paper table reports 12M model, action repeat 2, replay ratio 512; reference file contains more runs than the paper's stated 5 seeds | secondary candidate |
 | Crafter scaling | Paper Figure 4c/4d reports model-size and replay-ratio scaling | Stopped 200M/ratio-512 pilot is healthy and recoverable | Repository has no `crafter*.json.gz`; one configuration cannot reproduce a scaling claim | parked |
 | Full DMC suite mean/median | Paper tables and official JSON exist | Environment support exists | Requires many tasks and repeated seeds; cost is not appropriate for the first target | convergence-stage expansion |
