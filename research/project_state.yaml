@@ -1,34 +1,35 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-05T22:06:08Z'
+updated_at: '2026-08-05T22:11:38Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在可审计的受控实验中理解DreamerV3关键机制，并区分论文原消融与当前runtime上的机制扩展。
-primary_problem: 用第二个DMC任务的五seed冻结复现，检验walker单任务证据能否扩展为Figure14/Table11的独立数值证据。
+primary_problem: 恢复DreamerV3 Figure 18 learning-signal消融的精确梯度语义，并判断单任务三臂pilot能否以合理成本提供机制证据。
 active_experiment_id: null
-active_candidate: EXP-0008 Cheetah Run five-seed author-reimplementation replication
+active_candidate: Figure 18 learning-signal single-task conceptual pilot protocol recovery
 canonical_baseline:
   id: DV3-2026-DMCP-WALKER-KL-CONTROL
   name: DreamerV3 2026 runtime seeded walker_walk KL control
-  repo_commit: 2b3841f50feb446ff2628944747e710f734c2977
+  repo_commit: 5b49eebf12126352bce25867cbe99acde620b035
   config: runtime ad49802; size12m; ratio512; repeat2; 16 envs; 250K agent decisions=500K environment steps; env.dmc.use_seed=True; free_nats=1; dyn=1; rep=0.1
   evaluation_protocol: 对每个arm使用agent/env seeds 0和1配对；训练score按environment steps分箱，报告0-250K与250-500K AUC及final-30K；同时比较raw KL、KL阈值比例、prior/posterior entropy与reconstruction losses；终点checkpoint做固定eval seed10000的随机连续策略评估并与训练口径分列。
 parked_lanes:
-- Figure 17完整14任务论文消融矩阵
+- Figure 18完整3x14任务论文消融矩阵
+- EXP-0007之后的访问分布匹配机制归因
 - Crafter scaling与DMC visual/full suite
 - 旧runtime早期曲线谱系归因
 - E2-E5横向机制扩展
 stage_exit_gates:
-- baseline、E1、P4各两个配对seed均自然完成500K environment steps且完整性门通过。
-- raw KL、低KL比例、prior/posterior entropy、reconstruction loss、score AUC与final-window形成同坐标对照。
-- 结论明确限制在2026作者重实现、seeded DMC walker_walk与重构P4配置，不外推为Figure 6/17数值复现。
+- Figure 18两种梯度阻断已绑定论文原文、代码路径与等价性边界。
+- 单batch参数组grad-norm known-answer test可区分representation与head/decoder梯度路由。
+- 任务、预算、seed政策、聚合口径和conceptual证据权限经用户确认后才创建下一实验。
 repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/dreamerv3-reproduction
   branch: exp/EXP-0008-cheetah-five-seed
-  commit: 514b684ba2f49e5fe480dc3041918358b1f5ba87
+  commit: 5b49eebf12126352bce25867cbe99acde620b035
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dreamerv3/review
@@ -36,8 +37,8 @@ human_review:
 repository_snapshots:
   control:
     repo: /root/autodl-tmp/dreamerv3-reproduction
-    branch: exp/EXP-0006-kl-mechanism
-    commit: 2b3841f50feb446ff2628944747e710f734c2977
+    branch: exp/EXP-0008-cheetah-five-seed
+    commit: 5b49eebf12126352bce25867cbe99acde620b035
     tracked_clean: true
     worktree_clean: true
     untracked_count: 0
@@ -91,6 +92,21 @@ repository_snapshots:
     declared_path: /root/autodl-tmp/dreamerv3-exp0006
     declared_remote: https://github.com/danijar/dreamerv3.git
     expected_commit: ad49802bf7051d36be318a9db742a3e1a9255622
+    commit_matches_manifest: true
+    required_clean: true
+    version: null
+  runtime_exp0007:
+    repo: /root/autodl-tmp/dreamerv3-exp0007
+    branch: exp/EXP-0007-openloop-prediction
+    commit: cdb3d00c3d2614a43aa7a8c6c541c8a2e1a8fcf6
+    tracked_clean: true
+    worktree_clean: true
+    untracked_count: 0
+    remote: https://github.com/danijar/dreamerv3.git
+    role: runtime_exp0007
+    declared_path: /root/autodl-tmp/dreamerv3-exp0007
+    declared_remote: https://github.com/danijar/dreamerv3.git
+    expected_commit: cdb3d00c3d2614a43aa7a8c6c541c8a2e1a8fcf6
     commit_matches_manifest: true
     required_clean: true
     version: null
