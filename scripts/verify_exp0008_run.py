@@ -57,14 +57,15 @@ def unexpected_nonfinite_metrics(rows: list[dict]) -> list[dict]:
     for row_index, row in enumerate(rows):
         for key, value in row.items():
             if isinstance(value, float) and not math.isfinite(value):
+                conditional_stat_empty = (
+                    key.startswith(("train/", "report/"))
+                    and ("/constats/" in key or "/rewstats/" in key)
+                    and key.rsplit("/", 1)[-1]
+                    in {"neg_acc", "neg_loss", "pos_acc", "pos_loss"}
+                )
                 allowed = (
                     key in ALLOWED_NONFINITE_METRIC_KEYS
-                    or key in {
-                        "train/constats/neg_acc",
-                        "train/constats/neg_loss",
-                        "report/constats/neg_acc",
-                        "report/constats/neg_loss",
-                    }
+                    or conditional_stat_empty
                     or (key.startswith("timer/") and key.endswith("/min"))
                 )
                 if not allowed:

@@ -46,6 +46,7 @@ class Exp0008AnalysisTest(unittest.TestCase):
                     "step": 32,
                     "replay/replay_ratio": float("nan"),
                     "train/constats/neg_loss": float("nan"),
+                    "report/rewstats/pos_loss": float("nan"),
                     "timer/checkpoint_save/min": float("inf"),
                 }
             ]
