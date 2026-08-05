@@ -1,13 +1,13 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-05T17:07:25Z'
+updated_at: '2026-08-05T22:06:08Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在可审计的受控实验中理解DreamerV3关键机制，并区分论文原消融与当前runtime上的机制扩展。
 primary_problem: 用第二个DMC任务的五seed冻结复现，检验walker单任务证据能否扩展为Figure14/Table11的独立数值证据。
-active_experiment_id: EXP-0008
+active_experiment_id: null
 active_candidate: EXP-0008 Cheetah Run five-seed author-reimplementation replication
 canonical_baseline:
   id: DV3-2026-DMCP-WALKER-KL-CONTROL

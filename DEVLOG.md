@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-27T04:31:50Z
+> Updated: 2026-08-05T22:08:00Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -178,3 +178,12 @@
 - Next: 只改变唯一 run tag 与 detached transport，重新提交/冻结；使用 named `screen` 启动相同五 seed 协议。
 - Approval: normal in-scope recovery；no training outcome observed
 - Git: replacement transport/tag commit `514b684`；replacement freeze `EVT-0047`
+
+### 2026-08-05T22:06:08Z | result | EXP-0008-cheetah-five-seed
+
+- Actor: codex
+- Summary: 2411f7d 谱系 Cheetah Run 五 seed 全部自然完成并通过完整性门；5/5 后半程均值高于前半程，但 final-30K 聚合 `550.54` 低于官方范围下限 `584.00`，主数值门失败，裁决 `negative`。
+- Evidence: `EVT-0049`--`EVT-0050`；`ART-0040`--`ART-0046`；checkpoint hashes 与独立 raw-file 复算全部一致
+- Next: 先人工审图；新计算前恢复 Figure 18 两种梯度阻断的精确语义和 known-answer test。
+- Approval: 用户批准无人值守五 seed 运行；scientific human review pending
+- Git: control analysis `6fe34f3`；runtime upstream `2411f7d` + compatibility `6642b94`

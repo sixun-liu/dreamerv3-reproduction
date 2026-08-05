@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-07-27T04:31:50Z
+> Updated: 2026-08-05T22:08:00Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,18 +8,18 @@
 
 ## 一句话判断
 
-EXP-0007 已把 EXP-0006 的现象转化为共同数据支持上的功能诊断：P4 在两个训练 seed 中均呈现
-更低 posterior-prior KL 与更差 prior/teacher-forced prediction 并存；独立复算通过，但三个模型
-各自在自身 replay 来源上表现最好，访问分布效应不可忽略。
+EXP-0008 五 seed Cheetah Run 全部自然完成且同向学习，但 final-30K 聚合 `550.54`
+低于官方终值范围下限 `584.00`；当前作者重实现在第二个 DMC 任务上复现了学习行为，
+没有通过论文 Table 11 主数值门。
 
 ## 当前主要矛盾
 
-共同 panel 上的 pooled 退化不是少数窗口或单一 observation key 驱动，但当前交叉矩阵不能区分
-representation specialization、各策略访问分布难度与训练目标的贡献。证据权限仍是 walker_walk、
-两 seed、固定真实 action 的 offline probe，不支持闭环因果、跨任务或论文 Figure 6/17 主张。
+Walker 单 seed 终值对齐与 Cheetah 五 seed 数值门失败同时存在，说明继续盲目加任务不会自动解决
+2023 参考产物、2024 runtime、未受控 DMC env RNG 和未公开导出流水线之间的谱系缺口。
+下一阶段应转向论文原生机制问题，而非继续追单条曲线。
 
 ## 下一项决策
 
-计算已停止。先由用户审查 `EXP-0007` 主图和受限结论；若继续机制归因，唯一下一判别问题是：
-在匹配或交换训练访问分布后，P4 相对 E1 的 teacher-forced 退化是否仍跨两个 seed 成立。
-不得自动启动新实验。
+计算已停止。用户先审查 `EXP-0008` 主图与受限负复现表述；后续唯一优先候选是
+Figure 18 learning-signal 消融。新计算前必须先恢复“阻断任务信号塑形表征”与“阻断重建信号塑形表征”
+的精确梯度语义，并用参数组梯度 known-answer test 验证。
