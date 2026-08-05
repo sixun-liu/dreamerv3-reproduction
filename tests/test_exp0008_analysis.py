@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from analyze_exp0008_cheetah import aggregate_curve, describe, t95_interval  # noqa: E402
+from verify_exp0008_run import unexpected_nonfinite_metrics  # noqa: E402
 
 
 class Exp0008AnalysisTest(unittest.TestCase):
@@ -37,6 +38,23 @@ class Exp0008AnalysisTest(unittest.TestCase):
         self.assertAlmostEqual((interval[0] + interval[1]) / 2, 3.0)
         self.assertLess(interval[0], 1.1)
         self.assertGreater(interval[1], 4.9)
+
+    def test_initial_replay_nan_is_allowed_but_loss_nan_is_not(self) -> None:
+        allowed = unexpected_nonfinite_metrics(
+            [
+                {
+                    "step": 32,
+                    "replay/replay_ratio": float("nan"),
+                    "train/constats/neg_loss": float("nan"),
+                    "timer/checkpoint_save/min": float("inf"),
+                }
+            ]
+        )
+        rejected = unexpected_nonfinite_metrics(
+            [{"step": 64, "train/model_loss": float("nan")}]
+        )
+        self.assertEqual(allowed, [])
+        self.assertEqual(rejected[0]["key"], "train/model_loss")
 
 
 if __name__ == "__main__":

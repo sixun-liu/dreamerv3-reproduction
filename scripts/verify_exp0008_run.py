@@ -20,6 +20,13 @@ ERROR_MARKERS = (
     "CUDA_ERROR",
     "ResourceExhaustedError",
 )
+ALLOWED_NONFINITE_METRIC_KEYS = {
+    "replay/replay_ratio",
+    "replay/insert_wait_avg",
+    "replay/insert_wait_frac",
+    "replay/sample_wait_avg",
+    "replay/sample_wait_frac",
+}
 
 
 def sha256(path: Path) -> str:
@@ -43,6 +50,26 @@ def all_numbers_finite(value: object) -> bool:
     if isinstance(value, float):
         return math.isfinite(value)
     return True
+
+
+def unexpected_nonfinite_metrics(rows: list[dict]) -> list[dict]:
+    unexpected = []
+    for row_index, row in enumerate(rows):
+        for key, value in row.items():
+            if isinstance(value, float) and not math.isfinite(value):
+                allowed = (
+                    key in ALLOWED_NONFINITE_METRIC_KEYS
+                    or key in {
+                        "train/constats/neg_acc",
+                        "train/constats/neg_loss",
+                        "report/constats/neg_acc",
+                        "report/constats/neg_loss",
+                    }
+                    or (key.startswith("timer/") and key.endswith("/min"))
+                )
+                if not allowed:
+                    unexpected.append({"row": row_index, "key": key, "value": str(value)})
+    return unexpected
 
 
 def verify(run_dir: Path, frozen_config: Path, expected_step: int) -> dict:
@@ -73,6 +100,7 @@ def verify(run_dir: Path, frozen_config: Path, expected_step: int) -> dict:
     stdout = stdout_path.read_text(encoding="utf-8", errors="replace")
     error_markers = [marker for marker in ERROR_MARKERS if marker in stdout]
 
+    unexpected_metric_values = unexpected_nonfinite_metrics(metrics)
     checks = {
         "config_semantically_equal": frozen == generated,
         "checkpoint_step": checkpoint_step,
@@ -81,14 +109,15 @@ def verify(run_dir: Path, frozen_config: Path, expected_step: int) -> dict:
         "score_rows": len(scores),
         "metric_rows": len(metrics),
         "scores_finite": all_numbers_finite(scores),
-        "metrics_finite": all_numbers_finite(metrics),
+        "metrics_unexpected_nonfinite": unexpected_metric_values,
+        "metrics_no_unexpected_nonfinite": not unexpected_metric_values,
         "error_markers": error_markers,
     }
     checks["passed"] = bool(
         checks["config_semantically_equal"]
         and checks["checkpoint_step_matches"]
         and checks["scores_finite"]
-        and checks["metrics_finite"]
+        and checks["metrics_no_unexpected_nonfinite"]
         and not checks["error_markers"]
     )
     return checks

@@ -2,13 +2,13 @@
 set -euo pipefail
 
 readonly EXPERIMENT=EXP-0008
-readonly TAG=EXP-0008__cheetah-run__s31415__smoke-2048-dec__20260805T160000Z
+readonly TAG=EXP-0008__cheetah-run__s31415__smoke-16384-dec__20260805T163000Z
 readonly OUTPUT=/root/autodl-tmp/runs/${TAG}
 readonly SIGNAL=/root/autodl-tmp/runs/${TAG}
 readonly RUNTIME=/root/autodl-tmp/dreamerv3-2411f7d
 readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
 readonly PYTHON=/root/autodl-tmp/envs/dv3-2411/bin/python
-readonly CONFIG=${CONTROL}/docs/reproduction/configs/exp0008_cheetah_smoke_s31415.yaml
+readonly CONFIG=${CONTROL}/docs/reproduction/configs/exp0008_cheetah_smoke_s31415_16384_dec.yaml
 readonly VERIFY=${CONTROL}/scripts/verify_exp0008_run.py
 
 if [[ ! -f "${SIGNAL}.freeze" ]]; then
@@ -62,7 +62,7 @@ env PYTHONUNBUFFERED=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
   --tensorboard False \
   --env.dmc.repeat 2 \
   --run.num_envs 16 \
-  --run.steps 2048 \
+  --run.steps 16384 \
   --run.train_ratio 512 \
   --run.log_every 30 \
   --run.save_every 60 \
@@ -72,12 +72,12 @@ env PYTHONUNBUFFERED=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
 "${PYTHON}" "${VERIFY}" \
   --run-dir "${OUTPUT}" \
   --frozen-config "${CONFIG}" \
-  --expected-step 2048 \
+  --expected-step 16384 \
   --output "${OUTPUT}/integrity.json" \
   > "${OUTPUT}/integrity_stdout.log" 2>&1 || fail $? integrity
 
 printf \
-  '{"experiment_id":"%s","completed_at":"%s","exit_code":0,"checkpoint_step":2048,"scope":"smoke"}\n' \
+  '{"experiment_id":"%s","completed_at":"%s","exit_code":0,"checkpoint_step":16384,"scope":"smoke"}\n' \
   "${EXPERIMENT}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
   > "${SIGNAL}.completed"
 cp "${SIGNAL}.completed" "${OUTPUT}/.completed"

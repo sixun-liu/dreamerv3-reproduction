@@ -33,6 +33,7 @@ JAX 0.6/RTX 5090 兼容的 commit `6642b94`，证据等级为 `author_reimplemen
 
 ## 无人值守规则
 
-smoke 先验证环境、训练、checkpoint、配置比对、ETA 和磁盘增长。正式矩阵健康后不因中途分数、
+16,384-decision smoke 先验证环境、训练、完整 episode、checkpoint、配置比对、ETA 和磁盘增长。
+正式矩阵健康后不因中途分数、
 曲线形状、断线或正常耗时终止；只在冻结的 OOM、NaN/Inf、traceback、GPU 冲突、完整性漂移或
 数据盘低于 8 GiB 时安全停止。正式结案前不追加别的实验。
