@@ -1,6 +1,6 @@
 config_schema_version: 1
 experiment_id: EXP-0008
-run_tag: EXP-0008__cheetah-run__five-seed__500k-env__20260805T160000Z
+run_tag: EXP-0008__cheetah-run__five-seed__500k-env__20260805T171000Z
 runtime:
   path: /root/autodl-tmp/dreamerv3-2411f7d
   upstream_commit: 2411f7d136832378c0291c587cdbf2fca6506873
@@ -40,18 +40,18 @@ cost:
 configs:
   - seed: 0
     path: docs/reproduction/configs/exp0008_cheetah_s000_500k_env.yaml
-    sha256: f23282658305b0deb1dae641f8fb2881a14ab99ffedfc8066d1f870aa244c83c
+    sha256: 9ae4362977b98cafe8615a1eee28c835394862fdb3d4a82107a7954b5906cf82
   - seed: 1
     path: docs/reproduction/configs/exp0008_cheetah_s001_500k_env.yaml
-    sha256: 254afd72c937eac46a85848a435d9afa0781dc29727680e1ec85dae8ab7479a8
+    sha256: 683f1887da79ef2c25ef26e643392421593b46244e09ccfd134e4207e41fc8b7
   - seed: 2
     path: docs/reproduction/configs/exp0008_cheetah_s002_500k_env.yaml
-    sha256: 696b7f3718c946d84bf48b24506b29400d1df4f218276e77b558c90f2e099b63
+    sha256: 458f12f7022defcb4a8a4a2bc2c794f15805056b5ac1a684944f878efe9ba5ed
   - seed: 3
     path: docs/reproduction/configs/exp0008_cheetah_s003_500k_env.yaml
-    sha256: c7a42ae1b978fb7bfecc03333c0d832d606ff514297a671509e095e592665725
+    sha256: aead38e4e9a39a55733b9e9570693389a7bab830a85a1b353753fec2414194db
   - seed: 4
     path: docs/reproduction/configs/exp0008_cheetah_s004_500k_env.yaml
-    sha256: f873c7eb9f25eca1a7f384d1eb72395c70bf12151c4613db8e6d1c3ab22b5c3d
+    sha256: b012716b30ad564e0c7a0603931ec32e775bc305d2716748aabfedb5fb0a6fb7
 runner: scripts/run_exp0008_matrix.sh
 analysis: scripts/reproduce_exp0008_analysis.sh

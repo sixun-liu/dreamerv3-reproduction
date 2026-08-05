@@ -169,3 +169,12 @@
 - Next: 按最终 freeze detached 启动五 seed matrix；健康运行不中途停止。
 - Approval: within user-approved autonomous run
 - Git: verifier fix `47d357b`；final freeze `EVT-0045`
+
+### 2026-08-05T17:00:20Z | protocol | EXP-0008-detachment-recovery
+
+- Actor: codex
+- Summary: 首次正式 tag 仅创建 matrix `.started`；nohup child 随 exec session 清理，在 seed0 信标、GPU 进程和训练输出出现前退出。现场保留并标记 `detachment_before_seed0`，不构成 scientific run。
+- Evidence: `/root/autodl-tmp/runs/EXP-0008__cheetah-run__five-seed__500k-env__20260805T160000Z.{started,failed}`；GPU query empty；seed0 signal absent
+- Next: 只改变唯一 run tag 与 detached transport，重新提交/冻结；使用 named `screen` 启动相同五 seed 协议。
+- Approval: normal in-scope recovery；no training outcome observed
+- Git: replacement freeze pending

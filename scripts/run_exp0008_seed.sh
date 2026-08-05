@@ -13,7 +13,7 @@ case "${SEED}" in
 esac
 
 readonly EXPERIMENT=EXP-0008
-readonly TAG=EXP-0008__cheetah-run__five-seed__500k-env__20260805T160000Z
+readonly TAG=EXP-0008__cheetah-run__five-seed__500k-env__20260805T171000Z
 readonly ROOT=/root/autodl-tmp/runs/${TAG}
 readonly SIGNAL=/root/autodl-tmp/runs/${TAG}
 readonly SEED_PADDED=$(printf '%03d' "${SEED}")
