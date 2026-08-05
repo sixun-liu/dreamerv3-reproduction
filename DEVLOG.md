@@ -159,4 +159,4 @@
 - Evidence: `research/cards/EXP-0008.md`；`docs/reproduction/EXP0008_CHEETAH_PROTOCOL.md`；score SHA256 `8182860a...cc7f4`；runtime `6642b94`
 - Next: 提交推送后运行独立 smoke；通过完整性、ETA 和磁盘门再 detached 启动五 seed 顺序矩阵。
 - Approval: user
-- Git: branch `exp/EXP-0008-cheetah-five-seed`；freeze commit pending
+- Git: protocol/runner commit `43b4b7a`；provenance freeze `EVT-0043`

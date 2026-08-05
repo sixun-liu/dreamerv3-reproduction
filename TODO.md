@@ -8,8 +8,7 @@
 
 ## Now
 
-- [ ] [codex] 提交并推送 `EXP-0008` 协议、runner、分析器和五 seed expanded configs；trigger: 静态测试通过。
-- [ ] [codex] 冻结 provenance 并运行 2048-decision Cheetah smoke；trigger: control/runtime/workflow 均满足 freeze gate。
+- [ ] [codex] 运行 2048-decision Cheetah smoke；trigger: `EVT-0043` 已冻结并推送。
 - [ ] [codex] detached 顺序启动 seeds 0--4；trigger: smoke 完整性、ETA 和磁盘门通过。
 - [ ] [codex] 完成官方同图、独立复算、artifact 登记、closure 与 strict audit；trigger: 五 seed 自然完成。
 
