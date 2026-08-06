@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly TAG=EXP-0009__reacher-hard__gradient-gate__s000__debug-1024-dec__20260806T031509Z
+readonly TAG=EXP-0009__reacher-hard__gradient-gate__s000__debug-120-dec__20260806T032742Z
 readonly ROOT=/root/autodl-tmp/runs/${TAG}
 readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
 readonly RUNTIME=/root/autodl-tmp/dreamerv3-2411f7d
@@ -31,7 +31,7 @@ printf \
   "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$$" > "${ROOT}.started"
 cp "${ROOT}.started" "${ROOT}/.started"
 printf \
-  '{"experiment_id":"EXP-0009","scope":"gradient_gate","runtime_commit":"%s","control_commit":"%s","seed":0,"agent_decisions":1024,"environment_steps":2048}\n' \
+  '{"experiment_id":"EXP-0009","scope":"gradient_gate","runtime_commit":"%s","control_commit":"%s","seed":0,"agent_decisions":120,"environment_steps":240}\n' \
   "$(git -C "${RUNTIME}" rev-parse HEAD)" "$(git -C "${CONTROL}" rev-parse HEAD)" \
   > "${ROOT}/.freeze"
 

@@ -14,14 +14,14 @@ case "${ARM}" in
   *) echo "Unknown arm: ${ARM}" >&2; exit 2 ;;
 esac
 
-readonly TAG=EXP-0009__reacher-hard__gradient-gate__s000__debug-1024-dec__20260806T031509Z
+readonly TAG=EXP-0009__reacher-hard__gradient-gate__s000__debug-120-dec__20260806T032742Z
 readonly ROOT=/root/autodl-tmp/runs/${TAG}
 readonly OUTPUT=${ROOT}/${ARM}
 readonly RUNTIME=/root/autodl-tmp/dreamerv3-2411f7d
 readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
 readonly PYTHON=/root/autodl-tmp/envs/dv3-2411/bin/python
-readonly CONFIG=${CONTROL}/docs/reproduction/configs/exp0009_gradient_${ARM}_s000_1024_dec.yaml
-readonly VERIFY=${CONTROL}/scripts/verify_exp0008_run.py
+readonly CONFIG=${CONTROL}/docs/reproduction/configs/exp0009_gradient_${ARM}_s000_120_dec.yaml
+readonly VERIFY=${CONTROL}/scripts/verify_exp0009_gradient_probe.py
 
 if [[ ! -f "${ROOT}/.freeze" ]]; then
   echo "Missing gradient-gate freeze: ${ROOT}/.freeze" >&2
@@ -81,10 +81,10 @@ env PYTHONUNBUFFERED=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
   --env.dmc.repeat 2 \
   --env.dmc.use_seed True \
   --run.num_envs 4 \
-  --run.steps 1024 \
+  --run.steps 120 \
   --run.train_ratio 8 \
-  --run.eval_every 1000000000 \
-  --run.log_every 2 \
+  --run.eval_every 0 \
+  --run.log_every 0 \
   --run.save_every 1000000000 \
   --run.save_at_end True \
   --report_gradnorms True \
@@ -97,11 +97,11 @@ env PYTHONUNBUFFERED=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
 "${PYTHON}" "${VERIFY}" \
   --run-dir "${OUTPUT}" \
   --frozen-config "${CONFIG}" \
-  --expected-step 1024 \
+  --expected-step 120 \
   --output "${OUTPUT}/integrity.json" \
   > "${OUTPUT}/integrity_stdout.log" 2>&1 || fail $? integrity
 
 printf \
-  '{"experiment_id":"EXP-0009","arm":"%s","completed_at":"%s","exit_code":0,"checkpoint_step":1024,"scope":"gradient_gate"}\n' \
+  '{"experiment_id":"EXP-0009","arm":"%s","completed_at":"%s","exit_code":0,"checkpoint_step":120,"scope":"gradient_gate"}\n' \
   "${ARM}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "${OUTPUT}.completed"
 cp "${OUTPUT}.completed" "${OUTPUT}/.completed"
