@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-07-21T05:57:00Z'
+updated_at: '2026-08-06T03:15:09Z'
 repositories:
   control:
     path: /root/autodl-tmp/dreamerv3-reproduction
@@ -14,7 +14,7 @@ repositories:
   runtime_2411:
     path: /root/autodl-tmp/dreamerv3-2411f7d
     remote: https://github.com/danijar/dreamerv3.git
-    commit: 6642b941f578cd72147bc2be3c3343d5bc72931c
+    commit: 990123a0984a6096fb4041705ae9eeae44ab88a9
     required_clean: true
   runtime_exp0006:
     path: /root/autodl-tmp/dreamerv3-exp0006

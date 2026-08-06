@@ -1,13 +1,13 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-05T22:11:38Z'
+updated_at: '2026-08-06T03:03:44Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在可审计的受控实验中理解DreamerV3关键机制，并区分论文原消融与当前runtime上的机制扩展。
 primary_problem: 恢复DreamerV3 Figure 18 learning-signal消融的精确梯度语义，并判断单任务三臂pilot能否以合理成本提供机制证据。
-active_experiment_id: null
+active_experiment_id: EXP-0009
 active_candidate: Figure 18 learning-signal single-task conceptual pilot protocol recovery
 canonical_baseline:
   id: DV3-2026-DMCP-WALKER-KL-CONTROL
