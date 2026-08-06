@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-06T03:03:44Z'
+updated_at: '2026-08-06T03:44:01Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -28,8 +28,8 @@ stage_exit_gates:
 repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/dreamerv3-reproduction
-  branch: exp/EXP-0008-cheetah-five-seed
-  commit: 5b49eebf12126352bce25867cbe99acde620b035
+  branch: exp/EXP-0009-reacher-signal-ablation
+  commit: 10f76c7ea9ef984069ea4ed71559ea0e138af163
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dreamerv3/review
