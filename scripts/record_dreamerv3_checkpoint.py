@@ -20,6 +20,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--task", default="dmc_cheetah_run")
     parser.add_argument("--seed", type=int, default=10000)
+    parser.add_argument("--use-env-seed", action="store_true")
     parser.add_argument("--max-decisions", type=int, default=620)
     parser.add_argument("--fps", type=float, default=20.0)
     return parser.parse_args()
@@ -70,6 +71,7 @@ def main() -> None:
         logdir=str(args.output),
         tensorboard=False,
     )
+    config = config.update({"env.dmc.use_seed": args.use_env_seed})
     config.save(args.output / "config.yaml")
 
     agent = dv3_main.make_agent(config)
@@ -119,7 +121,7 @@ def main() -> None:
         "schema_version": 1,
         "task": args.task,
         "agent_seed": args.seed,
-        "environment_seed_controlled": False,
+        "environment_seed_controlled": args.use_env_seed,
         "checkpoint": str(args.checkpoint),
         "frames": len(frames),
         "fps": args.fps,
@@ -137,4 +139,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
