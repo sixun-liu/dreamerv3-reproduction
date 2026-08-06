@@ -193,7 +193,7 @@
 ### 2026-08-06T09:58:02Z | result | EXP-0009-reacher-signal-ablation
 
 - Actor: codex
-- Summary: Reacher Hard 单配对 seed 的 1M environment-step 三臂 pilot 全部自然完成；真实模型梯度 gate 通过，fixed-bin AUC 为 baseline `867.42`、no-reward/value `391.61`、no-reconstruction `7.84`，定性方向门通过。裁决 `promote` 仅指进入跨 seed 验证。
+- Summary: Reacher Hard 单配对 seed 的 1M environment-step 三臂 pilot 全部自然完成；真实模型梯度 gate 通过，fixed-bin AUC 为 baseline `867.42`、no-reward/value `391.61`、no-reconstruction `7.84`，定性方向门通过。裁决 `promising_unresolved`，待人工审查与跨 seed 验证。
 - Evidence: `EVT-0056`--`EVT-0057`；`ART-0049`--`ART-0052`；working claim `C-0002`
 - Next: 用户审查学习曲线和配对行为展示；若继续，只先冻结相同 1M 协议的 paired seeds 1、2，不自动进入 10M 或 14-task 矩阵。
 - Approval: 用户批准梯度验证与 1M 三臂 pilot；scientific human review pending
