@@ -20,6 +20,11 @@ LABELS = {
     "no_reward_value": "No reward & value gradients",
     "no_reconstruction": "No reconstruction gradients",
 }
+CONTACT_LABELS = {
+    "baseline": ("Dreamer baseline",),
+    "no_reward_value": ("No reward/value", "gradients"),
+    "no_reconstruction": ("No reconstruction", "gradients"),
+}
 COLORS = {
     "baseline": "#167D4A",
     "no_reward_value": "#D18B16",
@@ -111,8 +116,13 @@ def contact_sheet(sources, episodes, output):
   for row, arm in enumerate(ARMS):
     y = 82 + row * 194
     draw.rounded_rectangle((16, y + 48, 178, y + 112), radius=4, fill=COLORS[arm])
-    text_center(draw, (16, y + 50, 178, y + 82), LABELS[arm], label_font, "white")
-    text_center(draw, (16, y + 82, 178, y + 110),
+    lines = CONTACT_LABELS[arm]
+    if len(lines) == 1:
+      text_center(draw, (16, y + 50, 178, y + 86), lines[0], label_font, "white")
+    else:
+      text_center(draw, (16, y + 45, 178, y + 70), lines[0], label_font, "white")
+      text_center(draw, (16, y + 65, 178, y + 90), lines[1], label_font, "white")
+    text_center(draw, (16, y + 88, 178, y + 112),
                 f"return {episodes[arm]['episode_return']:.1f}", small_font, "white")
     for column, index in enumerate(picks):
       frame = sources[arm][index].resize((160, 160), Image.Resampling.NEAREST)
