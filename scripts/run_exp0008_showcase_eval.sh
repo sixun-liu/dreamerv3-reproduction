@@ -44,6 +44,7 @@ readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
 readonly RUNTIME=/root/autodl-tmp/dreamerv3-2411f7d
 readonly MATRIX=/root/autodl-tmp/runs/EXP-0008__cheetah-run__five-seed__500k-env__20260805T171000Z
 readonly PYTHON=/root/autodl-tmp/envs/dv3-2411/bin/python
+readonly RECORDER=${CONTROL}/scripts/record_dreamerv3_checkpoint.py
 readonly EVAL_SEED=10000
 readonly EVAL_ENVS=1
 readonly EVAL_DECISIONS=620
@@ -81,6 +82,7 @@ mkdir -p "${ROOT}"
 control_commit=$(git -C "${CONTROL}" rev-parse HEAD)
 runtime_commit=$(git -C "${RUNTIME}" rev-parse HEAD)
 workflow_commit=$(git -C /root/autodl-tmp/research-agent-kit rev-parse HEAD)
+recorder_sha256=$(sha256sum "${RECORDER}" | cut -d' ' -f1)
 seed_csv=$(IFS=,; printf '%s' "${SEEDS[*]}")
 {
   printf '{\n'
@@ -91,6 +93,7 @@ seed_csv=$(IFS=,; printf '%s' "${SEEDS[*]}")
   printf '  "control_commit": "%s",\n' "${control_commit}"
   printf '  "runtime_commit": "%s",\n' "${runtime_commit}"
   printf '  "workflow_commit": "%s",\n' "${workflow_commit}"
+  printf '  "recorder_sha256": "%s",\n' "${recorder_sha256}"
   printf '  "task": "dmc_cheetah_run",\n'
   printf '  "train_seeds": [%s],\n' "${seed_csv}"
   printf '  "eval_seed": %d,\n' "${EVAL_SEED}"
@@ -142,32 +145,25 @@ for seed in "${SEEDS[@]}"; do
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "${output}/.started"
   cp "${ROOT}.freeze" "${output}/.freeze"
 
-  cd "${RUNTIME}"
+  cd "${CONTROL}"
   env PYTHONUNBUFFERED=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
     MUJOCO_GL=egl PYOPENGL_PLATFORM=egl \
-    "${PYTHON}" dreamerv3/main.py \
-    --logdir "${output}/eval" \
-    --configs dmc_proprio size12m \
+    "${PYTHON}" "${RECORDER}" \
+    --runtime "${RUNTIME}" \
+    --checkpoint "${checkpoint}" \
+    --output "${output}/capture" \
     --task dmc_cheetah_run \
-    --run.script eval_only \
     --seed "${EVAL_SEED}" \
-    --env.dmc.repeat 2 \
-    --run.num_envs "${EVAL_ENVS}" \
-    --run.steps "${EVAL_DECISIONS}" \
-    --run.log_every 1 \
-    --run.log_keys_video log_image \
-    --run.log_video_streams 1 \
-    --run.from_checkpoint "${checkpoint}" \
+    --max-decisions "${EVAL_DECISIONS}" \
+    --fps 20 \
     > "${output}/stdout.log" 2>&1 || fail $? "eval_${seed_name}"
 
-  video=$(find "${output}/eval/scope" \
-    -path '*epstats-policy_log-image.mp4/*.mp4' -type f -print -quit \
-    2>/dev/null || true)
+  video=${output}/capture/policy.mp4
   if [[ -z "${video}" || ! -s "${video}" ]]; then
     echo "Evaluation completed without a policy video for ${seed_name}" >&2
     fail 25 "video_${seed_name}"
   fi
-  if [[ ! -s "${output}/eval/scores.jsonl" ]]; then
+  if [[ ! -s "${output}/capture/episode.json" ]]; then
     echo "Evaluation completed without an episode score for ${seed_name}" >&2
     fail 26 "score_${seed_name}"
   fi
@@ -184,4 +180,3 @@ printf \
   "${EXPERIMENT}" "${TAG}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
   "${#SEEDS[@]}" > "${ROOT}.completed"
 cp "${ROOT}.completed" "${ROOT}/.completed"
-
