@@ -44,8 +44,8 @@
 
 ## 指标与裁决
 
-- Primary：raw episode return 按 episode 结束时的 environment step 放入固定 100K bins，计算
-  0--1M 的梯形 AUC。
+- Primary：raw episode return 按 episode 结束时的 environment step 放入固定 100K bins；在各箱
+  中心取均值，0 和 1M 端点沿用最近箱均值，再计算 0--1M 的归一化梯形 AUC（等价于十箱均值）。
 - Directional gate：`baseline` 和 `no_reward_value` 的 AUC 都高于 `no_reconstruction`。
 - Secondary：`baseline` 与 `no_reward_value` 的顺序；1M 内未分开不判论文负例。
 - Tail：末 200K environment steps 的 episode return 均值、每箱 episode 数和最差箱。

@@ -1,0 +1,78 @@
+config_schema_version: 1
+experiment_id: EXP-0009
+run_tag: EXP-0009__reacher-hard__three-arm__s000__1m-env__20260806T034000Z
+evidence_scope: conceptual_single_task_single_seed_one_tenth_paper_budget
+runtime:
+  path: /root/autodl-tmp/dreamerv3-2411f7d
+  upstream_commit: 2411f7d136832378c0291c587cdbf2fca6506873
+  compatibility_commit: 6642b941f578cd72147bc2be3c3343d5bc72931c
+  experiment_commit: 990123a0984a6096fb4041705ae9eeae44ab88a9
+  python: /root/autodl-tmp/envs/dv3-2411/bin/python
+reference:
+  paper: arXiv:2301.04104v2
+  figures: [6b, 18]
+  task_horizon_env_steps: 10000000
+gradient_gate:
+  path: /root/autodl-tmp/runs/EXP-0009__reacher-hard__gradient-gate__s000__debug-120-dec__20260806T032742Z/gradient_gate.json
+  sha256: d318087c0a0bc28d161449c3afcaa41942c3e470a9fdbbad314c0ff14e4fba4b
+  passed: true
+protocol:
+  task: dmc_reacher_hard
+  observation_type: proprioceptive
+  model: size12m
+  total_agent_steps_per_arm: 500000
+  total_environment_steps_per_arm: 1000000
+  action_repeat: 2
+  num_envs: 16
+  replay_ratio: 512
+  agent_seed: 0
+  dmc_environment_seed_controlled: true
+  environment_seed_derivation: hash((agent_seed, env_index)) modulo 2^32-1
+  arm_order: [baseline, no_reward_value, no_reconstruction]
+arms:
+  baseline:
+    reconstruction_grad: true
+    reward_grad: true
+    replay_critic_grad: true
+  no_reward_value:
+    reconstruction_grad: true
+    reward_grad: false
+    replay_critic_grad: false
+  no_reconstruction:
+    reconstruction_grad: false
+    reward_grad: true
+    replay_critic_grad: true
+invariants:
+  ac_grads: none
+  continuation_representation_gradient: true
+  dynamics_and_kl_gradients: true
+metrics:
+  bin_width_environment_steps: 100000
+  primary: normalized trapezoidal AUC over ten fixed-bin raw episode return means
+  endpoint_rule: extend the nearest bin mean to environment steps 0 and 1000000
+  directional_gate: baseline and no_reward_value AUC each exceed no_reconstruction AUC
+  secondary: baseline AUC exceeds no_reward_value AUC
+  tail: raw episode return mean for episodes ending in (800000, 1000000]
+completion:
+  checkpoint_agent_steps: 500000
+  all_arms_natural_exit: true
+  finite_metrics_and_scores: true
+  no_score_based_early_stop: true
+cost:
+  expected_wall_hours: [6, 7]
+  maximum_healthy_wall_hours: 9
+  expected_additional_disk_gib: [6, 7]
+  matrix_launch_floor_gib: 10
+  per_arm_stop_floor_gib: 5
+configs:
+  baseline:
+    path: docs/reproduction/configs/exp0009_reacher_baseline_s000_1m_env.yaml
+    sha256: 628a2df7e7c2df5083dc432381fe8d9da48ddb1d6ca0813e5a41761280e938a8
+  no_reward_value:
+    path: docs/reproduction/configs/exp0009_reacher_no_reward_value_s000_1m_env.yaml
+    sha256: 9e1a2457efb7efb7ce3949b52fa34c6a983238c0b3d068008c55854bfbf3a776
+  no_reconstruction:
+    path: docs/reproduction/configs/exp0009_reacher_no_reconstruction_s000_1m_env.yaml
+    sha256: 811f9ac5cd836c39dadc7ec5e98e3ff3a78ebeddfff70d655c285babbc3f614c
+runner: scripts/run_exp0009_matrix.sh
+analysis: scripts/analyze_exp0009.py
