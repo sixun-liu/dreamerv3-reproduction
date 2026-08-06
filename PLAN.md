@@ -1,27 +1,28 @@
 # PLAN
 
-> Updated: 2026-08-05T22:08:00Z
+> Updated: 2026-08-06T09:54:43Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml
 
 - Stage: `exploration`
 - 北极星：在受控实验中理解 DreamerV3 的关键机制，并区分论文原消融与当前 runtime 的机制扩展。
-- 当前问题：在 EXP-0008 区分了“持续学习”与“论文数值对齐”后，恢复 Figure 18
-  learning-signal 消融的精确梯度语义，为下一个低成本机制实验做准备。
+- 当前问题：EXP-0009 单 seed pilot 已恢复并验证 Figure 18 梯度语义且通过定性方向门；下一步判断
+  该排序能否在同预算的 paired seeds 1、2 上保持，而不是直接扩大到论文完整矩阵。
 
 ## 阶段退出门
 
-- [ ] 把 Figure 18 两种梯度阻断分别映射到论文原文和 2411f7d 代码，标出等价项与非等价近似。
-- [ ] 在任何训练前，用一次小 batch 参数组梯度测试证明：被阻断信号不更新 encoder/RSSM，
+- [x] 把 Figure 18 两种梯度阻断分别映射到论文原文和 2411f7d 代码，标出等价项与非等价近似。
+- [x] 在任何训练前，用一次小 batch 参数组梯度测试证明：被阻断信号不更新 encoder/RSSM，
   但对应 prediction head/decoder 仍能学习。
-- [ ] 候选任务、预算、seed 政策与证据权限经用户确认后，再新建独立 EXP 和 runtime 分支。
+- [x] 候选任务、预算、seed 政策与证据权限经用户确认后，再新建独立 EXP 和 runtime 分支。
+- [ ] 用户人工审查 EXP-0009 图与结论权限，再决定是否把同一 1M 协议扩展到 paired seeds 1、2。
 
 ## 活动路线
 
-1. 用户审查 EXP-0008 官方对照图和受限负复现表述。
-2. 以 arXiv v2 主文/补充 Figure 18 为主真源，恢复三臂协议和 14 任务范围。
-3. 先做梯度路由 known-answer test 和最小 smoke，再评估单任务三臂 pilot 是否能区分主要解释。
-4. 只有在一个代表任务上出现稳定信号，才考虑增加 seed 或任务；不直接复制 3×14 全矩阵。
+1. 用户审查 EXP-0009 fixed-bin 曲线、配对行为展示和 scoped claim。
+2. 若用户批准，冻结相同 Reacher Hard 1M 三臂协议的 paired seeds 1、2；不按 seed 0 结果调参。
+3. 跨 seed 顺序稳定后，再在“延长到 10M”与“增加第二代表任务”之间预注册一个选择。
+4. Figure 18 完整 3×14 矩阵继续 parked。
 
 ## Parked Lanes
 
