@@ -13,14 +13,14 @@ if [[ ! "${TAG}" =~ ^EXP-0009__reacher-hard__showcase-eval-three-arm__[0-9]{8}T[
 fi
 
 readonly EXPERIMENT=EXP-0009
-readonly ROOT=/root/autodl-tmp/runs/${TAG}
-readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
-readonly RUNTIME=/root/autodl-tmp/dreamerv3-2411f7d
-readonly MATRIX=/root/autodl-tmp/runs/EXP-0009__reacher-hard__three-arm__s000__1m-env__20260806T034000Z
-readonly PYTHON=/root/autodl-tmp/envs/dv3-2411/bin/python
+readonly ROOT=/root/autodl-tmp/Runs/${TAG}
+readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
+readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3-2411f7d
+readonly MATRIX=/root/autodl-tmp/Runs/EXP-0009__reacher-hard__three-arm__s000__1m-env__20260806T034000Z
+readonly PYTHON=/root/autodl-tmp/Envs/dv3-2411/bin/python
 readonly RECORDER=${CONTROL}/scripts/record_dreamerv3_checkpoint.py
 readonly BUILDER=${CONTROL}/scripts/build_exp0009_showcase.py
-readonly ARTIFACTS=/root/autodl-tmp/artifacts/dreamerv3/EXP-0009/showcase
+readonly ARTIFACTS=/root/autodl-tmp/Artifacts/dreamerv3/EXP-0009/showcase
 readonly EVAL_SEED=10000
 readonly EVAL_DECISIONS=620
 readonly ARMS=(baseline no_reward_value no_reconstruction)

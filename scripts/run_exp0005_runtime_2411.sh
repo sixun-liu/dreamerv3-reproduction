@@ -2,10 +2,10 @@
 set -uo pipefail
 
 readonly TAG=EXP-0005__walker_walk__s000-agent__500k-env__20260721T120000Z
-readonly OUTPUT=/root/autodl-tmp/runs/${TAG}
-readonly SIGNAL=/root/autodl-tmp/runs/${TAG}
-readonly RUNTIME=/root/autodl-tmp/dreamerv3-2411f7d
-readonly PYTHON=/root/autodl-tmp/envs/dv3-2411/bin/python
+readonly OUTPUT=/root/autodl-tmp/Runs/${TAG}
+readonly SIGNAL=/root/autodl-tmp/Runs/${TAG}
+readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3-2411f7d
+readonly PYTHON=/root/autodl-tmp/Envs/dv3-2411/bin/python
 
 if [[ ! -f "${SIGNAL}.freeze" ]]; then
   echo "Missing ${SIGNAL}.freeze" >&2

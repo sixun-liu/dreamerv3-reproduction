@@ -198,3 +198,17 @@
 - Next: 用户审查学习曲线和配对行为展示；若继续，只先冻结相同 1M 协议的 paired seeds 1、2，不自动进入 10M 或 14-task 矩阵。
 - Approval: 用户批准梯度验证与 1M 三臂 pilot；scientific human review pending
 - Git: control freeze `10f76c7`；runtime gradient routing `990123a`；showcase code `f950ce2`
+
+## 2026-08-07
+
+### 2026-08-07T14:13:57Z | migration | workspace-uppercase-layout
+
+- Actor: codex
+- Summary: 用户批准将稳定工作区入口迁移为大写目录；DreamerV3 control/runtime 仓进入
+  `Code/DreamerV3/`，run、artifact、paper、env、workflow 等切换到大写 canonical 路径，旧根级
+  路径作为 compatibility alias 保留。
+- Evidence: `/root/autodl-tmp/Discussion/workspace/2026-08-07_uppercase-layout-migration.md`；
+  `research/repositories.yaml`；Git worktree repair 与新旧 inode 对账。
+- Next: 用新 canonical 路径完成 research audit、环境导入和一个后续实验周期；在此之前不移除 alias。
+- Approval: user-approved
+- Git: branch `infra/workspace-uppercase-layout`; historical JSONL/freeze unchanged

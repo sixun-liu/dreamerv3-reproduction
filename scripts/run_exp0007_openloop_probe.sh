@@ -3,12 +3,12 @@ set -euo pipefail
 
 readonly EXPERIMENT=EXP-0007
 readonly TAG=EXP-0007__openloop-prediction__20260727T040500Z
-readonly ROOT=/root/autodl-tmp/runs/${TAG}
-readonly SIGNAL=/root/autodl-tmp/runs/${TAG}
-readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
-readonly RUNTIME=/root/autodl-tmp/dreamerv3-exp0007
-readonly MATRIX=/root/autodl-tmp/runs/EXP-0006__walker-kl__matrix-2seed__20260721T142500Z
-readonly PANEL_ROOT=/root/autodl-tmp/staging/EXP-0007-panel-20260727T040500Z
+readonly ROOT=/root/autodl-tmp/Runs/${TAG}
+readonly SIGNAL=/root/autodl-tmp/Runs/${TAG}
+readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
+readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3-exp0007
+readonly MATRIX=/root/autodl-tmp/Runs/EXP-0006__walker-kl__matrix-2seed__20260721T142500Z
+readonly PANEL_ROOT=/root/autodl-tmp/Staging/EXP-0007-panel-20260727T040500Z
 readonly PANEL=${PANEL_ROOT}/panel.npz
 readonly MANIFEST=${PANEL_ROOT}/panel_manifest.json
 readonly EVALUATOR=${CONTROL}/scripts/evaluate_exp0007_openloop.py

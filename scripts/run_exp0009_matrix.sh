@@ -3,13 +3,13 @@ set -euo pipefail
 
 readonly EXPERIMENT=EXP-0009
 readonly TAG=EXP-0009__reacher-hard__three-arm__s000__1m-env__20260806T034000Z
-readonly ROOT=/root/autodl-tmp/runs/${TAG}
-readonly SIGNAL=/root/autodl-tmp/runs/${TAG}
-readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
+readonly ROOT=/root/autodl-tmp/Runs/${TAG}
+readonly SIGNAL=/root/autodl-tmp/Runs/${TAG}
+readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
 readonly RUN_ONE=${CONTROL}/scripts/run_exp0009_arm.sh
 readonly ANALYZE=${CONTROL}/scripts/analyze_exp0009.py
-readonly PYTHON=/root/autodl-tmp/envs/dv3-2411/bin/python
-readonly ARTIFACTS=/root/autodl-tmp/artifacts/dreamerv3/EXP-0009
+readonly PYTHON=/root/autodl-tmp/Envs/dv3-2411/bin/python
+readonly ARTIFACTS=/root/autodl-tmp/Artifacts/dreamerv3/EXP-0009
 
 if [[ ! -f "${SIGNAL}.freeze" ]]; then
   echo "Missing ${SIGNAL}.freeze" >&2

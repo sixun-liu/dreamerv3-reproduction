@@ -3,11 +3,11 @@ set -euo pipefail
 
 readonly EXPERIMENT=EXP-0008
 readonly TAG=EXP-0008__cheetah-run__s31415__smoke-16384-dec__20260805T163000Z
-readonly OUTPUT=/root/autodl-tmp/runs/${TAG}
-readonly SIGNAL=/root/autodl-tmp/runs/${TAG}
-readonly RUNTIME=/root/autodl-tmp/dreamerv3-2411f7d
-readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
-readonly PYTHON=/root/autodl-tmp/envs/dv3-2411/bin/python
+readonly OUTPUT=/root/autodl-tmp/Runs/${TAG}
+readonly SIGNAL=/root/autodl-tmp/Runs/${TAG}
+readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3-2411f7d
+readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
+readonly PYTHON=/root/autodl-tmp/Envs/dv3-2411/bin/python
 readonly CONFIG=${CONTROL}/docs/reproduction/configs/exp0008_cheetah_smoke_s31415_16384_dec.yaml
 readonly VERIFY=${CONTROL}/scripts/verify_exp0008_run.py
 

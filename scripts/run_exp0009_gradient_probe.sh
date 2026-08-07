@@ -15,11 +15,11 @@ case "${ARM}" in
 esac
 
 readonly TAG=EXP-0009__reacher-hard__gradient-gate__s000__debug-120-dec__20260806T032742Z
-readonly ROOT=/root/autodl-tmp/runs/${TAG}
+readonly ROOT=/root/autodl-tmp/Runs/${TAG}
 readonly OUTPUT=${ROOT}/${ARM}
-readonly RUNTIME=/root/autodl-tmp/dreamerv3-2411f7d
-readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
-readonly PYTHON=/root/autodl-tmp/envs/dv3-2411/bin/python
+readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3-2411f7d
+readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
+readonly PYTHON=/root/autodl-tmp/Envs/dv3-2411/bin/python
 readonly CONFIG=${CONTROL}/docs/reproduction/configs/exp0009_gradient_${ARM}_s000_120_dec.yaml
 readonly VERIFY=${CONTROL}/scripts/verify_exp0009_gradient_probe.py
 

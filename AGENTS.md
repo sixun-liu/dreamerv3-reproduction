@@ -14,16 +14,16 @@
 
 ## 零、仓库边界
 
-- 本目录 `/root/autodl-tmp/dreamerv3-reproduction` 是 control repo，只保存研究状态、配置、分析和文档。
-- 官方 runtime 位于 `/root/autodl-tmp/dreamerv3`，固定上游 commit；训练必须从 runtime 启动。
+- 本目录 `/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction` 是 control repo，只保存研究状态、配置、分析和文档。
+- 官方 runtime 位于 `/root/autodl-tmp/Code/DreamerV3/dreamerv3`，固定上游 commit；训练必须从 runtime 启动。
 - runs/checkpoint/artifact 位于 Git 外的数据盘。仓库角色真源见 `research/repositories.yaml`。
 - `EXP-0001` 早于本 control repo，历史 freeze 继续引用旧 runtime 路径；不得把首次导入提交伪装成 pre-run commit。
 
 ## 一、任务与验收（导师口径）
 
 - 任务：**复现 DreamerV3（arXiv 2301.04104 = Nature 2025）paper 结果**，A 档：跑通官方码、曲线/分数对齐论文，开源码合规可用。
-- 当前状态：**论文理解与协议恢复阶段**。`crafter_baseline_0716` 已于 2026-07-16 23:50 CST 经用户批准停止，日志、replay 和 step 12330 checkpoint 完整保留；GPU 当前空闲。详见 `/root/autodl-tmp/runs/STATUS.md`。
-- **验收标准待冻结**：runtime 的 `/root/autodl-tmp/dreamerv3/scores/` 含 DMC、Atari、DMLab、Minecraft、ProcGen 官方参考 JSON，**不含 `crafter*.json.gz`**。Crafter 只出现在论文 scaling 分析中，单个 200M/ratio-512 run 不能独立复现该结论。下一次长跑前必须绑定论文版本、目标图表/主张、官方参考产物和评测协议。
+- 当前状态：**论文理解与协议恢复阶段**。`crafter_baseline_0716` 已于 2026-07-16 23:50 CST 经用户批准停止，日志、replay 和 step 12330 checkpoint 完整保留；GPU 当前空闲。详见 `/root/autodl-tmp/Runs/STATUS.md`。
+- **验收标准待冻结**：runtime 的 `/root/autodl-tmp/Code/DreamerV3/dreamerv3/scores/` 含 DMC、Atari、DMLab、Minecraft、ProcGen 官方参考 JSON，**不含 `crafter*.json.gz`**。Crafter 只出现在论文 scaling 分析中，单个 200M/ratio-512 run 不能独立复现该结论。下一次长跑前必须绑定论文版本、目标图表/主张、官方参考产物和评测协议。
 - 后续顺序：完成 claim-protocol 对账 → 选择一个低成本论文结果 → smoke/pilot → 正式 replication → 基线确认后再进入消融矩阵（见 §四）。
 
 ## 二、服务器纪律（前人血泪，SSH_GUIDE 精华，违者必踩坑）
@@ -58,7 +58,7 @@
 ## 五、分工契约（双 agent 不踩脚）
 
 - **服务器执行权（启动/杀进程/实验循环/researchctl）：codex 独有**。Claude（沙盒侧）不再启动任何进程，只读查询（看日志/拉数据）。
-- **研读/日报草稿/独立验收：Claude**。codex 的状态与产出请落两处：`/root/autodl-tmp/runs/STATUS.md`（当前所有 run 一览，勤更新）+ `/root/autodl-tmp/artifacts/`（图/表/结论）——Claude 定期只读拉取汇总进给导师的日报。
+- **研读/日报草稿/独立验收：Claude**。codex 的状态与产出请落两处：`/root/autodl-tmp/Runs/STATUS.md`（当前所有 run 一览，勤更新）+ `/root/autodl-tmp/Artifacts/`（图/表/结论）——Claude 定期只读拉取汇总进给导师的日报。
 - codex 报"复现成功/实验结论"时，Claude 会做独立抽验（拉原始 metrics 复算）——两侧互为审计，不是不信任，是流程。
 - 日报口径（给导师）：如实写"agent 辅助工程与实验执行，用户主导实验设计与分析"。
 
@@ -66,18 +66,18 @@
 
 | 什么 | 哪里 |
 |---|---|
-| 基线 run 日志/信标/freeze | `/root/autodl-tmp/runs/crafter_baseline_0716*` |
+| 基线 run 日志/信标/freeze | `/root/autodl-tmp/Runs/crafter_baseline_0716*` |
 | 部署全程日志 | `/root/setup_dv3.log` |
-| 官方论文基线曲线 | `/root/autodl-tmp/dreamerv3/scores/` |
-| 两篇论文与 DreamerV3 arXiv 源码 | `/root/autodl-tmp/papers/` |
-| 工作流 kit | `/root/autodl-tmp/research-agent-kit/`（README + SKILL.md） |
+| 官方论文基线曲线 | `/root/autodl-tmp/Code/DreamerV3/dreamerv3/scores/` |
+| 两篇论文与 DreamerV3 arXiv 源码 | `/root/autodl-tmp/Paper/` |
+| 工作流 kit | `/root/autodl-tmp/Tools/research-agent-kit/`（README + SKILL.md） |
 | 代理备忘 | `/root/PROXY_NOTE.txt` |
 
 ## 七、现场注记（2026-07-16 23:50 更新）
 
 - 原基线 run（pid 8616）启动于旧 `/root/dreamerv3`，目录搬移后 cwd 为 `(deleted)`，但绝对 logdir 和 checkpoint 正常。成本/协议审计后已由 codex 发送 `SIGTERM` 并确认 GPU 释放；**不得因看到 `.started` 信标而自动恢复**。
-- 可恢复 checkpoint：`/root/autodl-tmp/runs/crafter_baseline_0716/ckpt/20260716T233947F045849`，checkpoint step 12330；停止前最后日志 step 16200。
-- 服务器执行权仍归 codex 独有（§五），Claude 负责研读、材料补充和独立验收。任何新 run 必须从 `/root/autodl-tmp/dreamerv3` 启动，并先完成 replication 卡与 freeze。
+- 可恢复 checkpoint：`/root/autodl-tmp/Runs/crafter_baseline_0716/ckpt/20260716T233947F045849`，checkpoint step 12330；停止前最后日志 step 16200。
+- 服务器执行权仍归 codex 独有（§五），Claude 负责研读、材料补充和独立验收。任何新 run 必须从 `/root/autodl-tmp/Code/DreamerV3/dreamerv3` 启动，并先完成 replication 卡与 freeze。
 
 ## 八、研读资料（Claude 推送）
 
@@ -94,9 +94,9 @@
 1. **补依赖**（DMC 任务需要，当时精简安装未含）：`conda activate dv3 && pip install dm_control`（阿里云镜像已配；若 mujoco 相关报错再 `pip install mujoco`）。
 2. **启动首个 DMC proprio 复现 run**（小时级出完整曲线——第一个"复现 paper 结果"数据点）：
    - 配置：官方默认 `--configs dmc_proprio --task dmc_walker_walk`（勿改 size/超参，复现口径）
-   - logdir：`/root/autodl-tmp/runs/dmc_walker_walk_0717`；信标 + freeze 记录照 §二-5
+   - logdir：`/root/autodl-tmp/Runs/dmc_walker_walk_0717`；信标 + freeze 记录照 §二-5
    - 短冒烟（`--run.steps 500` 另一 logdir）确认 dm_control 通了再开正式 run
-3. **跑完验收**：与 `scores/` 内官方 DMC proprio 曲线（walker_walk）画同图对比，图与结论写 `/root/autodl-tmp/artifacts/`，状态更新 `runs/STATUS.md`。
+3. **跑完验收**：与 `scores/` 内官方 DMC proprio 曲线（walker_walk）画同图对比，图与结论写 `/root/autodl-tmp/Artifacts/`，状态更新 `runs/STATUS.md`。
 4. **Crafter 官方配置重排周末档**（48h 档期，周五晚启动周日收）——同样官方默认配置不动，复现口径。
 5. 若 walker_walk 顺利，可再排 1-2 个 DMC 任务（如 cartpole_swingup / cheetah_run）加密复现证据。
 
@@ -107,4 +107,4 @@
 - `discussion/claude/`：Claude 写研读补充、独立验收和回复；Codex 只读。
 - `discussion/codex/`：Codex 写服务器审计、协议问题和运行观察；Claude 只读。
 - `discussion/INDEX.md`：当前未决线程索引，不保存 canonical state。
-- 经核验的事实再进入 `docs/reproduction/CLAIM_PROTOCOL_MATRIX.md`；持久决策进入 `DEVLOG.md`；run 状态进入 `/root/autodl-tmp/runs/STATUS.md`。
+- 经核验的事实再进入 `docs/reproduction/CLAIM_PROTOCOL_MATRIX.md`；持久决策进入 `DEVLOG.md`；run 状态进入 `/root/autodl-tmp/Runs/STATUS.md`。

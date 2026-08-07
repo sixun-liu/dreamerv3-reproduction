@@ -28,13 +28,13 @@ esac
 
 readonly EXPERIMENT=EXP-0009
 readonly TAG=EXP-0009__reacher-hard__three-arm__s000__1m-env__20260806T034000Z
-readonly ROOT=/root/autodl-tmp/runs/${TAG}
-readonly SIGNAL=/root/autodl-tmp/runs/${TAG}
+readonly ROOT=/root/autodl-tmp/Runs/${TAG}
+readonly SIGNAL=/root/autodl-tmp/Runs/${TAG}
 readonly OUTPUT=${ROOT}/${ARM}
 readonly TRAIN_OUTPUT=${OUTPUT}/train
-readonly RUNTIME=/root/autodl-tmp/dreamerv3-2411f7d
-readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
-readonly PYTHON=/root/autodl-tmp/envs/dv3-2411/bin/python
+readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3-2411f7d
+readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
+readonly PYTHON=/root/autodl-tmp/Envs/dv3-2411/bin/python
 readonly CONFIG=${CONTROL}/docs/reproduction/configs/exp0009_reacher_${ARM}_s000_1m_env.yaml
 readonly VERIFY=${CONTROL}/scripts/verify_exp0008_run.py
 

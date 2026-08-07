@@ -39,11 +39,11 @@ if [[ "${MODE}" == smoke && ( ${#SEEDS[@]} -ne 1 || "${SEEDS[0]}" != "${TAG_SEED
 fi
 
 readonly EXPERIMENT=EXP-0008
-readonly ROOT=/root/autodl-tmp/runs/${TAG}
-readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
-readonly RUNTIME=/root/autodl-tmp/dreamerv3-2411f7d
-readonly MATRIX=/root/autodl-tmp/runs/EXP-0008__cheetah-run__five-seed__500k-env__20260805T171000Z
-readonly PYTHON=/root/autodl-tmp/envs/dv3-2411/bin/python
+readonly ROOT=/root/autodl-tmp/Runs/${TAG}
+readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
+readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3-2411f7d
+readonly MATRIX=/root/autodl-tmp/Runs/EXP-0008__cheetah-run__five-seed__500k-env__20260805T171000Z
+readonly PYTHON=/root/autodl-tmp/Envs/dv3-2411/bin/python
 readonly RECORDER=${CONTROL}/scripts/record_dreamerv3_checkpoint.py
 readonly EVAL_SEED=10000
 readonly EVAL_ENVS=1
@@ -81,7 +81,7 @@ find /dev/shm -maxdepth 1 -type f \
 mkdir -p "${ROOT}"
 control_commit=$(git -C "${CONTROL}" rev-parse HEAD)
 runtime_commit=$(git -C "${RUNTIME}" rev-parse HEAD)
-workflow_commit=$(git -C /root/autodl-tmp/research-agent-kit rev-parse HEAD)
+workflow_commit=$(git -C /root/autodl-tmp/Tools/research-agent-kit rev-parse HEAD)
 recorder_sha256=$(sha256sum "${RECORDER}" | cut -d' ' -f1)
 seed_csv=$(IFS=,; printf '%s' "${SEEDS[*]}")
 {

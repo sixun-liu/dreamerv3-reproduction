@@ -26,7 +26,7 @@ This document separates paper facts, code-lineage facts, available reference art
 | Crafter scaling | Paper Figure 4c/4d reports model-size and replay-ratio scaling | Stopped 200M/ratio-512 pilot is healthy and recoverable | Repository has no `crafter*.json.gz`; one configuration cannot reproduce a scaling claim | parked |
 | Full DMC suite mean/median | Paper tables and official JSON exist | Environment support exists | Requires many tasks and repeated seeds; cost is not appropriate for the first target | convergence-stage expansion |
 | Minecraft diamond | Paper result and official JSON exist | Environment wrapper exists | About 9 A100 GPU-days in the paper; environment/version burden is high | parked |
-| DQN Atari result | 2013 paper gives 7-game scores; Breakout average 168 and best 225 after the paper budget | Independent 2013-style implementation under `/root/autodl-tmp/dqn-reproduction`; CleanRL commit `fe8d8a0` is engineering reference only | Modern ALE/runtime, random no-op/FIRE reset, optimizer constants and the paper's ambiguous frame-count semantics prevent exact equivalence | separate single-game conceptual/independent replication |
+| DQN Atari result | 2013 paper gives 7-game scores; Breakout average 168 and best 225 after the paper budget | Independent 2013-style implementation under `/root/autodl-tmp/Code/DQN/dqn-reproduction`; CleanRL commit `fe8d8a0` is engineering reference only | Modern ALE/runtime, random no-op/FIRE reset, optimizer constants and the paper's ambiguous frame-count semantics prevent exact equivalence | separate single-game conceptual/independent replication |
 
 ## Protocol Fields Required Before Reproduction
 

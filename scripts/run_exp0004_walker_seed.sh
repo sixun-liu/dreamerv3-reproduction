@@ -13,10 +13,10 @@ case "${SEED}" in
   *) echo "Seed must be one of 0, 1, 2" >&2; exit 2 ;;
 esac
 
-readonly OUTPUT=/root/autodl-tmp/runs/${TAG}
+readonly OUTPUT=/root/autodl-tmp/Runs/${TAG}
 readonly TRAIN_OUTPUT=${OUTPUT}/train
 readonly EVAL_OUTPUT=${OUTPUT}/eval
-readonly RUNTIME=/root/autodl-tmp/dreamerv3
+readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3
 readonly PYTHON=/root/miniconda3/envs/dv3/bin/python
 
 mkdir -p "${OUTPUT}"

@@ -2,10 +2,10 @@
 set -euo pipefail
 
 readonly TAG=EXP-0009__reacher-hard__gradient-gate__s000__debug-120-dec__20260806T032742Z
-readonly ROOT=/root/autodl-tmp/runs/${TAG}
-readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
-readonly RUNTIME=/root/autodl-tmp/dreamerv3-2411f7d
-readonly PYTHON=/root/autodl-tmp/envs/dv3-2411/bin/python
+readonly ROOT=/root/autodl-tmp/Runs/${TAG}
+readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
+readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3-2411f7d
+readonly PYTHON=/root/autodl-tmp/Envs/dv3-2411/bin/python
 readonly RUN_ONE=${CONTROL}/scripts/run_exp0009_gradient_probe.sh
 readonly VERIFY=${CONTROL}/scripts/verify_exp0009_gradient_gate.py
 

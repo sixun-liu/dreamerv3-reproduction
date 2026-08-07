@@ -13,23 +13,23 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-CONTROL = Path("/root/autodl-tmp/dreamerv3-reproduction")
-RUNTIME = Path("/root/autodl-tmp/dreamerv3-2411f7d")
-ARTIFACT = Path("/root/autodl-tmp/artifacts/dreamerv3/EXP-0009")
+CONTROL = Path("/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction")
+RUNTIME = Path("/root/autodl-tmp/Code/DreamerV3/dreamerv3-2411f7d")
+ARTIFACT = Path("/root/autodl-tmp/Artifacts/dreamerv3/EXP-0009")
 REVIEW = Path(
-    "/root/autodl-tmp/artifacts/dreamerv3/review/"
+    "/root/autodl-tmp/Artifacts/dreamerv3/review/"
     "EXP-0009-reacher-signal-ablation/README.md"
 )
 GRADIENT = Path(
-    "/root/autodl-tmp/runs/"
+    "/root/autodl-tmp/Runs/"
     "EXP-0009__reacher-hard__gradient-gate__s000__debug-120-dec__20260806T032742Z"
 )
 MATRIX = Path(
-    "/root/autodl-tmp/runs/"
+    "/root/autodl-tmp/Runs/"
     "EXP-0009__reacher-hard__three-arm__s000__1m-env__20260806T034000Z"
 )
 SHOWCASE = Path(
-    "/root/autodl-tmp/runs/"
+    "/root/autodl-tmp/Runs/"
     "EXP-0009__reacher-hard__showcase-eval-three-arm__20260806T093903Z"
 )
 ARMS = ("baseline", "no_reward_value", "no_reconstruction")

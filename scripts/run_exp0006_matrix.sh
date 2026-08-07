@@ -3,9 +3,9 @@ set -euo pipefail
 
 readonly EXPERIMENT=EXP-0006
 readonly TAG=EXP-0006__walker-kl__matrix-2seed__20260721T142500Z
-readonly ROOT=/root/autodl-tmp/runs/${TAG}
-readonly SIGNAL=/root/autodl-tmp/runs/${TAG}
-readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
+readonly ROOT=/root/autodl-tmp/Runs/${TAG}
+readonly SIGNAL=/root/autodl-tmp/Runs/${TAG}
+readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
 readonly RUN_ONE=${CONTROL}/scripts/run_exp0006_arm_seed.sh
 
 if [[ ! -f "${SIGNAL}.freeze" ]]; then

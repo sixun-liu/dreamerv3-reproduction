@@ -13,10 +13,10 @@ if [[ ! "${TAG}" =~ ^EXP-0006__walker-walk__showcase-eval-s001__[0-9]{8}T[0-9]{6
 fi
 
 readonly EXPERIMENT=EXP-0006
-readonly ROOT=/root/autodl-tmp/runs/${TAG}
-readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
-readonly RUNTIME=/root/autodl-tmp/dreamerv3-exp0006
-readonly MATRIX=/root/autodl-tmp/runs/EXP-0006__walker-kl__matrix-2seed__20260721T142500Z
+readonly ROOT=/root/autodl-tmp/Runs/${TAG}
+readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
+readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3-exp0006
+readonly MATRIX=/root/autodl-tmp/Runs/EXP-0006__walker-kl__matrix-2seed__20260721T142500Z
 readonly PYTHON=/root/miniconda3/envs/dv3/bin/python
 readonly EVAL_SEED=10000
 readonly TRAIN_SEED=1
@@ -61,7 +61,7 @@ find /dev/shm -maxdepth 1 -type f \
 mkdir -p "${ROOT}"
 control_commit=$(git -C "${CONTROL}" rev-parse HEAD)
 runtime_commit=$(git -C "${RUNTIME}" rev-parse HEAD)
-workflow_commit=$(git -C /root/autodl-tmp/research-agent-kit rev-parse HEAD)
+workflow_commit=$(git -C /root/autodl-tmp/Tools/research-agent-kit rev-parse HEAD)
 {
   printf '{\n'
   printf '  "experiment_id": "%s",\n' "${EXPERIMENT}"
