@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-06T09:58:02Z'
+updated_at: '2026-08-07T14:46:03Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -26,14 +26,38 @@ stage_exit_gates:
 - 单batch参数组grad-norm known-answer test可区分representation与head/decoder梯度路由。
 - 任务、预算、seed政策、聚合口径和conceptual证据权限经用户确认后才创建下一实验。
 repository_manifest: research/repositories.yaml
+workspace:
+  path_aliases:
+  - from: /root/autodl-tmp/artifacts
+    to: /root/autodl-tmp/Artifacts
+  - from: /root/autodl-tmp/dreamerv3-reproduction
+    to: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
+  - from: /root/autodl-tmp/dreamerv3-2411f7d
+    to: /root/autodl-tmp/Code/DreamerV3/dreamerv3-2411f7d
+  - from: /root/autodl-tmp/dreamerv3-exp0006
+    to: /root/autodl-tmp/Code/DreamerV3/dreamerv3-exp0006
+  - from: /root/autodl-tmp/dreamerv3-exp0007
+    to: /root/autodl-tmp/Code/DreamerV3/dreamerv3-exp0007
+  - from: /root/autodl-tmp/dreamerv3
+    to: /root/autodl-tmp/Code/DreamerV3/dreamerv3
+  - from: /root/autodl-tmp/papers
+    to: /root/autodl-tmp/Paper
+  - from: /root/autodl-tmp/research-agent-kit
+    to: /root/autodl-tmp/Tools/research-agent-kit
+  - from: /root/autodl-tmp/runs
+    to: /root/autodl-tmp/Runs
+  - from: /root/autodl-tmp/staging
+    to: /root/autodl-tmp/Staging
+  - from: /root/autodl-tmp/third_party
+    to: /root/autodl-tmp/ThirdParty
 canonical_repo:
-  path: /root/autodl-tmp/dreamerv3-reproduction
+  path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
   branch: exp/EXP-0009-reacher-signal-ablation
   commit: 10f76c7ea9ef984069ea4ed71559ea0e138af163
   tracked_clean_at_snapshot: true
 human_review:
-  root: /root/autodl-tmp/artifacts/dreamerv3/review
-  latest: /root/autodl-tmp/artifacts/dreamerv3/review/LATEST.md
+  root: /root/autodl-tmp/Artifacts/dreamerv3/review
+  latest: /root/autodl-tmp/Artifacts/dreamerv3/review/LATEST.md
 repository_snapshots:
   control:
     repo: /root/autodl-tmp/dreamerv3-reproduction
