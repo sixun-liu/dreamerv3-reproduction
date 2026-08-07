@@ -77,12 +77,12 @@ def copy_sources(output: Path) -> list[dict]:
         "protocol/exp0009_reacher_matrix.yaml": CONTROL
         / "docs/reproduction/configs/exp0009_reacher_matrix.yaml",
         "protocol/REVIEW.md": REVIEW,
-        "provenance/gradient_gate.freeze.json": GRADIENT.with_suffix(".freeze"),
-        "provenance/gradient_gate.completed.json": GRADIENT.with_suffix(".completed"),
-        "provenance/training_matrix.freeze.json": MATRIX.with_suffix(".freeze"),
-        "provenance/training_matrix.completed.json": MATRIX.with_suffix(".completed"),
-        "provenance/showcase_eval.freeze.json": SHOWCASE.with_suffix(".freeze"),
-        "provenance/showcase_eval.completed.json": SHOWCASE.with_suffix(".completed"),
+        "provenance/gradient_gate.freeze.json": GRADIENT / ".freeze",
+        "provenance/gradient_gate.completed.json": GRADIENT / ".completed",
+        "provenance/training_matrix.freeze.json": MATRIX / ".freeze",
+        "provenance/training_matrix.completed.json": MATRIX / ".completed",
+        "provenance/showcase_eval.freeze.json": SHOWCASE / ".freeze",
+        "provenance/showcase_eval.completed.json": SHOWCASE / ".completed",
         "provenance/showcase_manifest.json": ARTIFACT / "showcase/manifest.json",
         "provenance/scripts/analyze_exp0009.py": CONTROL
         / "scripts/analyze_exp0009.py",
