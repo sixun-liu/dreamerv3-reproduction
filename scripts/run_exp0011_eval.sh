@@ -17,17 +17,26 @@ readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2026-crossdom
 readonly PYTHON=/root/autodl-tmp/Envs/dv3-atari-2026/bin/python
 readonly ROMDIR=/root/autodl-tmp/ThirdParty/atari-roms
 readonly TRAIN_ROOT=/root/autodl-tmp/Runs/EXP-0011__breakout__s000__100k-dec__20260811T201000Z
-readonly CHECKPOINT=${TRAIN_ROOT}/train/checkpoint.ckpt
+readonly CHECKPOINT_ROOT=${TRAIN_ROOT}/train/ckpt
 readonly ROOT=/root/autodl-tmp/Runs/${TAG}
 
 if [[ -e "${ROOT}" || -e "${ROOT}.started" ]]; then
   echo "Refusing duplicate EXP-0011 evaluation" >&2
   exit 20
 fi
-if [[ ! -s "${CHECKPOINT}" || ! -f "${TRAIN_ROOT}/.formal.completed" ]]; then
+if [[ ! -s "${CHECKPOINT_ROOT}/latest" || ! -f "${TRAIN_ROOT}/.formal.completed" ]]; then
   echo "Formal checkpoint is incomplete" >&2
   exit 21
 fi
+IFS= read -r checkpoint_name < "${CHECKPOINT_ROOT}/latest"
+if [[ ! "${checkpoint_name}" =~ ^[A-Za-z0-9._-]+$ || \
+      ! -s "${CHECKPOINT_ROOT}/${checkpoint_name}/agent.pkl" || \
+      ! -s "${CHECKPOINT_ROOT}/${checkpoint_name}/step.pkl" || \
+      ! -f "${CHECKPOINT_ROOT}/${checkpoint_name}/done" ]]; then
+  echo "Formal directory checkpoint is incomplete" >&2
+  exit 21
+fi
+readonly CHECKPOINT=${CHECKPOINT_ROOT}/${checkpoint_name}
 mapfile -t gpu_pids < <(nvidia-smi --query-compute-apps=pid --format=csv,noheader,nounits | sed '/^[[:space:]]*$/d')
 if (( ${#gpu_pids[@]} )); then
   echo "GPU is busy: ${gpu_pids[*]}" >&2
@@ -36,9 +45,11 @@ fi
 
 mkdir -p "${ROOT}"
 printf \
-  '{"experiment_id":"%s","purpose":"independent terminal checkpoint evaluation","control_commit":"%s","runtime_commit":"%s","checkpoint_sha256":"%s","agent_seed":10000,"environment_seed":20260812,"episodes":10,"video_selection":"episode0"}\n' \
+  '{"experiment_id":"%s","purpose":"independent terminal checkpoint evaluation","control_commit":"%s","runtime_commit":"%s","checkpoint":"%s","checkpoint_agent_sha256":"%s","checkpoint_step_sha256":"%s","agent_seed":10000,"environment_seed":20260812,"episodes":10,"video_selection":"episode0"}\n' \
   "${EXPERIMENT}" "$(git -C "${CONTROL}" rev-parse HEAD)" \
-  "$(git -C "${RUNTIME}" rev-parse HEAD)" "$(sha256sum "${CHECKPOINT}" | cut -d' ' -f1)" > "${ROOT}.freeze"
+  "$(git -C "${RUNTIME}" rev-parse HEAD)" "${CHECKPOINT}" \
+  "$(sha256sum "${CHECKPOINT}/agent.pkl" | cut -d' ' -f1)" \
+  "$(sha256sum "${CHECKPOINT}/step.pkl" | cut -d' ' -f1)" > "${ROOT}.freeze"
 cp "${ROOT}.freeze" "${ROOT}/.freeze"
 printf '{"experiment_id":"%s","tag":"%s","started_at":"%s","pid":%d}\n' \
   "${EXPERIMENT}" "${TAG}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$$" > "${ROOT}.started"
@@ -70,4 +81,3 @@ sha256sum "${ROOT}/evaluation/evaluation.json" \
 printf '{"experiment_id":"%s","tag":"%s","completed_at":"%s","exit_code":0,"episodes":10}\n' \
   "${EXPERIMENT}" "${TAG}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "${ROOT}.completed"
 cp "${ROOT}.completed" "${ROOT}/.completed"
-

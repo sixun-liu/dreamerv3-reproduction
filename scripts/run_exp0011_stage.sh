@@ -17,16 +17,17 @@ readonly REFERENCE=${RUNTIME}/scores/atari100k-dreamerv3.json.gz
 readonly VERIFY=${CONTROL}/scripts/verify_exp0011_run.py
 readonly ANALYZE=${CONTROL}/scripts/analyze_exp0011_atari.py
 readonly L0_TAG=EXP-0011__breakout__s31415__ale-l0__20260811T201000Z
-readonly SMOKE_TAG=EXP-0011__breakout__s31415__smoke-r1-2048-dec__20260811T202700Z
+readonly SMOKE_TAG=EXP-0011__breakout__s31415__smoke-r2-4090-dec__20260811T203200Z
 readonly FORMAL_TAG=EXP-0011__breakout__s000__100k-dec__20260811T201000Z
 
 case "${STAGE}" in
   smoke)
     readonly TAG=${SMOKE_TAG}
-    readonly CONFIG=${CONTROL}/docs/reproduction/configs/exp0011_atari100k_smoke_r1_s31415_2048_dec.yaml
-    readonly EXPECTED_CONFIG_SHA=5f3fcc1ea35feaeb83898904de1f30e4e48f91fded13d43ef2a50348ad594d5a
-    readonly STEPS=2048
+    readonly CONFIG=${CONTROL}/docs/reproduction/configs/exp0011_atari100k_smoke_r2_s31415_4090_dec.yaml
+    readonly EXPECTED_CONFIG_SHA=1a69657051612140d21479788854dfb9215849643546f5971dff2d14376aa6c1
+    readonly STEPS=4090
     readonly SEED=31415
+    readonly LOG_EVERY=15
     ;;
   formal)
     readonly TAG=${FORMAL_TAG}
@@ -34,6 +35,7 @@ case "${STAGE}" in
     readonly EXPECTED_CONFIG_SHA=014da22ccad6427836fa6b1b7af40d0e49758cd81d1f1b25fc41aef5024ed7f4
     readonly STEPS=100000
     readonly SEED=0
+    readonly LOG_EVERY=120
     ;;
   *)
     echo "Unknown stage: ${STAGE}" >&2
@@ -177,6 +179,7 @@ cd "${RUNTIME}"
   --run.envs 1 \
   --run.steps "${STEPS}" \
   --run.train_ratio 256 \
+  --run.log_every "${LOG_EVERY}" \
   --run.save_at_end True \
   > "${STDOUT_LOG}" 2>&1 &
 TRAIN_PID=$!

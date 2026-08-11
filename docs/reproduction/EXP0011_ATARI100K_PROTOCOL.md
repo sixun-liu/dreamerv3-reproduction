@@ -26,14 +26,14 @@
 | Environment | repeat 4；sticky false；每局随机 0--30 no-op；训练 RNG 不显式固定 |
 | Formal seed | agent seed 0；单环境 |
 | Train ratio | 256 |
-| Smoke | 2,048 decisions；必须越过 1,024-decision replay warmup |
+| Smoke | r2 为 4,090 decisions；必须越过 1,024-decision replay warmup 并留下训练 loss |
 | Formal | 100,000 decisions = 400,000 nominal emulator frames |
 | Eval | agent seed 10000；environment/no-op seed 20260812；10 局；第 0 局固定视频 |
 
 展开配置：
 
-- `configs/exp0011_atari100k_smoke_r1_s31415_2048_dec.yaml`，SHA256
-  `5f3fcc1ea35feaeb83898904de1f30e4e48f91fded13d43ef2a50348ad594d5a`
+- `configs/exp0011_atari100k_smoke_r2_s31415_4090_dec.yaml`，SHA256
+  `1a69657051612140d21479788854dfb9215849643546f5971dff2d14376aa6c1`
 - `configs/exp0011_atari100k_s000_100k_dec.yaml`，SHA256
   `014da22ccad6427836fa6b1b7af40d0e49758cd81d1f1b25fc41aef5024ed7f4`
 
@@ -49,7 +49,7 @@
 
 1. ALE L0：使用相同图像、动作、repeat、sticky、no-op 与 raw reward 配置；以 L0 专用短 time
    limit 强制检查 first/last/terminal/reset，保存非空视频。
-2. 模型 smoke：精确运行 2,048 decisions；checkpoint、replay、post-warmup loss、资源采样和完整性
+2. 模型 smoke r2：精确运行 4,090 decisions；checkpoint、replay、post-warmup loss、资源采样和完整性
    全部通过；按 steady policy FPS 估算正式 ETA 不超过 12 小时，线性磁盘外推后至少保留 5 GiB。
 3. 正式训练：精确 100K decisions；不根据中间分数换 seed、模型、ratio 或奖励。
 4. 独立评测：固定 agent/environment seed 完成 10 局，报告完整分布和固定第 0 局视频。
@@ -77,6 +77,11 @@
   2026 runtime 使用顶层 `--script train`，而 runner 误用了 2024 接口 `--run.script train`。
 - 失败目录和信标保留。replacement 只修正版本化 CLI 字段并更换 tag；seed、配置、预算和算法不变，
   且在任何训练 outcome 出现前重新提交与 freeze。
+- replacement r1 自然训练结束，但揭示 2026 runtime 的 checkpoint 是 `train/ckpt/<timestamp>/`
+  目录，driver 以 10 decisions 为粒度把请求的 2,048 推进到 2,050；默认 120 秒日志周期也没有留下
+  post-warmup loss。该运行只支持工程诊断，不用于科学裁决。
+- r2 将 smoke 调整到可精确到达的 4,090 decisions，并把 `log_every` 改为 15 秒。正式 100K 协议、
+  seed、算法和趋势门不变；目录 checkpoint 校验同时要求 `agent.pkl`、`step.pkl` 与 `done`。
 
 ## 允许结论
 

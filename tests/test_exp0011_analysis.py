@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -10,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from analyze_exp0011_atari import compute_smoke_gate, fixed_bins  # noqa: E402
-from verify_exp0011_run import unexpected_nonfinite_metrics  # noqa: E402
+from verify_exp0011_run import resolve_latest_checkpoint, unexpected_nonfinite_metrics  # noqa: E402
 
 
 class Exp0011AnalysisTest(unittest.TestCase):
@@ -30,7 +31,7 @@ class Exp0011AnalysisTest(unittest.TestCase):
         passed = compute_smoke_gate(
             True,
             [10.0, 12.0, 14.0],
-            smoke_steps=2048,
+            smoke_steps=4090,
             formal_steps=100_000,
             output_bytes=100 * 1024**2,
             free_bytes=100 * 1024**3,
@@ -38,7 +39,7 @@ class Exp0011AnalysisTest(unittest.TestCase):
         slow = compute_smoke_gate(
             True,
             [1.0, 1.0],
-            smoke_steps=2048,
+            smoke_steps=4090,
             formal_steps=100_000,
             output_bytes=100 * 1024**2,
             free_bytes=100 * 1024**3,
@@ -55,6 +56,25 @@ class Exp0011AnalysisTest(unittest.TestCase):
         unexpected = unexpected_nonfinite_metrics(rows)
         self.assertEqual(len(unexpected), 1)
         self.assertEqual(unexpected[0]["key"], "train/loss/dyn")
+
+    def test_resolve_latest_directory_checkpoint(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            train = Path(directory)
+            checkpoint = train / "ckpt" / "20260812T043021F558700"
+            checkpoint.mkdir(parents=True)
+            (train / "ckpt/latest").write_text(checkpoint.name, encoding="utf-8")
+            (checkpoint / "agent.pkl").write_bytes(b"agent")
+            (checkpoint / "step.pkl").write_bytes(b"step")
+            (checkpoint / "done").touch()
+            self.assertEqual(resolve_latest_checkpoint(train), checkpoint)
+
+    def test_resolve_latest_rejects_incomplete_checkpoint(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            train = Path(directory)
+            (train / "ckpt").mkdir(parents=True)
+            (train / "ckpt/latest").write_text("missing", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Incomplete directory checkpoint"):
+                resolve_latest_checkpoint(train)
 
 
 if __name__ == "__main__":

@@ -43,6 +43,22 @@ def load_jsonl(path: Path) -> list[dict]:
         return [json.loads(line) for line in handle if line.strip()]
 
 
+def resolve_latest_checkpoint(train_dir: Path) -> Path:
+    checkpoint_root = train_dir / "ckpt"
+    latest_file = checkpoint_root / "latest"
+    if not latest_file.is_file():
+        raise ValueError(f"Missing checkpoint index: {latest_file}")
+    name = latest_file.read_text(encoding="utf-8").strip()
+    if not name or name in {".", ".."} or Path(name).name != name:
+        raise ValueError(f"Invalid checkpoint name in {latest_file}: {name!r}")
+    checkpoint = checkpoint_root / name
+    required = (checkpoint / "agent.pkl", checkpoint / "step.pkl", checkpoint / "done")
+    missing = [str(path) for path in required if not path.is_file()]
+    if missing:
+        raise ValueError(f"Incomplete directory checkpoint: {missing}")
+    return checkpoint
+
+
 def unexpected_nonfinite_metrics(rows: list[dict]) -> list[dict]:
     unexpected = []
     for row_index, row in enumerate(rows):
@@ -84,13 +100,11 @@ def verify(
 ) -> dict:
     train_dir = run_dir / "train"
     generated_config = train_dir / "config.yaml"
-    checkpoint = train_dir / "checkpoint.ckpt"
     scores_path = train_dir / "scores.jsonl"
     metrics_path = train_dir / "metrics.jsonl"
     required = (
         frozen_config,
         generated_config,
-        checkpoint,
         scores_path,
         metrics_path,
         stdout_path,
@@ -103,8 +117,9 @@ def verify(
     generated = yaml.safe_load(generated_config.read_text(encoding="utf-8"))
     scores = load_jsonl(scores_path)
     metrics = load_jsonl(metrics_path)
-    checkpoint_data = cloudpickle.loads(checkpoint.read_bytes())
-    checkpoint_step = int(checkpoint_data["step"])
+    checkpoint = resolve_latest_checkpoint(train_dir)
+    checkpoint_step = int(cloudpickle.loads((checkpoint / "step.pkl").read_bytes()))
+    checkpoint_files = sorted(path for path in checkpoint.iterdir() if path.is_file())
     replay_files = [path for path in (train_dir / "replay").rglob("*") if path.is_file()]
     stdout = stdout_path.read_text(encoding="utf-8", errors="replace")
     unexpected = unexpected_nonfinite_metrics(metrics)
@@ -129,10 +144,16 @@ def verify(
         "generated_config_sha256": sha256(generated_config),
         "config_semantically_equal": frozen == generated,
         "config_checks": config_checks,
+        "checkpoint_path": str(checkpoint),
+        "checkpoint_latest": checkpoint.name,
         "checkpoint_step": checkpoint_step,
         "checkpoint_step_matches": checkpoint_step == expected_step,
-        "checkpoint_sha256": sha256(checkpoint),
-        "checkpoint_bytes": checkpoint.stat().st_size,
+        "checkpoint_sha256": sha256(checkpoint / "agent.pkl"),
+        "checkpoint_file_sha256": {
+            path.name: sha256(path) for path in checkpoint_files
+        },
+        "checkpoint_bytes": sum(path.stat().st_size for path in checkpoint_files),
+        "checkpoint_done": (checkpoint / "done").is_file(),
         "replay_file_count": len(replay_files),
         "replay_bytes": sum(path.stat().st_size for path in replay_files),
         "replay_nonempty": bool(replay_files),
@@ -150,6 +171,7 @@ def verify(
         checks["config_semantically_equal"]
         and all(config_checks.values())
         and checks["checkpoint_step_matches"]
+        and checks["checkpoint_done"]
         and checks["replay_nonempty"]
         and checks["scores_finite"]
         and checks["has_post_warmup_loss"]

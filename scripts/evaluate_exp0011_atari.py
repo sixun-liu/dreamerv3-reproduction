@@ -54,8 +54,15 @@ def main() -> None:
         raise ValueError("episodes must be positive")
     if not (runtime / "dreamerv3/main.py").is_file():
         raise FileNotFoundError(f"Invalid runtime: {runtime}")
-    if not checkpoint_path.is_file():
+    if not checkpoint_path.is_dir():
         raise FileNotFoundError(checkpoint_path)
+    required_checkpoint_files = (
+        checkpoint_path / "agent.pkl",
+        checkpoint_path / "step.pkl",
+        checkpoint_path / "done",
+    )
+    if not all(path.is_file() for path in required_checkpoint_files):
+        raise FileNotFoundError(f"Incomplete directory checkpoint: {checkpoint_path}")
     output.mkdir(parents=True)
 
     sys.path.insert(0, str(runtime))
