@@ -28,7 +28,7 @@ if [[ ! -s "${CHECKPOINT_ROOT}/latest" || ! -f "${TRAIN_ROOT}/.formal.completed"
   echo "Formal checkpoint is incomplete" >&2
   exit 21
 fi
-IFS= read -r checkpoint_name < "${CHECKPOINT_ROOT}/latest"
+checkpoint_name=$(<"${CHECKPOINT_ROOT}/latest")
 if [[ ! "${checkpoint_name}" =~ ^[A-Za-z0-9._-]+$ || \
       ! -s "${CHECKPOINT_ROOT}/${checkpoint_name}/agent.pkl" || \
       ! -s "${CHECKPOINT_ROOT}/${checkpoint_name}/step.pkl" || \
