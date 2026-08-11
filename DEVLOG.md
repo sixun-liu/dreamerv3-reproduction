@@ -232,3 +232,15 @@
 - Next: 只创建并冻结 `EXP-0011` Atari100K Breakout；ALE L0 与 2048-decision smoke 通过后再运行 100K decisions。
 - Approval: user-approved long-running cross-domain loop；scientific human review pending
 - Git: control freeze `d6d15ba` / monitoring `464c116`；runtime `6642b94`
+
+### 2026-08-11T23:23:07Z | result | EXP-0011-atari100k-breakout
+
+- Actor: codex
+- Summary: 2026 作者重实现的 50M/ratio256 Breakout 单 seed 完成精确 100K decisions；early/tail
+  均值为 `1.286/7.542`，改善 `6.256`，预注册趋势门通过。独立固定 checkpoint 10 局均值
+  `9.10`、范围 `5--16`，固定第 0 局视频完整，裁决 `promising_unresolved`。
+- Evidence: `EVT-0077`--`EVT-0080`；`ART-0063`--`ART-0070`；正式训练 `54.1 min`，峰值显存
+  `24645 MiB`。两次评测前 transport/config 接口失败均保留，不进入科学结果。
+- Next: 创建 `EXP-0012`，只按依赖审计 → Minecraft L0 → 模型资源 gate → 最多 100K 串行推进。
+- Approval: user-approved cross-domain long run；scientific human review pending
+- Git: runtime `5168475`；formal control freeze `ea7c73a`；evaluation repair `2469eab`

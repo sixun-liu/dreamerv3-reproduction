@@ -1,13 +1,13 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-11T20:45:41Z'
+updated_at: '2026-08-11T23:23:07Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在可审计的作者重实现上建立 DreamerV3 跨域最小证据闭环，区分像素控制、Atari 低数据预算与 Minecraft 工程可行性。
 primary_problem: DMC Vision 已形成单 seed 闭环；当前需验证 2026 作者重实现的降规模 Atari100K Breakout 环境、训练和独立评测链。
-active_experiment_id: EXP-0011
+active_experiment_id: null
 active_candidate: Atari100K Breakout size50m single-seed 100K-decision feasibility replication
 canonical_baseline:
   id: DV3-2026-ATARI100K-BREAKOUT-50M
