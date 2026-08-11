@@ -1,15 +1,13 @@
 schema_version: 1
-domain: dreamerv3-cross-domain-reproduction
+domain: minecraft
 primary_metrics:
-- Atari100K Breakout 100K-decision训练回报与固定checkpoint独立评测分布。
-- Minecraft里程碑成功率、首次达成步数与回报分布。
+- 各里程碑成功回合数、首次出现environment step和回报分布
 tail_metrics:
-- NaN/Inf、失败回合、最差固定窗口、checkpoint可恢复性、吞吐、显存、CPU/RAM与磁盘增长。
+- NaN/Inf、环境错误、checkpoint/replay完整性、吞吐、资源峰值和视频动态性
 forbidden_inputs:
-- 不得跨域合并为一个复现成功主张；每域独立报告runtime、协议和证据权限。
-- freeze后不得依据中间分数修改算法、奖励、动作空间、模型规模、seed或验收指标。
-- Minecraft未经新授权不得越过100K environment steps。
+- 不按中途分数换seed、模型、ratio、reward、动作、break speed或预算。
+- 100K后不自动追加1M/5M/100M；不把L0或早期里程碑称为论文钻石数值复现。
 promotion_gates:
-- 每个域仅在预期动作发生、完整性通过、参考协议可比且主指标进入预注册门时独立晋级。
+- L0与size50m资源门通过，100K自然完成且checkpoint/replay/metrics/里程碑分析/独立评测/视频完整。
 review_requirements:
-- 用户查看每域同坐标曲线、固定评测视频和受限结论后再确认人工审查。
+- 人工审查L0首帧、正式曲线和固定评测第0局视频。
