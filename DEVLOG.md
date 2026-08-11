@@ -223,3 +223,12 @@
 - Next: 完成 P0 审计后只创建并冻结 EXP-0010 DMC Vision 100K gate。
 - Approval: user
 - Git: control `main@077e8c9`; branch `exp/EXP-0010-dmc-vision-walker`; runtime_2411 `6642b94`; runtime_2026 `5168475`
+
+### 2026-08-11T19:59:51Z | result | EXP-0010-dmc-vision-walker
+
+- Actor: codex
+- Summary: 2024 作者重实现谱系的 DMC Vision Walker 通过 100K gate 并续至 1M environment steps；终点 checkpoint 精确为 500K decisions。末 100K 训练均值 `959.43` 进入官方 10-seed 范围 `954.96--964.79`，独立 10 局均值 `956.43`，裁决 `promising_unresolved`。
+- Evidence: `EVT-0064`--`EVT-0067`；`ART-0056`--`ART-0062`；完整性通过，fixed-bin AUC `849.43` 进入官方逐 seed AUC 范围，视频 501 帧且运动性检查通过。
+- Next: 只创建并冻结 `EXP-0011` Atari100K Breakout；ALE L0 与 2048-decision smoke 通过后再运行 100K decisions。
+- Approval: user-approved long-running cross-domain loop；scientific human review pending
+- Git: control freeze `d6d15ba` / monitoring `464c116`；runtime `6642b94`

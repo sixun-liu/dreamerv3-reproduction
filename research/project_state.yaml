@@ -1,13 +1,13 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-11T15:37:08Z'
+updated_at: '2026-08-11T19:59:51Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在可审计的作者重实现上建立 DreamerV3 跨域最小证据闭环，区分像素控制、Atari 低数据预算与 Minecraft 工程可行性。
 primary_problem: 当前正式证据仅覆盖 DMC Proprio；需要按独立代码谱系和协议串行恢复 DMC Vision、Atari100K 与 Minecraft Reduced 的最小证据。
-active_experiment_id: EXP-0010
+active_experiment_id: null
 active_candidate: DMC Vision walker_walk size12m single-seed staged replication
 canonical_baseline:
   id: DV3-2024-DMCV-WALKER-12M

@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-08-11T15:07:45Z
+> Updated: 2026-08-11T20:02:00Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,16 +8,15 @@
 
 ## 一句话判断
 
-用户已批准串行建立 DMC Vision、Atari100K 与 Minecraft Reduced 的跨域最小证据闭环；
-数据盘扩至 150 GB，两个目标 runtime 已固定为 clean clone，当前无 active experiment。
+`EXP-0010` DMC Vision Walker 已完成 100K gate 与 1M 全程，单 seed 末段数值、AUC、独立
+10 局评测和视频均形成闭环；GPU 已释放，下一项是 Atari100K Breakout。
 
 ## 当前主要矛盾
 
-既有正式证据只覆盖 DMC Proprio，尚不能回答作者重实现能否在像素控制、Atari 低数据预算和复杂
-Minecraft 环境上形成可复核行为。三个域的 runtime 与协议不同，必须逐项冻结和裁决，不能合并成
-“DreamerV3 多域复现成功”。
+DMC Vision 的首个像素控制实例已经闭环，但 Atari 低数据预算与 Minecraft 环境链仍无运行证据。
+Atari 使用不同的 2026 runtime、50M 模型和 ALE 计步语义，必须独立建立环境、smoke 和评测协议。
 
 ## 下一项决策
 
-完成 P0 版本/环境/资源审计后，只创建 `EXP-0010` DMC Vision Walker。先执行 100K environment-step
-gate；完整性、趋势、ETA 和磁盘门通过时，按预注册第二阶段续至 1M。Figure 18 paired seeds 已 parked。
+创建并冻结 `EXP-0011` Atari100K Breakout；先做 ALE L0 与越过 1024-decision replay warmup 的
+2048-decision 模型 smoke，通过完整性和资源门后运行单 seed 100K decisions。Minecraft 继续 parked。

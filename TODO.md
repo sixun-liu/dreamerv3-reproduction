@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-08-11T15:07:45Z
+> Updated: 2026-08-11T20:02:00Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,9 +8,10 @@
 
 ## Now
 
-- [ ] [codex] 完成三域 P0 审计并冻结 `EXP-0010`；trigger: clean runtime 与 150 GB 数据盘已确认。
-- [ ] [codex] 串行关闭 `EXP-0010`、`EXP-0011`、`EXP-0012`；trigger: 用户已恢复长期 goal。
-- [ ] [codex] 每域生成独立评测、图/视频与受限裁决；trigger: 对应训练或工程审计结束。
+- [ ] [codex] 建立 Atari 独立环境并冻结 `EXP-0011`；trigger: `EXP-0010` 已关闭且 GPU 空闲。
+- [ ] [codex] 依次完成 ALE L0、2048-decision smoke 和 100K-decision 正式运行；trigger: 上一层 gate 通过。
+- [ ] [codex] 关闭 `EXP-0011` 后建立 Minecraft 独立环境并执行 `EXP-0012` L0；trigger: Atari 已审计提交。
+- [ ] [codex] Minecraft L0/资源门通过时训练至硬上限 100K；trigger: 不越过当前授权。
 
 ## Waiting
 

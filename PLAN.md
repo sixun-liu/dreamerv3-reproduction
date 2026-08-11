@@ -1,6 +1,6 @@
 # PLAN
 
-> Updated: 2026-08-11T15:07:45Z
+> Updated: 2026-08-11T20:02:00Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml
 
@@ -11,14 +11,14 @@
 
 ## 阶段退出门
 
-- [ ] EXP-0010 DMC Vision 完成 100K gate；满足门时续至 1M，并生成独立评测和图像材料。
+- [x] EXP-0010 DMC Vision 完成 100K gate、1M 续训、独立评测和图像材料。
 - [ ] EXP-0011 Atari100K Breakout 完成 100K decisions、独立评测和 DQN 协议差异表。
 - [ ] EXP-0012 Minecraft 完成依赖/L0；通过时训练至 100K，否则以可复现工程阻塞结案。
 
 ## 活动路线
 
-1. 收口控制仓、clean runtime 与三域 P0 审计。
-2. DMC Vision → Atari100K → Minecraft 严格串行；每项关闭后才创建下一项。
+1. `EXP-0010` 已关闭；当前只建立 `EXP-0011` Atari 环境、协议与证据阶梯。
+2. Atari100K → Minecraft 严格串行；Atari 关闭后才创建 Minecraft 实验卡。
 3. 每项保留展开配置、资源账、checkpoint、独立评测、曲线/视频和受限裁决。
 4. 阴性结果或可复现工程阻塞均正常结案，不为追求正结果改协议。
 

@@ -1,6 +1,6 @@
 # RESULTS_SCOREBOARD
 
-> Updated: 2026-08-06T09:54:43Z
+> Updated: 2026-08-11T20:00:00Z
 > Maintainer: codex
 > Source of truth: research/experiments.jsonl and research/artifacts.jsonl
 
@@ -14,3 +14,4 @@
 | `EXP-0006` | Author 2026 runtime `ad49802`；seeded walker_walk；baseline/E1/P4-reconstructed；paired seeds0,1；500K env steps | E1 vs baseline late raw-KL delta -0.803/+0.337，双seed门失败；P4 vs E1 KL ratio0.0399/0.0161且entropy双seed更低，P4机制门通过 | reconstruction ratio2.99/2.46；final-30K baseline903.37/833.47、E1 638.62/616.56、P4 466.52/445.43；无严格collapse candidate | `/root/autodl-tmp/artifacts/dreamerv3/review/EXP-0006-walker-kl-three-arm/` | `promising_unresolved`；P4机制强支持，E1 raw-KL假说未复现；非论文Figure6/17数值复现 |
 | `EXP-0008` | Author 2024 runtime `2411f7d`+compat；cheetah_run；12M；repeat2；ratio512；seeds0--4；500K env steps | final-30K seed means595.24/512.70/464.80/573.96/605.99；aggregate550.54 vs official613.61 and official seed range583.995--651.096 | 5/5完整性通过；5/5后seed后半程均值高于前半程；本地聚合标准差53.67；DMC env RNG未受控 | `/root/autodl-tmp/artifacts/dreamerv3/review/EXP-0008-cheetah-five-seed/` | `negative`；学习方向复现、主数值门失败；仅限author-reimplementation |
 | `EXP-0009` | Author 2024 runtime `2411f7d`+EXP路由；reacher_hard；12M；repeat2；ratio512；paired agent/env seed0；1M env steps×三臂 | fixed-bin AUC baseline867.42、no-reward/value391.61、no-reconstruction7.84；预注册方向门通过 | final-200K means952.75/538.88/8.80；三臂精确step500000、完整性通过；单seed且仅论文1/10预算 | `/root/autodl-tmp/artifacts/dreamerv3/review/EXP-0009-reacher-signal-ablation/` | `promising_unresolved`；支持Reacher pilot机制顺序，待人工审查与跨seed验证 |
+| `EXP-0010` | Author 2024 runtime `2411f7d`+compat；DMC Vision walker_walk；12M；repeat2；ratio512；agent seed0；1M env steps | final-100K mean959.43，进入官方10-seed范围954.96--964.79；独立10局均值956.43 | early-20K mean83.93；fixed-bin AUC849.43，进入官方逐seed范围820.10--901.78；前约200K慢于官方均值；checkpoint step500000、完整性通过 | `/root/autodl-tmp/Artifacts/dreamerv3/review/EXP-0010-dmc-vision-walker-staged/` | `promising_unresolved`；单seed数值对齐实例，非跨seed或DMC Vision全域复现 |
