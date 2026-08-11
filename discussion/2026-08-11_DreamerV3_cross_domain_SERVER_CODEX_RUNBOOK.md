@@ -4,7 +4,7 @@
 > 用途：传给 AutoDL 服务器 Codex，作为新实验的预注册执行说明。
 > 当前设备：RTX 5090 32 GB；已验证 JAX 可在 Blackwell 上运行。
 > 当前证据：正式实验只覆盖 DMC Proprio，包括 Walker、Cheetah 与 Reacher。下一步希望用最小成本检查像素控制、Atari 和 Minecraft 三类不同环境，不追求会前完成论文级多域复现。
-> 服务器裁决（2026-08-11）：用户批准按证据阶梯串行执行；DMC Vision 使用 2024 runtime 的兼容提交，Atari/Minecraft 使用 2026 runtime；Minecraft 未经新授权不越过 1M。数据盘已扩到 150 GB。
+> 服务器裁决（2026-08-11）：用户批准按证据阶梯串行执行；DMC Vision 使用 2024 runtime 的兼容提交，Atari/Minecraft 使用 2026 runtime；Minecraft 未经新授权不越过 100K。数据盘已扩到 150 GB。
 
 ## 1. 总体问题
 

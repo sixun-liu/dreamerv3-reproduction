@@ -1,0 +1,35 @@
+schema_version: 1
+experiment_id: EXP-0010
+task: dmc_walker_walk
+runtime:
+  path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2411-crossdomain
+  commit: 6642b941f578cd72147bc2be3c3343d5bc72931c
+reference:
+  path: scores/dmc_vision-dreamerv3.json.gz
+  sha256: 68dd7e83ee6af076734e1edb843a3816cd241736c92e91837e7cf460231b7b08
+run:
+  tag: EXP-0010__walker-vision__s000__staged-1m-env__20260811T151208Z
+  seed: 0
+  environment_seed_controlled: false
+  action_repeat: 2
+  num_envs: 16
+  train_ratio: 512
+  model: size12m
+stages:
+  pilot:
+    decisions: 50000
+    environment_steps: 100000
+    config: docs/reproduction/configs/exp0010_dmcvision_s000_100k_env.yaml
+    config_sha256: ef1068f85184f0937aa512aecf60b01e3519a34726b193edec28c88e55330588
+  full:
+    decisions: 500000
+    environment_steps: 1000000
+    config: docs/reproduction/configs/exp0010_dmcvision_s000_1m_env.yaml
+    config_sha256: ab1a663629a43e0bf197296bb34ee9301bd85926f2970ebd7c9b4b86b5e0300f
+    continuation: same logdir, replay, checkpoint, seed, and algorithm settings
+continuation_gate:
+  integrity_passed: true
+  final_20k_mean_min: 200
+  improvement_over_first_20k_min: 100
+  estimated_additional_wall_hours_max: 12
+  remaining_disk_floor_gib: 5
