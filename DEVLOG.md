@@ -212,3 +212,14 @@
 - Next: 用新 canonical 路径完成 research audit、环境导入和一个后续实验周期；在此之前不移除 alias。
 - Approval: user-approved
 - Git: branch `infra/workspace-uppercase-layout`; historical JSONL/freeze unchanged
+
+## 2026-08-11
+
+### 2026-08-11T15:07:45Z | protocol | cross-domain-minimal-loop
+
+- Actor: codex
+- Summary: 用户批准将当前主问题切换为 DMC Vision、Atari100K 和 Minecraft Reduced 的串行跨域最小闭环；Figure 18 paired seeds 暂时 parked，三个域不得合并成单一复现主张。
+- Evidence: `discussion/2026-08-11_DreamerV3_cross_domain_SERVER_CODEX_RUNBOOK.md`；`research/project_state.yaml`；数据盘 150 GB/可用 108 GB；runtime `6642b94` 与 `5168475` clean clone。
+- Next: 完成 P0 审计后只创建并冻结 EXP-0010 DMC Vision 100K gate。
+- Approval: user
+- Git: control `main@077e8c9`; branch `exp/EXP-0010-dmc-vision-walker`; runtime_2411 `6642b94`; runtime_2026 `5168475`

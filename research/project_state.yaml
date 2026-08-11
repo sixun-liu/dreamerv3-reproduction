@@ -1,30 +1,28 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-07T14:46:03Z'
+updated_at: '2026-08-11T15:07:45Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
-north_star: 在可审计的受控实验中理解DreamerV3关键机制，并区分论文原消融与当前runtime上的机制扩展。
-primary_problem: 恢复DreamerV3 Figure 18 learning-signal消融的精确梯度语义，并判断单任务三臂pilot能否以合理成本提供机制证据。
+north_star: 在可审计的作者重实现上建立 DreamerV3 跨域最小证据闭环，区分像素控制、Atari 低数据预算与 Minecraft 工程可行性。
+primary_problem: 当前正式证据仅覆盖 DMC Proprio；需要按独立代码谱系和协议串行恢复 DMC Vision、Atari100K 与 Minecraft Reduced 的最小证据。
 active_experiment_id: null
-active_candidate: Figure 18 learning-signal single-task conceptual pilot protocol recovery
+active_candidate: DMC Vision walker_walk size12m single-seed staged replication
 canonical_baseline:
-  id: DV3-2026-DMCP-WALKER-KL-CONTROL
-  name: DreamerV3 2026 runtime seeded walker_walk KL control
-  repo_commit: 5b49eebf12126352bce25867cbe99acde620b035
-  config: runtime ad49802; size12m; ratio512; repeat2; 16 envs; 250K agent decisions=500K environment steps; env.dmc.use_seed=True; free_nats=1; dyn=1; rep=0.1
-  evaluation_protocol: 对每个arm使用agent/env seeds 0和1配对；训练score按environment steps分箱，报告0-250K与250-500K AUC及final-30K；同时比较raw KL、KL阈值比例、prior/posterior entropy与reconstruction losses；终点checkpoint做固定eval seed10000的随机连续策略评估并与训练口径分列。
+  id: DV3-2024-DMCV-WALKER-12M
+  name: DreamerV3 2024 author reimplementation DMC Vision Walker
+  repo_commit: c797ce9550776451d1c2938a419fb7b139b612fb
+  config: runtime 6642b94; dmc_vision+size12m; repeat2; train_ratio512; seed0; 50K decision gate=100K environment steps; preregistered upper 500K decisions=1M environment steps
+  evaluation_protocol: 训练 episode score 按 environment steps 固定分箱并与官方 dmc_vision walker 十 seed 曲线同坐标；终点 checkpoint 使用固定 eval seed 的随机连续策略评测并生成视频，训练与评测统计分列。
 parked_lanes:
-- Figure 18完整3x14任务论文消融矩阵
-- EXP-0007之后的访问分布匹配机制归因
-- Crafter scaling与DMC visual/full suite
-- 旧runtime早期曲线谱系归因
-- E2-E5横向机制扩展
+- EXP-0009 Figure 18 paired seeds 1,2 与 10M/14-task 扩展
+- DMC Vision、Atari100K 与 Minecraft 的多 seed/full-suite 扩展
+- Minecraft 1M/5M/100M 预算；当前授权只到 100K
 stage_exit_gates:
-- Figure 18两种梯度阻断已绑定论文原文、代码路径与等价性边界。
-- 单batch参数组grad-norm known-answer test可区分representation与head/decoder梯度路由。
-- 任务、预算、seed政策、聚合口径和conceptual证据权限经用户确认后才创建下一实验。
+- EXP-0010 DMC Vision 按 100K gate 完成 staged closure，满足门时续至 1M。
+- EXP-0011 Atari100K Breakout 完成 100K decisions、独立评测和协议边界裁决。
+- EXP-0012 Minecraft 完成依赖/L0；通过时训练至 100K，否则以可复现工程阻塞结案。
 repository_manifest: research/repositories.yaml
 workspace:
   path_aliases:
@@ -52,60 +50,60 @@ workspace:
     to: /root/autodl-tmp/ThirdParty
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
-  branch: exp/EXP-0009-reacher-signal-ablation
-  commit: 10f76c7ea9ef984069ea4ed71559ea0e138af163
+  branch: exp/EXP-0010-dmc-vision-walker
+  commit: c797ce9550776451d1c2938a419fb7b139b612fb
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
   latest: /root/autodl-tmp/Artifacts/dreamerv3/review/LATEST.md
 repository_snapshots:
   control:
-    repo: /root/autodl-tmp/dreamerv3-reproduction
-    branch: exp/EXP-0008-cheetah-five-seed
-    commit: 5b49eebf12126352bce25867cbe99acde620b035
+    repo: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
+    branch: exp/EXP-0010-dmc-vision-walker
+    commit: c797ce9550776451d1c2938a419fb7b139b612fb
     tracked_clean: true
     worktree_clean: true
     untracked_count: 0
     remote: https://github.com/sixun-liu/dreamerv3-reproduction.git
     role: control
-    declared_path: /root/autodl-tmp/dreamerv3-reproduction
+    declared_path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
     declared_remote: https://github.com/sixun-liu/dreamerv3-reproduction.git
     expected_commit: null
     commit_matches_manifest: true
     required_clean: true
     version: null
   runtime:
-    repo: /root/autodl-tmp/dreamerv3
-    branch: fix/eval-only-log-image
+    repo: /root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2026-crossdomain
+    branch: HEAD
     commit: 5168475b7a4413f9575933b4580e7073caea2114
     tracked_clean: true
-    worktree_clean: false
-    untracked_count: 13
-    remote: https://github.com/danijar/dreamerv3
+    worktree_clean: true
+    untracked_count: 0
+    remote: https://github.com/danijar/dreamerv3.git
     role: runtime
-    declared_path: /root/autodl-tmp/dreamerv3
+    declared_path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2026-crossdomain
     declared_remote: https://github.com/danijar/dreamerv3.git
     expected_commit: 5168475b7a4413f9575933b4580e7073caea2114
     commit_matches_manifest: true
     required_clean: true
     version: null
   runtime_2411:
-    repo: /root/autodl-tmp/dreamerv3-2411f7d
-    branch: fix/jax06-sm120
+    repo: /root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2411-crossdomain
+    branch: HEAD
     commit: 6642b941f578cd72147bc2be3c3343d5bc72931c
     tracked_clean: true
     worktree_clean: true
     untracked_count: 0
     remote: https://github.com/danijar/dreamerv3.git
     role: runtime_2411
-    declared_path: /root/autodl-tmp/dreamerv3-2411f7d
+    declared_path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2411-crossdomain
     declared_remote: https://github.com/danijar/dreamerv3.git
     expected_commit: 6642b941f578cd72147bc2be3c3343d5bc72931c
     commit_matches_manifest: true
     required_clean: true
     version: null
   runtime_exp0006:
-    repo: /root/autodl-tmp/dreamerv3-exp0006
+    repo: /root/autodl-tmp/Code/DreamerV3/dreamerv3-exp0006
     branch: exp/EXP-0006-kl-mechanism-runtime
     commit: ad49802bf7051d36be318a9db742a3e1a9255622
     tracked_clean: true
@@ -113,14 +111,14 @@ repository_snapshots:
     untracked_count: 0
     remote: https://github.com/danijar/dreamerv3.git
     role: runtime_exp0006
-    declared_path: /root/autodl-tmp/dreamerv3-exp0006
+    declared_path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-exp0006
     declared_remote: https://github.com/danijar/dreamerv3.git
     expected_commit: ad49802bf7051d36be318a9db742a3e1a9255622
     commit_matches_manifest: true
     required_clean: true
     version: null
   runtime_exp0007:
-    repo: /root/autodl-tmp/dreamerv3-exp0007
+    repo: /root/autodl-tmp/Code/DreamerV3/dreamerv3-exp0007
     branch: exp/EXP-0007-openloop-prediction
     commit: cdb3d00c3d2614a43aa7a8c6c541c8a2e1a8fcf6
     tracked_clean: true
@@ -128,14 +126,14 @@ repository_snapshots:
     untracked_count: 0
     remote: https://github.com/danijar/dreamerv3.git
     role: runtime_exp0007
-    declared_path: /root/autodl-tmp/dreamerv3-exp0007
+    declared_path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-exp0007
     declared_remote: https://github.com/danijar/dreamerv3.git
     expected_commit: cdb3d00c3d2614a43aa7a8c6c541c8a2e1a8fcf6
     commit_matches_manifest: true
     required_clean: true
     version: null
   workflow:
-    repo: /root/autodl-tmp/research-agent-kit
+    repo: /root/autodl-tmp/Tools/research-agent-kit
     branch: main
     commit: ffc2d665b477d7be0d20ec230aeb6f828552ed82
     tracked_clean: true
@@ -143,7 +141,7 @@ repository_snapshots:
     untracked_count: 0
     remote: https://github.com/sixun-liu/research-agent-kit.git
     role: workflow
-    declared_path: /root/autodl-tmp/research-agent-kit
+    declared_path: /root/autodl-tmp/Tools/research-agent-kit
     declared_remote: https://github.com/sixun-liu/research-agent-kit.git
     expected_commit: ffc2d665b477d7be0d20ec230aeb6f828552ed82
     commit_matches_manifest: true

@@ -1,15 +1,16 @@
 schema_version: 1
-domain: dreamerv3-mechanism-study
+domain: dreamerv3-cross-domain-reproduction
 primary_metrics:
-- 逐seed配对的raw KL时序、KL<0.1/0.5/1.0比例与final-30K episode score。
-- 0-250K和250-500K environment-step training-score AUC。
+- DMC Vision fixed-bin training-return AUC/tail 与官方十 seed 参考包络。
+- Atari100K Breakout 100K-decision训练回报与固定 checkpoint 独立评测分布。
+- Minecraft 里程碑成功率、首次达成步数与回报分布。
 tail_metrics:
-- NaN/Inf、失败episode尾部、raw-KL离散度、prior/posterior entropy和checkpoint可恢复性。
+- NaN/Inf、失败回合、最差固定窗口、checkpoint可恢复性、吞吐、显存、CPU/RAM与磁盘增长。
 forbidden_inputs:
-- freeze后不得依据中途或最终分数改变arm、seed、预算、P4语义或验收指标。
-- 不得把同环境seed描述为相同轨迹；策略分化后的轨迹仍会不同。
+- 不得跨域合并为一个复现成功主张；每域独立报告 runtime、协议和证据权限。
+- freeze 后不得依据中间分数修改算法、奖励、动作空间、模型规模、seed 或验收指标；只允许执行预注册预算 gate。
+- Minecraft 未经新授权不得越过 100K environment steps。
 promotion_gates:
-- 至少baseline/E1/P4各两个配对seed完整500K，且预期中间机制指标在两个seed方向一致，才形成supported working claim。
-- 任何结论仅适用于当前runtime和walker任务；不得称论文Figure 6/17已数值复现。
+- 每个域仅在预期动作发生、完整性通过、参考协议可比且主指标进入预注册包络时独立晋级。
 review_requirements:
-- 用户查看三臂同坐标KL、entropy/reconstruction和score图后确认。
+- 用户查看每域同坐标曲线、固定评测视频和受限结论后再确认人工审查。

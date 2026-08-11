@@ -1,32 +1,29 @@
 # PLAN
 
-> Updated: 2026-08-06T09:54:43Z
+> Updated: 2026-08-11T15:07:45Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml
 
 - Stage: `exploration`
-- 北极星：在受控实验中理解 DreamerV3 的关键机制，并区分论文原消融与当前 runtime 的机制扩展。
-- 当前问题：EXP-0009 单 seed pilot 已恢复并验证 Figure 18 梯度语义且通过定性方向门；下一步判断
-  该排序能否在同预算的 paired seeds 1、2 上保持，而不是直接扩大到论文完整矩阵。
+- 北极星：在可审计的作者重实现上建立 DreamerV3 跨域最小证据闭环，区分像素控制、Atari
+  低数据预算与 Minecraft 工程可行性。
+- 当前问题：正式证据仅覆盖 DMC Proprio；需要串行恢复三个域的最小运行、评测和边界证据。
 
 ## 阶段退出门
 
-- [x] 把 Figure 18 两种梯度阻断分别映射到论文原文和 2411f7d 代码，标出等价项与非等价近似。
-- [x] 在任何训练前，用一次小 batch 参数组梯度测试证明：被阻断信号不更新 encoder/RSSM，
-  但对应 prediction head/decoder 仍能学习。
-- [x] 候选任务、预算、seed 政策与证据权限经用户确认后，再新建独立 EXP 和 runtime 分支。
-- [ ] 用户人工审查 EXP-0009 图与结论权限，再决定是否把同一 1M 协议扩展到 paired seeds 1、2。
+- [ ] EXP-0010 DMC Vision 完成 100K gate；满足门时续至 1M，并生成独立评测和图像材料。
+- [ ] EXP-0011 Atari100K Breakout 完成 100K decisions、独立评测和 DQN 协议差异表。
+- [ ] EXP-0012 Minecraft 完成依赖/L0；通过时训练至 100K，否则以可复现工程阻塞结案。
 
 ## 活动路线
 
-1. 用户审查 EXP-0009 fixed-bin 曲线、配对行为展示和 scoped claim。
-2. 若用户批准，冻结相同 Reacher Hard 1M 三臂协议的 paired seeds 1、2；不按 seed 0 结果调参。
-3. 跨 seed 顺序稳定后，再在“延长到 10M”与“增加第二代表任务”之间预注册一个选择。
-4. Figure 18 完整 3×14 矩阵继续 parked。
+1. 收口控制仓、clean runtime 与三域 P0 审计。
+2. DMC Vision → Atari100K → Minecraft 严格串行；每项关闭后才创建下一项。
+3. 每项保留展开配置、资源账、checkpoint、独立评测、曲线/视频和受限裁决。
+4. 阴性结果或可复现工程阻塞均正常结案，不为追求正结果改协议。
 
 ## Parked Lanes
 
-- EXP-0006/0007 之后的访问分布匹配机制归因。
-- Figure 18 完整 3×14 learning-signal 矩阵及原论文多 seed 聚合。
-- Crafter scaling、DMC visual/full suite 和旧 runtime 曲线谱系归因。
-- EMA critic、entropy、unimix、replay critic 等 E2--E5 横向扩展。
+- EXP-0009 Figure 18 paired seeds 1、2，以及 10M/14-task 扩展。
+- 三个新域的多 seed 与 full-suite 扩展。
+- Minecraft 1M、5M 与 100M 预算；当前授权只到 100K。

@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-08-06T09:54:43Z
+> Updated: 2026-08-11T15:07:45Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,12 +8,13 @@
 
 ## Now
 
-- [ ] [user] 审查 `EXP-0009` 学习曲线、contact sheet 和“单任务单seed机制顺序获支持”表述；trigger: EXP-0009 已完成。
-- [ ] [user] 决定是否补 Reacher Hard paired seeds 1、2；trigger: EXP-0009 人工审查完成。
-- [ ] [claude] 独立复算 `EXP-0009` 固定十箱 AUC 与末200K统计；trigger: `ART-0050` 可读。
+- [ ] [codex] 完成三域 P0 审计并冻结 `EXP-0010`；trigger: clean runtime 与 150 GB 数据盘已确认。
+- [ ] [codex] 串行关闭 `EXP-0010`、`EXP-0011`、`EXP-0012`；trigger: 用户已恢复长期 goal。
+- [ ] [codex] 每域生成独立评测、图/视频与受限裁决；trigger: 对应训练或工程审计结束。
 
 ## Waiting
 
 - [ ] [user] 审查 `EXP-0007` 主图与“共同支持退化 + own-replay advantage”表述；trigger: `EVT-0042` 已关闭。
 - [ ] [user] 审查 `EXP-0008` 主图和“同向学习通过、主数值门失败”表述；trigger: `EVT-0050` 已关闭。
-- Figure 18 完整 3×14 矩阵保持 parked；单任务 pilot 不得表述为整图复现。
+- [ ] [user] 审查 `EXP-0009` 主图和单任务机制顺序表述；trigger: `EVT-0057` 已关闭。
+- Figure 18 paired seeds 与完整矩阵保持 parked；跨域长期作业不改变既有结论。
