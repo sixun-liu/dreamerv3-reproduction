@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-11T20:09:18Z'
+updated_at: '2026-08-11T20:20:13Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -50,7 +50,7 @@ workspace:
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
   branch: exp/EXP-0011-atari100k-breakout
-  commit: e9ea28fc60da5fbdea520e0e5aaf5e6e48d26069
+  commit: 27ef70139a3d75b9753e1dfa424c331539b45ac1
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
