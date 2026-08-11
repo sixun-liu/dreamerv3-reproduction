@@ -32,8 +32,8 @@
 
 展开配置：
 
-- `configs/exp0011_atari100k_smoke_s31415_2048_dec.yaml`，SHA256
-  `1afcfba829511b2f39618567874cbfa9bb815aebcd15c18a372f2a1ff4c256d7`
+- `configs/exp0011_atari100k_smoke_r1_s31415_2048_dec.yaml`，SHA256
+  `5f3fcc1ea35feaeb83898904de1f30e4e48f91fded13d43ef2a50348ad594d5a`
 - `configs/exp0011_atari100k_s000_100k_dec.yaml`，SHA256
   `014da22ccad6427836fa6b1b7af40d0e49758cd81d1f1b25fc41aef5024ed7f4`
 
@@ -71,8 +71,14 @@
 - formal 非零退出、重复 GPU 进程或完整性失败时保留原始证据并结案/诊断，不自动重启。
 - 阴性趋势结果正常结案；不为追求正结果追加 seed 或改变协议。
 
+## 启动层恢复记录
+
+- 首个 smoke tag `...smoke-2048-dec__20260811T201000Z` 在 0 秒、构造环境/模型之前失败：
+  2026 runtime 使用顶层 `--script train`，而 runner 误用了 2024 接口 `--run.script train`。
+- 失败目录和信标保留。replacement 只修正版本化 CLI 字段并更换 tag；seed、配置、预算和算法不变，
+  且在任何训练 outcome 出现前重新提交与 freeze。
+
 ## 允许结论
 
 - 允许：当前 2026 作者重实现、降规模配置和现代 ALE 下的单 seed 工程可行性与学习趋势。
 - 不允许：论文 200M 配置严格复现、跨 seed 稳定性、DreamerV3 优于 DQN 或 Atari100K 全域复现。
-

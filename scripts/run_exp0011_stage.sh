@@ -17,14 +17,14 @@ readonly REFERENCE=${RUNTIME}/scores/atari100k-dreamerv3.json.gz
 readonly VERIFY=${CONTROL}/scripts/verify_exp0011_run.py
 readonly ANALYZE=${CONTROL}/scripts/analyze_exp0011_atari.py
 readonly L0_TAG=EXP-0011__breakout__s31415__ale-l0__20260811T201000Z
-readonly SMOKE_TAG=EXP-0011__breakout__s31415__smoke-2048-dec__20260811T201000Z
+readonly SMOKE_TAG=EXP-0011__breakout__s31415__smoke-r1-2048-dec__20260811T202700Z
 readonly FORMAL_TAG=EXP-0011__breakout__s000__100k-dec__20260811T201000Z
 
 case "${STAGE}" in
   smoke)
     readonly TAG=${SMOKE_TAG}
-    readonly CONFIG=${CONTROL}/docs/reproduction/configs/exp0011_atari100k_smoke_s31415_2048_dec.yaml
-    readonly EXPECTED_CONFIG_SHA=1afcfba829511b2f39618567874cbfa9bb815aebcd15c18a372f2a1ff4c256d7
+    readonly CONFIG=${CONTROL}/docs/reproduction/configs/exp0011_atari100k_smoke_r1_s31415_2048_dec.yaml
+    readonly EXPECTED_CONFIG_SHA=5f3fcc1ea35feaeb83898904de1f30e4e48f91fded13d43ef2a50348ad594d5a
     readonly STEPS=2048
     readonly SEED=31415
     ;;
@@ -172,7 +172,7 @@ cd "${RUNTIME}"
   --logdir "${ROOT}/train" \
   --configs atari100k size50m \
   --task atari100k_breakout \
-  --run.script train \
+  --script train \
   --seed "${SEED}" \
   --run.envs 1 \
   --run.steps "${STEPS}" \
@@ -229,4 +229,3 @@ if [[ "${STAGE}" == "smoke" ]]; then
 fi
 cp "${STAGE_COMPLETED}" "${COMPLETED}"
 cp "${STAGE_COMPLETED}" "${ROOT}/.completed"
-
