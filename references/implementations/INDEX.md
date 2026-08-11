@@ -5,7 +5,7 @@
 ### DreamerV3 Author Public Reimplementation
 
 - Repository: `https://github.com/danijar/dreamerv3`
-- Local path: `/root/autodl-tmp/dreamerv3`
+- Local path: `/root/autodl-tmp/Code/DreamerV3/dreamerv3`
 - Commit: `e3f02248693a79dc8b0ebd62c93683888ddaccfe`
 - License: Apache-2.0 (`LICENSE` in the repository)
 - Source class: `author`
@@ -14,7 +14,7 @@
 ### CleanRL DQN（已核验的第三方参照）
 
 - Repository: `https://github.com/vwxyzjn/cleanrl`
-- Local path: `/root/autodl-tmp/third_party/cleanrl`
+- Local path: `/root/autodl-tmp/ThirdParty/cleanrl`
 - Commit: `fe8d8a03c41a7ef5b523e2e354bd01c363e786bb`
 - License: MIT（仓库 `LICENSE`）
 - Source file: `cleanrl/dqn_atari.py`

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
-readonly OUTPUT=/root/autodl-tmp/runs/EXP-0002__walker_walk__eval-s10000__40k-dec__20260721T053900Z
-readonly RUNTIME=/root/autodl-tmp/dreamerv3
+readonly OUTPUT=/root/autodl-tmp/Runs/EXP-0002__walker_walk__eval-s10000__40k-dec__20260721T053900Z
+readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3
 readonly PYTHON=/root/miniconda3/envs/dv3/bin/python
-readonly CHECKPOINT=/root/autodl-tmp/runs/dv3_dmcp_walker_500k_s0_0717/ckpt/20260717T021720F580890
+readonly CHECKPOINT=/root/autodl-tmp/Runs/dv3_dmcp_walker_500k_s0_0717/ckpt/20260717T021720F580890
 
 mkdir -p "${OUTPUT}"
 if [[ ! -f "${OUTPUT}/.freeze" ]]; then

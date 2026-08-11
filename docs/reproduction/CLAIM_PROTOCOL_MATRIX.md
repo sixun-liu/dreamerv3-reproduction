@@ -1,6 +1,6 @@
 # DreamerV3 Claim-Protocol Matrix
 
-Updated: 2026-07-21
+Updated: 2026-08-05
 
 This document separates paper facts, code-lineage facts, available reference artifacts, and unresolved reproduction choices. Unknown fields are not filled from repository defaults without evidence.
 
@@ -21,11 +21,12 @@ This document separates paper facts, code-lineage facts, available reference art
 | Candidate | Paper/reference evidence | Local protocol evidence | Blocking mismatch | Decision |
 |---|---|---|---|---|
 | DMC proprioceptive `walker_walk` | `scores/dmc_proprio-dreamerv3.json.gz`, 5 seeds；最后3点mean `935.752 -> 936` | `EXP-0004`三seedaggregate `785.53±90.34`；`EXP-0005`旧runtime单run final-30K `930.72`、250K median `658.26` | 两个runtime在250K均落后官方；DMC env seed未受控；本地window与官方导出点非完全同构 | 2026 runtime三seed `negative`；旧runtime `promising_unresolved`，终值通过但早期门失败 |
+| DMC proprioceptive `cheetah_run` | arXiv v2 Figure 14 / Table 11；官方5 seeds末3点 `613.613 -> 614`；逐seed范围 `[583.995,651.096]` | `EXP-0008` 2411f7d lineage 五 seed 均完成；final-30K `595.24/512.70/464.80/573.96/605.99`，aggregate `550.54`；5/5 同向学习 | 2024作者重实现不是2023 exact artifact；DMC env RNG未受agent seed控制；本地raw window与官方导出点非逐样本同构 | `negative`；学习方向通过，主数值门失败；仅限author-reimplementation |
 | DMC visual `walker_walk` | `scores/dmc_vision-dreamerv3.json.gz`, reference curves near 1M | Current `dmc_vision` defaults to the large model, 1.1M steps, replay ratio 256, repeat 1 | Paper table reports 12M model, action repeat 2, replay ratio 512; reference file contains more runs than the paper's stated 5 seeds | secondary candidate |
 | Crafter scaling | Paper Figure 4c/4d reports model-size and replay-ratio scaling | Stopped 200M/ratio-512 pilot is healthy and recoverable | Repository has no `crafter*.json.gz`; one configuration cannot reproduce a scaling claim | parked |
 | Full DMC suite mean/median | Paper tables and official JSON exist | Environment support exists | Requires many tasks and repeated seeds; cost is not appropriate for the first target | convergence-stage expansion |
 | Minecraft diamond | Paper result and official JSON exist | Environment wrapper exists | About 9 A100 GPU-days in the paper; environment/version burden is high | parked |
-| DQN Atari result | 2013 paper gives 7-game scores; Breakout average 168 and best 225 after the paper budget | Independent 2013-style implementation under `/root/autodl-tmp/dqn-reproduction`; CleanRL commit `fe8d8a0` is engineering reference only | Modern ALE/runtime, random no-op/FIRE reset, optimizer constants and the paper's ambiguous frame-count semantics prevent exact equivalence | separate single-game conceptual/independent replication |
+| DQN Atari result | 2013 paper gives 7-game scores; Breakout average 168 and best 225 after the paper budget | Independent 2013-style implementation under `/root/autodl-tmp/Code/DQN/dqn-reproduction`; CleanRL commit `fe8d8a0` is engineering reference only | Modern ALE/runtime, random no-op/FIRE reset, optimizer constants and the paper's ambiguous frame-count semantics prevent exact equivalence | separate single-game conceptual/independent replication |
 
 ## Protocol Fields Required Before Reproduction
 
@@ -42,7 +43,6 @@ This document separates paper facts, code-lineage facts, available reference art
 
 ## Current Recommendation
 
-`EXP-0005` 说明旧runtime可恢复论文终值量级，但没有恢复250K官方样本效率。当前复现主验收以
-500K固定预算终值和重复稳定性为准，曲线形状仅作诊断；先人工图审和独立复算，再决定证据是否
-足够转入论文理解，或补两个旧runtime独立重复。配对environment seed的谱系归因单独park，不与
-论文结果复现混为一项验收。
+`EXP-0005` 的 walker 单 seed 终值对齐与 `EXP-0008` 的 Cheetah 五 seed 数值门失败共同说明：
+当前谱系能稳定学习，但证据不支持跨任务数值复现已经闭环。下一优先项转为论文 Figure 18
+learning-signal 机制；先恢复梯度阻断语义和单元测试，再由用户决定是否启动单任务三臂 pilot。

@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-21T10:20:00Z
+> Updated: 2026-08-05T22:08:00Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -138,3 +138,77 @@
 - Next: 用户审查两张主图；随后在“恢复论文原P4配置”和“第二代表任务验证跨任务性”之间裁决，不自动补seed。
 - Approval: user批准12小时自主矩阵；scientific human review pending
 - Scope: 2026作者重实现、seeded DMC walker_walk与P4代码语义；不构成论文Figure6/17数值复现。
+
+## 2026-07-27
+
+### 2026-07-27T04:31:50Z | result | EXP-0007-openloop-prediction
+
+- Actor: codex
+- Summary: 六个 EXP-0006 checkpoint 在同一 576-window panel 上完成有限上下文预测。P4 相对 E1 在两个 seed 均表现为更低 H15 KL、更差 prior 和 teacher-forced NRMSE；独立 453 项复算零不一致。来源交叉矩阵同时显示三类模型均有 own-replay advantage，裁决 `promising_unresolved`。
+- Evidence: EVT-0038--EVT-0042；ART-0026--ART-0037；panel SHA256 `9fb6a644...36990f`
+- Next: 用户审查主图；若继续归因，只预注册能区分 representation specialization 与访问分布难度的匹配/交换分布实验，不自动追加计算。
+- Approval: experiment user-approved；scientific human review pending
+- Git: control audit `06115a0`；runtime `cdb3d00`
+
+## 2026-08-05
+
+### 2026-08-05T16:06:22Z | protocol | EXP-0008-cheetah-five-seed
+
+- Actor: codex
+- Summary: 用户批准夜间无人值守补强论文结果证据；预注册 Cheetah Run 12M、500K environment steps、五 seed 的 Figure 14 / Table 11 作者重实现复现。健康正式运行不按中途分数或曲线终止。
+- Evidence: `research/cards/EXP-0008.md`；`docs/reproduction/EXP0008_CHEETAH_PROTOCOL.md`；score SHA256 `8182860a...cc7f4`；runtime `6642b94`；修复后 freeze `EVT-0044`
+- Next: 提交推送后运行独立 smoke；通过完整性、ETA 和磁盘门再 detached 启动五 seed 顺序矩阵。
+- Approval: user
+- Git: protocol/runner commit `43b4b7a`；integrity-gate fix `e466398`；`EVT-0044` supersedes `EVT-0043`
+
+### 2026-08-05T16:57:08Z | protocol | EXP-0008-smoke-gate
+
+- Actor: codex
+- Summary: 两个 smoke 均自然训练并写出精确终点 checkpoint，但原 runner 的完整性检查先后把“预算内无完整 episode”和空条件统计 NaN 误判为失败；失败产物完整保留。收紧检查语义后，16,384-decision smoke 离线复核通过，实际主损失 NaN 仍会失败。
+- Evidence: `EVT-0045`--`EVT-0046`；step16384 checkpoint SHA256 `56bdc1e4...16aa0`；steady FPS `72.78`；replay ratio `520`；`runs/STATUS.md`
+- Next: 按最终 freeze detached 启动五 seed matrix；健康运行不中途停止。
+- Approval: within user-approved autonomous run
+- Git: verifier fix `47d357b`；final freeze `EVT-0045`
+
+### 2026-08-05T17:00:20Z | protocol | EXP-0008-detachment-recovery
+
+- Actor: codex
+- Summary: 首次正式 tag 仅创建 matrix `.started`；nohup child 随 exec session 清理，在 seed0 信标、GPU 进程和训练输出出现前退出。现场保留并标记 `detachment_before_seed0`，不构成 scientific run。
+- Evidence: `/root/autodl-tmp/runs/EXP-0008__cheetah-run__five-seed__500k-env__20260805T160000Z.{started,failed}`；GPU query empty；seed0 signal absent
+- Next: 只改变唯一 run tag 与 detached transport，重新提交/冻结；使用 named `screen` 启动相同五 seed 协议。
+- Approval: normal in-scope recovery；no training outcome observed
+- Git: replacement transport/tag commit `514b684`；replacement freeze `EVT-0047`
+
+### 2026-08-05T22:06:08Z | result | EXP-0008-cheetah-five-seed
+
+- Actor: codex
+- Summary: 2411f7d 谱系 Cheetah Run 五 seed 全部自然完成并通过完整性门；5/5 后半程均值高于前半程，但 final-30K 聚合 `550.54` 低于官方范围下限 `584.00`，主数值门失败，裁决 `negative`。
+- Evidence: `EVT-0049`--`EVT-0050`；`ART-0040`--`ART-0046`；checkpoint hashes 与独立 raw-file 复算全部一致
+- Next: 先人工审图；新计算前恢复 Figure 18 两种梯度阻断的精确语义和 known-answer test。
+- Approval: 用户批准无人值守五 seed 运行；scientific human review pending
+- Git: control analysis `6fe34f3`；runtime upstream `2411f7d` + compatibility `6642b94`
+
+## 2026-08-06
+
+### 2026-08-06T09:58:02Z | result | EXP-0009-reacher-signal-ablation
+
+- Actor: codex
+- Summary: Reacher Hard 单配对 seed 的 1M environment-step 三臂 pilot 全部自然完成；真实模型梯度 gate 通过，fixed-bin AUC 为 baseline `867.42`、no-reward/value `391.61`、no-reconstruction `7.84`，定性方向门通过。裁决 `promising_unresolved`，待人工审查与跨 seed 验证。
+- Evidence: `EVT-0056`--`EVT-0057`；`ART-0049`--`ART-0052`；working claim `C-0002`
+- Next: 用户审查学习曲线和配对行为展示；若继续，只先冻结相同 1M 协议的 paired seeds 1、2，不自动进入 10M 或 14-task 矩阵。
+- Approval: 用户批准梯度验证与 1M 三臂 pilot；scientific human review pending
+- Git: control freeze `10f76c7`；runtime gradient routing `990123a`；showcase code `f950ce2`
+
+## 2026-08-07
+
+### 2026-08-07T14:13:57Z | migration | workspace-uppercase-layout
+
+- Actor: codex
+- Summary: 用户批准将稳定工作区入口迁移为大写目录；DreamerV3 control/runtime 仓进入
+  `Code/DreamerV3/`，run、artifact、paper、env、workflow 等切换到大写 canonical 路径，旧根级
+  路径作为 compatibility alias 保留。
+- Evidence: `/root/autodl-tmp/Discussion/workspace/2026-08-07_uppercase-layout-migration.md`；
+  `research/repositories.yaml`；Git worktree repair 与新旧 inode 对账。
+- Next: 用新 canonical 路径完成 research audit、环境导入和一个后续实验周期；在此之前不移除 alias。
+- Approval: user-approved
+- Git: branch `infra/workspace-uppercase-layout`; historical JSONL/freeze unchanged

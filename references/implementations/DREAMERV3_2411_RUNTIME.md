@@ -16,7 +16,7 @@ checkpoint 增加默认关闭的 `run.save_at_end`，显式开启时等待异步
 
 ## 环境
 
-- 隔离前缀：`/root/autodl-tmp/envs/dv3-2411`
+- 隔离前缀：`/root/autodl-tmp/Envs/dv3-2411`
 - Python `3.12.13`；JAX/JAXlib `0.6.2`
 - dm-control `1.0.43`；MuJoCo `3.10.0`
 - pyzmq `27.1.0`；tensorflow-probability `0.25.0`

@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-07-21T21:45:00Z
+> Updated: 2026-08-06T09:54:43Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,17 +8,17 @@
 
 ## 一句话判断
 
-DreamerV3 已完成首个两seed受控机制实验：只关 free bits 的 E1 未在两个seed一致降低 raw KL，
-但性能均下降；在 E1 上把 representation KL 权重恢复为1的 P4-reconstructed 在两个seed都把
-late KL 压低到 baseline/E1 的约1.6%--4.0%，同时重构损失和性能明显恶化。
+EXP-0009 Reacher Hard 三臂 pilot 全部自然完成；真实模型梯度 gate 证明 intervention 语义正确，
+1M environment-step fixed-bin AUC 为 `867.42 > 391.61 > 7.84`，通过 Figure 18 定性方向门。
+证据权限仅为单任务、单配对 seed、论文十分之一预算的机制信号。
 
 ## 当前主要矛盾
 
-P4 的强效应在两个seed方向一致，但 posterior entropy 绝对值有明显seed差异；E1 raw-KL方向也
-不一致。论文 Figure 6/17 的完整 ablation config 仍未恢复，因此当前证据只支持 2026 runtime、
-seeded DMC、walker_walk 下的代码语义机制结论，不支持原图数值或跨任务主张。
+当前已从“消融到底阻断什么梯度”的实现不确定性推进到“该排序是否跨 seed 稳定”的统计不确定性。
+本轮结果足以支持继续验证，但不足以声称复现论文 14-task Figure 18；直接升到 10M 或全矩阵的成本收益
+仍不合理。
 
 ## 下一项决策
 
-计算已停止。先由用户审查 `EXP-0006` 两张主图；下一判别问题是：在恢复论文原 P4 配置或选择
-第二个代表任务后，E1→P4 的低 KL、重构恶化与性能下降是否仍能跨任务复现。不得自动补第三seed。
+计算已停止，GPU 空闲。用户先审查 `EXP-0009` 学习曲线、contact sheet 与受限表述；若继续，唯一
+下一计算候选是在相同 1M 预算下补 paired seeds 1、2，先排除 seed 0 偶然，再讨论 10M 或跨任务扩展。

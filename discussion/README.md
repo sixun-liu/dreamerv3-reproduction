@@ -15,7 +15,7 @@ Use `YYYY-MM-DD_topic.md` filenames. Each note should identify its author, evide
 - Verified paper/code/protocol facts move to `docs/reproduction/CLAIM_PROTOCOL_MATRIX.md`.
 - Durable route decisions move to `DEVLOG.md`.
 - Current judgment and next decision move to `CURRENT_STATE.md`.
-- Run facts move to `/root/autodl-tmp/runs/STATUS.md`.
-- Formal evidence moves through `research/` and `/root/autodl-tmp/artifacts/`.
+- Run facts move to `/root/autodl-tmp/Runs/STATUS.md`.
+- Formal evidence moves through `research/` and `/root/autodl-tmp/Artifacts/`.
 
 Discussion text alone cannot support a replication or method claim. Server process control remains Codex-only under `AGENTS.md`.

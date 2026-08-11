@@ -14,10 +14,10 @@ checkpoint、PDF 和完整 artifact 与本仓分离，通过固定 commit、路�
 | 角色 | 位置 |
 |---|---|
 | control | 本仓，`https://github.com/sixun-liu/dreamerv3-reproduction` |
-| runtime | `/root/autodl-tmp/dreamerv3`，官方 `danijar/dreamerv3@e3f0224` |
-| workflow | `/root/autodl-tmp/research-agent-kit@ffc2d66`，tag `v0.2.1` |
-| runs | `/root/autodl-tmp/runs/` |
-| artifacts | `/root/autodl-tmp/artifacts/dreamerv3/` |
+| runtime | `/root/autodl-tmp/Code/DreamerV3/dreamerv3`，官方 `danijar/dreamerv3@e3f0224` |
+| workflow | `/root/autodl-tmp/Tools/research-agent-kit@ffc2d66`，tag `v0.2.1` |
+| runs | `/root/autodl-tmp/Runs/` |
+| artifacts | `/root/autodl-tmp/Artifacts/dreamerv3/` |
 | staging | 旧 runtime 下的 `docs_from_claude/`，不进入 Git |
 
 机器可读角色清单见 `research/repositories.yaml`。本仓是在首轮实验完成后建立的控制仓，历史 freeze

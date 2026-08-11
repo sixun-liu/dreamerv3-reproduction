@@ -19,13 +19,13 @@ esac
 
 readonly EXPERIMENT=EXP-0006
 readonly TAG=EXP-0006__walker-kl__matrix-2seed__20260721T142500Z
-readonly ROOT=/root/autodl-tmp/runs/${TAG}
-readonly SIGNAL=/root/autodl-tmp/runs/${TAG}
+readonly ROOT=/root/autodl-tmp/Runs/${TAG}
+readonly SIGNAL=/root/autodl-tmp/Runs/${TAG}
 readonly OUTPUT=${ROOT}/${ARM}/s$(printf '%03d' "${SEED}")
 readonly TRAIN_OUTPUT=${OUTPUT}/train
 readonly EVAL_OUTPUT=${OUTPUT}/eval
-readonly RUNTIME=/root/autodl-tmp/dreamerv3-exp0006
-readonly CONTROL=/root/autodl-tmp/dreamerv3-reproduction
+readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3-exp0006
+readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
 readonly PYTHON=/root/miniconda3/envs/dv3/bin/python
 readonly TRAIN_CONFIG=${CONTROL}/docs/reproduction/configs/exp0006_${ARM}_s$(printf '%03d' "${SEED}")_train.yaml
 readonly EVAL_CONFIG=${CONTROL}/docs/reproduction/configs/exp0006_${ARM}_s$(printf '%03d' "${SEED}")_eval.yaml

@@ -5,7 +5,7 @@
 - Upstream: `https://github.com/danijar/dreamerv3.git`
 - Frozen upstream base: `e3f02248693a79dc8b0ebd62c93683888ddaccfe`
 - Local runtime head: `5168475b7a4413f9575933b4580e7073caea2114`
-- Complete local bundle: `/root/autodl-tmp/artifacts/dreamerv3/provenance/runtime-5168475.bundle`
+- Complete local bundle: `/root/autodl-tmp/Artifacts/dreamerv3/provenance/runtime-5168475.bundle`
   (SHA256 `d8b7a2acc891923c83a33f43af4de9941d9c2e4a305816bad8d36624d89442fb`)
 
 The tracked patches make this runtime state recoverable from the remote control repository without write access to
@@ -17,6 +17,20 @@ the author's upstream repository:
 | `patches/dreamerv3/0002-fix-runtime-optionally-save-checkpoint-at-run-end.patch` | Add default-off `run.save_at_end`; explicit runs save once after natural train-loop exit | No loss/update/policy change; only writes an exact terminal checkpoint when enabled | `5317f6d6e2bb6507a0cdd9962ad820f20459309ee15919e25542125ef77f28b3` |
 
 `MUJOCO_GL=egl` is an executor environment setting and is intentionally not a runtime source patch.
+
+## Experiment-specific analysis overlays
+
+`EXP-0007` uses an evaluation-only overlay on top of the frozen `EXP-0006` runtime. It adds a finite-context
+posterior warm-up and real-action prior rollout API; it does not change training, checkpoints, losses, optimizer,
+or environment interaction.
+
+| Experiment | Base | Runtime head | Patch | Patch SHA256 | Complete bundle |
+|---|---|---|---|---|---|
+| `EXP-0007` | `ad49802bf7051d36be318a9db742a3e1a9255622` | `cdb3d00c3d2614a43aa7a8c6c541c8a2e1a8fcf6` | `patches/dreamerv3-exp0007/0001-feat-EXP-0007-add-finite-context-open-loop-probe.patch` | `70cbfe05c9bfd8ca293f76d4fad6a9fe809a354d18f86ac355805d250a6d49f2` | `/root/autodl-tmp/Artifacts/dreamerv3/provenance/runtime-exp0007-cdb3d00.bundle` (SHA256 `2a56544a43df86489f232885c7896c5aa4ec392a12fc3d5ab9871622de29c577`) |
+
+Applying the `EXP-0007` patch to a clean `ad49802` checkout must produce tree
+`c37a92149a72d1484b5fbda5b0331f9b9dbfea17`. The bundle contains the complete reachable history and branch
+`exp/EXP-0007-openloop-prediction`; `git bundle verify` passed at closure.
 
 ## Recovery
 

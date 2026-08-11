@@ -14,7 +14,7 @@ This directory is the stable literature and understanding layer for the project.
 
 ## Layout
 
-- `papers/`: index and extracted text snapshots; canonical PDF binaries remain on the data disk at `/root/autodl-tmp/papers/`.
+- `papers/`: index and extracted text snapshots; canonical PDF binaries remain on the data disk at `/root/autodl-tmp/Paper/`.
 - `understanding/claude/`: stable snapshots of Claude-authored paper and code understanding.
 - `implementations/`: verified code-lineage and license index.
 - `surveys/`: literature-search outputs and future adapters for Claude's research workflow.
