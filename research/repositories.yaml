@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-08-07T14:09:01Z'
+updated_at: '2026-08-11T15:05:41Z'
 repositories:
   control:
     path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
@@ -7,14 +7,14 @@ repositories:
     commit_source: git-rev-parse-head
     required_clean: true
   runtime:
-    path: /root/autodl-tmp/Code/DreamerV3/dreamerv3
+    path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2026-crossdomain
     remote: https://github.com/danijar/dreamerv3.git
     commit: 5168475b7a4413f9575933b4580e7073caea2114
     required_clean: true
   runtime_2411:
-    path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-2411f7d
+    path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2411-crossdomain
     remote: https://github.com/danijar/dreamerv3.git
-    commit: 990123a0984a6096fb4041705ae9eeae44ab88a9
+    commit: 6642b941f578cd72147bc2be3c3343d5bc72931c
     required_clean: true
   runtime_exp0006:
     path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-exp0006
