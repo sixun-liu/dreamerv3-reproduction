@@ -244,3 +244,15 @@
 - Next: 创建 `EXP-0012`，只按依赖审计 → Minecraft L0 → 模型资源 gate → 最多 100K 串行推进。
 - Approval: user-approved cross-domain long run；scientific human review pending
 - Git: runtime `5168475`；formal control freeze `ea7c73a`；evaluation repair `2469eab`
+
+### 2026-08-11T23:58:00Z | protocol | EXP-0012-minecraft-reduced
+
+- Actor: codex
+- Summary: Minecraft 独立 Python 3.11 环境已建立；作者补丁 MineRL 0.4.4 wheel 通过长度与 CRC
+  校验，Java 8/Xvfb/GL、`pip check`、MineRL import 和 JAX 0.6.2 RTX 5090 matmul 均通过。
+  作者旧 JAX/CUDA pin 因 Blackwell 不兼容被替换；NumPy/OpenCV 固定为 `1.26.4/4.11.0.86`。
+- Evidence: `docs/reproduction/EXP0012_MINECRAFT_PROTOCOL.md`；wheel SHA256 `b04e2cd...c631`；
+  environment `/root/autodl-tmp/Envs/dv3-minecraft-2026`；card `EXP-0012`。
+- Next: 结果盲冻结后运行真实 32-step L0；通过时再进入 size50m 4096-step 模型资源 smoke。
+- Approval: user-approved cross-domain long run；100K hard limit
+- Git: runtime `5168475`；control preparation `fde4ce6`

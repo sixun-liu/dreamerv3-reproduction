@@ -1,13 +1,13 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-11T23:55:55Z'
+updated_at: '2026-08-11T23:57:37Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在可审计的作者重实现上建立 DreamerV3 跨域最小证据闭环，区分像素控制、Atari低数据预算与Minecraft工程可行性。
 primary_problem: DMC Vision与Atari100K已闭环；当前需验证Minecraft Reduced真实依赖/L0链、size50m资源门和100K早期里程碑。
-active_experiment_id: null
+active_experiment_id: EXP-0012
 active_candidate: Minecraft Diamond size50m single-seed 100K-environment-step reduced feasibility replication
 canonical_baseline:
   id: DV3-2026-MINECRAFT-DIAMOND-50M-100K
