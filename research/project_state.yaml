@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-11T15:35:30Z'
+updated_at: '2026-08-11T15:37:08Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -51,7 +51,7 @@ workspace:
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
   branch: exp/EXP-0010-dmc-vision-walker
-  commit: c797ce9550776451d1c2938a419fb7b139b612fb
+  commit: 233b821a2b97886b6c1fb3c01e8ccc3bbac44aeb
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
