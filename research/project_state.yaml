@@ -1,27 +1,26 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-11T19:59:51Z'
+updated_at: '2026-08-11T20:07:48Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在可审计的作者重实现上建立 DreamerV3 跨域最小证据闭环，区分像素控制、Atari 低数据预算与 Minecraft 工程可行性。
-primary_problem: 当前正式证据仅覆盖 DMC Proprio；需要按独立代码谱系和协议串行恢复 DMC Vision、Atari100K 与 Minecraft Reduced 的最小证据。
+primary_problem: DMC Vision 已形成单 seed 闭环；当前需验证 2026 作者重实现的降规模 Atari100K Breakout 环境、训练和独立评测链。
 active_experiment_id: null
-active_candidate: DMC Vision walker_walk size12m single-seed staged replication
+active_candidate: Atari100K Breakout size50m single-seed 100K-decision feasibility replication
 canonical_baseline:
-  id: DV3-2024-DMCV-WALKER-12M
-  name: DreamerV3 2024 author reimplementation DMC Vision Walker
-  repo_commit: c797ce9550776451d1c2938a419fb7b139b612fb
-  config: runtime 6642b94; dmc_vision+size12m; repeat2; train_ratio512; seed0; 50K decision gate=100K environment steps; preregistered upper 500K decisions=1M environment steps
-  evaluation_protocol: 训练 episode score 按 environment steps 固定分箱并与官方 dmc_vision walker 十 seed 曲线同坐标；终点 checkpoint 使用固定 eval seed 的随机连续策略评测并生成视频，训练与评测统计分列。
+  id: DV3-2026-ATARI100K-BREAKOUT-50M
+  name: DreamerV3 2026 author reimplementation Atari100K Breakout size50m
+  repo_commit: e9ea28fc60da5fbdea520e0e5aaf5e6e48d26069
+  config: runtime 5168475; atari100k+size50m; 64x64 RGB; repeat4; sticky false; minimal actions; train_ratio256; seed0; exactly 100K agent decisions
+  evaluation_protocol: 训练 episode raw score 按 emulator frames 固定分箱；官方五 seed曲线只作描述性上下文；终点checkpoint使用固定agent/environment seed独立评测10局并固定第0局视频。
 parked_lanes:
 - EXP-0009 Figure 18 paired seeds 1,2 与 10M/14-task 扩展
 - DMC Vision、Atari100K 与 Minecraft 的多 seed/full-suite 扩展
-- Minecraft 1M/5M/100M 预算；当前授权只到 100K
+- Minecraft 1M/5M/100M 预算；当前硬上限 100K
 stage_exit_gates:
-- EXP-0010 DMC Vision 按 100K gate 完成 staged closure，满足门时续至 1M。
-- EXP-0011 Atari100K Breakout 完成 100K decisions、独立评测和协议边界裁决。
+- EXP-0011 Atari100K Breakout 完成 ALE L0、2048-decision smoke、100K decisions、独立评测和协议边界裁决。
 - EXP-0012 Minecraft 完成依赖/L0；通过时训练至 100K，否则以可复现工程阻塞结案。
 repository_manifest: research/repositories.yaml
 workspace:
@@ -50,8 +49,8 @@ workspace:
     to: /root/autodl-tmp/ThirdParty
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
-  branch: exp/EXP-0010-dmc-vision-walker
-  commit: 233b821a2b97886b6c1fb3c01e8ccc3bbac44aeb
+  branch: exp/EXP-0011-atari100k-breakout
+  commit: e9ea28fc60da5fbdea520e0e5aaf5e6e48d26069
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
@@ -59,8 +58,8 @@ human_review:
 repository_snapshots:
   control:
     repo: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
-    branch: exp/EXP-0010-dmc-vision-walker
-    commit: c797ce9550776451d1c2938a419fb7b139b612fb
+    branch: exp/EXP-0011-atari100k-breakout
+    commit: e9ea28fc60da5fbdea520e0e5aaf5e6e48d26069
     tracked_clean: true
     worktree_clean: true
     untracked_count: 0

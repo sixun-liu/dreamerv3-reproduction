@@ -1,16 +1,15 @@
 schema_version: 1
 domain: dreamerv3-cross-domain-reproduction
 primary_metrics:
-- DMC Vision fixed-bin training-return AUC/tail 与官方十 seed 参考包络。
-- Atari100K Breakout 100K-decision训练回报与固定 checkpoint 独立评测分布。
-- Minecraft 里程碑成功率、首次达成步数与回报分布。
+- Atari100K Breakout 100K-decision训练回报与固定checkpoint独立评测分布。
+- Minecraft里程碑成功率、首次达成步数与回报分布。
 tail_metrics:
 - NaN/Inf、失败回合、最差固定窗口、checkpoint可恢复性、吞吐、显存、CPU/RAM与磁盘增长。
 forbidden_inputs:
-- 不得跨域合并为一个复现成功主张；每域独立报告 runtime、协议和证据权限。
-- freeze 后不得依据中间分数修改算法、奖励、动作空间、模型规模、seed 或验收指标；只允许执行预注册预算 gate。
-- Minecraft 未经新授权不得越过 100K environment steps。
+- 不得跨域合并为一个复现成功主张；每域独立报告runtime、协议和证据权限。
+- freeze后不得依据中间分数修改算法、奖励、动作空间、模型规模、seed或验收指标。
+- Minecraft未经新授权不得越过100K environment steps。
 promotion_gates:
-- 每个域仅在预期动作发生、完整性通过、参考协议可比且主指标进入预注册包络时独立晋级。
+- 每个域仅在预期动作发生、完整性通过、参考协议可比且主指标进入预注册门时独立晋级。
 review_requirements:
 - 用户查看每域同坐标曲线、固定评测视频和受限结论后再确认人工审查。
