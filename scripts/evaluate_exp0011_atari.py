@@ -67,12 +67,15 @@ def main() -> None:
 
     sys.path.insert(0, str(runtime))
     import elements  # noqa: PLC0415
-    from dreamerv3 import agent as agt  # noqa: PLC0415
     from dreamerv3 import main as dv3_main  # noqa: PLC0415
+    import ruamel.yaml as yaml  # noqa: PLC0415
 
-    config = elements.Config(agt.Agent.configs["defaults"])
+    configs = yaml.YAML(typ="safe").load(
+        (runtime / "dreamerv3/configs.yaml").read_text(encoding="utf-8")
+    )
+    config = elements.Config(configs["defaults"])
     for name in ("atari100k", "size50m"):
-        config = config.update(agt.Agent.configs[name])
+        config = config.update(configs[name])
     config = config.update(
         task="atari100k_breakout",
         seed=args.agent_seed,
@@ -120,8 +123,11 @@ def main() -> None:
     policy = lambda *values: agent.policy(*values, mode="eval")
     driver.reset(agent.init_policy)
     decision_budget = args.episodes * args.max_decisions_per_episode
-    while len(completed) < args.episodes and transitions_seen < decision_budget:
-        driver(policy, steps=min(100, decision_budget - transitions_seen))
+    try:
+        while len(completed) < args.episodes and transitions_seen < decision_budget:
+            driver(policy, steps=min(100, decision_budget - transitions_seen))
+    finally:
+        driver.close()
 
     if len(completed) != args.episodes:
         raise RuntimeError(
