@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import json
 import sys
 from fractions import Fraction
@@ -132,6 +133,11 @@ def main() -> None:
         "experiment_id": "EXP-0011",
         "purpose": "ALE environment L0; length=256 is test-only",
         "runtime": str(runtime),
+        "python": sys.version,
+        "packages": {
+            name: importlib.metadata.version(name)
+            for name in ("ale-py", "jax", "jaxlib", "numpy", "elements")
+        },
         "rom": str(rom),
         "rom_md5": rom_md5,
         "rom_sha256": rom_sha256,
