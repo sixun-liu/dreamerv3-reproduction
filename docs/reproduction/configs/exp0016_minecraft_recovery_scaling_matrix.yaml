@@ -1,0 +1,71 @@
+schema_version: 1
+experiment_id: EXP-0016
+purpose: bounded_recovery_environment_scaling
+runtime:
+  path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2026-crossdomain
+  commit: 5168475b7a4413f9575933b4580e7073caea2114
+hardware_boundary:
+  cpu_quota_cores: 16
+  cgroup_memory_bytes: 96636764160
+  gpu: NVIDIA GeForce RTX 5090
+  gpu_memory_mib: 32607
+source:
+  experiment_id: EXP-0012
+  run: /root/autodl-tmp/Runs/EXP-0012__minecraft-diamond__s000__100k-env__20260812T080000Z
+  checkpoint_step: 100000
+  checkpoint_tree_sha256: 768e088455502cadbee875022f7754c7703b5df6708aa7f9fed4df4c70775fe0
+  replay_tree_sha256: f103990afb0a5f484aa965a03df110d0a0a8ae9c12f2a9c823757bac95127fc2
+baseline:
+  experiment_id: EXP-0015
+  environment_count: 2
+  run: /root/autodl-tmp/Runs/EXP-0015__minecraft-recovery__s000__100k-to-105040-env__20260812T071500Z
+  integrity_sha256: 9c974d3258bf218d8a2775fc9440b35ea8a658a00e920c0ded805be0afe7d139
+  completed_sha256: 9efcd5a6f6f47dec087c07d2a0a6a2a010722f89d8ac26f740dda3fcdb5ab589
+  metrics_sha256: 4e06d000409d27274e41ce21782b2ef30d91178bd2b88b953401f2a6a3115646
+  resource_system_sha256: 1dc8252be5d6249666825190ceab7bfe860fcd8cd7e863ea22def3416df41c85
+  resource_gpu_sha256: bf0e503d67fc1382274ed3cb3423334a9658002ca9ef749cad7c45fc5981a490
+  frozen_window_policy_fps_mean: 40.68385831518033
+training:
+  source_step: 100000
+  added_environment_steps: 5040
+  absolute_final_step: 105040
+  seed: 0
+  debug: false
+  train_ratio: 32
+  from_checkpoint: ''
+  steady_window_added_step_fraction: [0.20, 0.90]
+  replay_ratio_range: [28.0, 36.0]
+  minimum_samples_per_arm: 5
+arms:
+  envs4:
+    environment_count: 4
+    run_if: always
+    promote_if:
+      minimum_steady_policy_speedup_over_envs2: 1.10
+      minimum_predicted_100k_eta_reduction: 0.08
+  envs8:
+    environment_count: 8
+    run_if: envs4_promoted
+    promote_if:
+      minimum_steady_policy_speedup_over_envs4: 1.05
+      minimum_predicted_100k_eta_reduction: 0.05
+resource_gates:
+  maximum_cgroup_memory_bytes: 77309411328
+  root_disk_minimum_free_bytes: 5368709120
+  data_disk_minimum_free_bytes: 10737418240
+  no_oom: true
+  source_unchanged: true
+  cleanup_required: true
+selection:
+  objective: lowest predicted added-100K wall time among promoted safe arms
+  fallback: envs2
+  gpu_utilization_is_diagnostic_only: true
+forbidden:
+  - script_parallel
+  - algorithm_or_reward_change
+  - score_or_inventory_based_selection
+  - training_beyond_105040
+  - rerun_failed_arm_in_same_output
+storage:
+  run_root: /root/autodl-tmp/Runs/EXP-0016__minecraft-recovery-scaling__s000__100k-to-105040-env__20260812T073000Z
+  temp_and_cache_root: each_arm/work

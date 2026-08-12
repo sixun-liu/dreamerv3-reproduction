@@ -121,6 +121,8 @@ def matching_original_files(source_manifest: dict, target_root: Path) -> dict:
 
 
 def verify(args: argparse.Namespace) -> dict:
+    experiment_id = getattr(args, "experiment_id", "EXP-0015")
+    expected_envs = getattr(args, "expected_envs", 2)
     train = args.run_dir / "train"
     required = (
         args.clone_manifest,
@@ -160,7 +162,7 @@ def verify(args: argparse.Namespace) -> dict:
         "changed_paths": sorted(config_differences),
         "task": generated.get("task") == "minecraft_diamond",
         "seed": generated.get("seed") == 0,
-        "envs": generated.get("run", {}).get("envs") == 2,
+        "envs": generated.get("run", {}).get("envs") == expected_envs,
         "debug_false": generated.get("run", {}).get("debug") is False,
         "absolute_final_step": generated.get("run", {}).get("steps") == float(args.final_step),
         "train_ratio": generated.get("run", {}).get("train_ratio") == 32.0,
@@ -192,7 +194,8 @@ def verify(args: argparse.Namespace) -> dict:
         "expected_new_stepids": args.final_step - args.source_step,
         "new_is_first_count": len(new_first_ids),
         "new_is_first_chunk_prefix_count": len(new_first_prefixes),
-        "two_new_worker_starts": len(new_first_prefixes) >= 2,
+        "expected_new_worker_starts": expected_envs,
+        "new_worker_starts_observed": len(new_first_prefixes) >= expected_envs,
         "original_replay_files": matching_original_files(
             clone["source"]["replay"], train / "replay"
         ),
@@ -272,7 +275,7 @@ def verify(args: argparse.Namespace) -> dict:
     error_markers = [marker for marker in ERROR_MARKERS if marker in stdout]
     checks = {
         "schema_version": 1,
-        "experiment_id": "EXP-0015",
+        "experiment_id": experiment_id,
         "clone_preflight_passed": clone.get("passed") is True,
         "source_unchanged": source_unchanged,
         "config": config_checks,
@@ -316,15 +319,15 @@ def verify(args: argparse.Namespace) -> dict:
         and replay_checks["target_unique_stepids"] == args.final_step
         and replay_checks["source_stepids_preserved"]
         and replay_checks["new_unique_stepids"] == replay_checks["expected_new_stepids"]
-        and replay_checks["two_new_worker_starts"]
+        and replay_checks["new_worker_starts_observed"]
         and replay_checks["original_replay_files"]["passed"]
         and metric_checks["only_post_source_steps"]
         and metric_checks["has_training_loss"]
         and metric_checks["finite"]
         and metric_checks["ratio32_observed"]
         and resource_checks["samples"] >= 2
-        and resource_checks["max_java_count"] >= 2
-        and resource_checks["max_temp_dir_count"] >= 2
+        and resource_checks["max_java_count"] >= expected_envs
+        and resource_checks["max_temp_dir_count"] >= expected_envs
         and resource_checks["system_disk_loss_within_limit"]
         and resource_checks["no_oom"]
         and resource_checks["temp_clean"]
@@ -338,6 +341,8 @@ def verify(args: argparse.Namespace) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-dir", type=Path, required=True)
+    parser.add_argument("--experiment-id", default="EXP-0015")
+    parser.add_argument("--expected-envs", type=int, default=2)
     parser.add_argument("--source-train", type=Path, required=True)
     parser.add_argument("--source-config", type=Path, required=True)
     parser.add_argument("--clone-manifest", type=Path, required=True)

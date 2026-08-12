@@ -70,7 +70,7 @@ class Exp0015RecoveryTest(unittest.TestCase):
             self.assertTrue(result["comparisons"]["checkpoint"]["distinct_inodes"])
             self.assertTrue(result["comparisons"]["replay"]["content_equal"])
 
-    def _fixture(self, root: Path) -> Namespace:
+    def _fixture(self, root: Path, expected_envs: int = 2) -> Namespace:
         source = root / "source"
         target = root / "target"
         (source / "replay").mkdir(parents=True)
@@ -80,9 +80,15 @@ class Exp0015RecoveryTest(unittest.TestCase):
         clone_manifest = target / "clone.json"
         clone_manifest.write_text(json.dumps(clone), encoding="utf-8")
 
-        write_checkpoint(target / "train", "final", 8, b"updated-agent")
-        write_chunk(target / "train/replay/new-worker-0.npz", 2, 2, first=True)
-        write_chunk(target / "train/replay/new-worker-1.npz", 3, 2, first=True)
+        final_step = 4 + 2 * expected_envs
+        write_checkpoint(target / "train", "final", final_step, b"updated-agent")
+        for worker in range(expected_envs):
+            write_chunk(
+                target / f"train/replay/new-worker-{worker}.npz",
+                2 + worker,
+                2,
+                first=True,
+            )
 
         source_config = yaml.safe_load(BASELINE.read_text(encoding="utf-8"))
         source_config["logdir"] = str(source)
@@ -91,8 +97,8 @@ class Exp0015RecoveryTest(unittest.TestCase):
         frozen["logdir"] = str(target / "train")
         frozen["run"].update(
             debug=False,
-            envs=2,
-            steps=8.0,
+            envs=expected_envs,
+            steps=float(final_step),
             log_every=10,
             report_every=120,
             save_every=300,
@@ -107,7 +113,7 @@ class Exp0015RecoveryTest(unittest.TestCase):
         (target / "train/metrics.jsonl").write_text(
             json.dumps(
                 {
-                    "step": 8,
+                    "step": final_step,
                     "train/loss/image": 1.0,
                     "replay/replay_ratio": 32.0,
                 }
@@ -140,8 +146,8 @@ class Exp0015RecoveryTest(unittest.TestCase):
                         "cgroup_memory_current_bytes": 100,
                         "memory_events_oom": 0,
                         "memory_events_oom_kill": 0,
-                        "java_count": 2,
-                        "temp_dir_count": 2,
+                        "java_count": expected_envs,
+                        "temp_dir_count": expected_envs,
                         "system_disk_used_bytes": 100,
                     }
                 )
@@ -157,12 +163,14 @@ class Exp0015RecoveryTest(unittest.TestCase):
             clone_manifest=clone_manifest,
             frozen_config=frozen_path,
             source_step=4,
-            final_step=8,
+            final_step=final_step,
             stdout_log=stdout,
             resource_system=resource,
             temp_root=temp_root,
             max_system_disk_loss=536870912,
             skip_live_process_check=True,
+            experiment_id="EXP-TEST",
+            expected_envs=expected_envs,
         )
 
     def test_verifier_accepts_replay_forest_and_rejects_source_drift(self) -> None:
@@ -177,6 +185,17 @@ class Exp0015RecoveryTest(unittest.TestCase):
             drifted = verify(args)
             self.assertFalse(drifted["passed"])
             self.assertFalse(drifted["source_unchanged"]["replay"])
+
+    def test_verifier_requires_every_declared_worker_start(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            args = self._fixture(Path(directory), expected_envs=4)
+            result = verify(args)
+            self.assertTrue(result["passed"])
+            self.assertEqual(result["replay"]["new_is_first_chunk_prefix_count"], 4)
+            args.expected_envs = 8
+            insufficient = verify(args)
+            self.assertFalse(insufficient["passed"])
+            self.assertFalse(insufficient["replay"]["new_worker_starts_observed"])
 
 
 if __name__ == "__main__":
