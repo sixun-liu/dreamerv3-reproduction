@@ -1,6 +1,7 @@
 # EXP-0012 Minecraft Reduced 协议
 
-> 状态：依赖兼容门通过，等待 L0；本轮最高预算 100K environment steps。
+> 状态：依赖、真实 L0 与 reconciled size50m smoke 门通过，等待 formal 100K；本轮最高预算
+> 100K environment steps。
 
 ## 研究问题
 

@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-08-11T23:58:00Z
+> Updated: 2026-08-12T00:22:00Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,9 +8,8 @@
 
 ## Now
 
-- [ ] [codex] 冻结 `EXP-0012` 并运行真实 Minecraft L0；trigger: 独立环境与静态兼容门已通过。
-- [ ] [codex] L0 通过后运行 4096-step size50m smoke；trigger: checkpoint/replay/有限损失及资源门。
-- [ ] [codex] smoke gate 通过后训练至硬上限 100K 并完成评测/材料；trigger: 不越过当前授权。
+- [ ] [codex] 启动 `EXP-0012` seed0 formal 100K，并在自然结束后完成三回合终点评测、曲线/视频、
+  资源材料与结案；trigger: L0、reconciled smoke integrity 和资源 gate 已通过，GPU 空闲。
 
 ## Waiting
 
