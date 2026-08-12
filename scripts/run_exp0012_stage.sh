@@ -54,6 +54,7 @@ readonly STAGE_COMPLETED=${ROOT}/.${STAGE}.completed
 readonly STAGE_FAILED=${ROOT}/.${STAGE}.failed
 readonly STDOUT_LOG=${ROOT}/train_${STAGE}_stdout.log
 readonly INTEGRITY=${ROOT}/integrity_${STAGE}.json
+readonly DRIVER_STEP_QUANTUM=10
 readonly START_EPOCH=$(date +%s)
 SAMPLER_PID=
 
@@ -137,6 +138,15 @@ if [[ "${STAGE}" == "formal" ]]; then
     echo "Smoke formal gate did not pass" >&2
     exit 28
   fi
+  if [[ -f "${SMOKE_ROOT}/.smoke.failed" ]]; then
+    readonly RECONCILIATION=${SMOKE_ROOT}/smoke_reconciliation.json
+    if [[ ! -f "${RECONCILIATION}" ]] || ! "${PYTHON}" -c \
+      'import json,sys; x=json.load(open(sys.argv[1])); raise SystemExit(0 if x["formal_gate"] and x["original_failure_retained"] and not x["scientific_inputs_changed"] else 1)' \
+      "${RECONCILIATION}"; then
+      echo "Retained smoke failure requires a valid reconciliation" >&2
+      exit 30
+    fi
+  fi
 fi
 if [[ -e "${ROOT}" || -e "${STARTED}" ]]; then
   echo "Refusing duplicate EXP-0012 ${STAGE} launch" >&2
@@ -202,6 +212,7 @@ verify_args=(
   --run-dir "${ROOT}"
   --frozen-config "${CONFIG}"
   --expected-step "${STEPS}"
+  --driver-step-quantum "${DRIVER_STEP_QUANTUM}"
   --stdout-log "${STDOUT_LOG}"
   --output "${INTEGRITY}"
 )
@@ -221,6 +232,8 @@ fi
 readonly WALL_SECONDS=$(( $(date +%s) - START_EPOCH ))
 readonly OUTPUT_BYTES=$(du -sb "${ROOT}" | awk '{print $1}')
 readonly DISK_FREE_BYTES=$(df --output=avail -B1 /root/autodl-tmp | tail -1)
+readonly CHECKPOINT_STEP=$("${PYTHON}" -c \
+  'import json,sys; print(json.load(open(sys.argv[1]))["checkpoint_step"])' "${INTEGRITY}")
 
 if [[ "${STAGE}" == "smoke" ]]; then
   "${PYTHON}" "${SMOKE_ANALYZE}" \
@@ -234,8 +247,9 @@ if [[ "${STAGE}" == "smoke" ]]; then
 fi
 
 printf \
-  '{"experiment_id":"%s","stage":"%s","completed_at":"%s","exit_code":0,"checkpoint_step":%d,"environment_steps":%d,"wall_seconds":%d,"output_bytes":%d}\n' \
+  '{"experiment_id":"%s","stage":"%s","completed_at":"%s","exit_code":0,"requested_environment_steps":%d,"checkpoint_step":%d,"environment_steps":%d,"driver_step_quantum":%d,"wall_seconds":%d,"output_bytes":%d}\n' \
   "${EXPERIMENT}" "${STAGE}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-  "${STEPS}" "${STEPS}" "${WALL_SECONDS}" "${OUTPUT_BYTES}" > "${STAGE_COMPLETED}"
+  "${STEPS}" "${CHECKPOINT_STEP}" "${CHECKPOINT_STEP}" "${DRIVER_STEP_QUANTUM}" \
+  "${WALL_SECONDS}" "${OUTPUT_BYTES}" > "${STAGE_COMPLETED}"
 cp "${STAGE_COMPLETED}" "${COMPLETED}"
 cp "${STAGE_COMPLETED}" "${ROOT}/.completed"

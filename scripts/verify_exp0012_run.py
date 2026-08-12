@@ -91,10 +91,23 @@ def all_numbers_finite(value: object) -> bool:
     return True
 
 
+def natural_stop_step(requested_step: int, driver_step_quantum: int) -> int:
+    """Return the first driver boundary at or above the requested budget."""
+    if requested_step < 0:
+        raise ValueError("requested_step must be non-negative")
+    if driver_step_quantum <= 0:
+        raise ValueError("driver_step_quantum must be positive")
+    return (
+        (requested_step + driver_step_quantum - 1) // driver_step_quantum
+        * driver_step_quantum
+    )
+
+
 def verify(
     run_dir: Path,
     frozen_config: Path,
     expected_step: int,
+    driver_step_quantum: int,
     stdout_path: Path,
     require_scores: bool,
 ) -> dict:
@@ -113,6 +126,7 @@ def verify(
     metrics = load_jsonl(metrics_path)
     checkpoint = resolve_latest_checkpoint(train_dir)
     checkpoint_step = int(cloudpickle.loads((checkpoint / "step.pkl").read_bytes()))
+    natural_checkpoint_step = natural_stop_step(expected_step, driver_step_quantum)
     checkpoint_files = sorted(path for path in checkpoint.iterdir() if path.is_file())
     replay_files = [path for path in (train_dir / "replay").rglob("*") if path.is_file()]
     stdout = stdout_path.read_text(encoding="utf-8", errors="replace")
@@ -136,8 +150,12 @@ def verify(
         "config_checks": config_checks,
         "checkpoint_path": str(checkpoint),
         "checkpoint_latest": checkpoint.name,
+        "requested_step": expected_step,
+        "driver_step_quantum": driver_step_quantum,
+        "natural_checkpoint_step": natural_checkpoint_step,
         "checkpoint_step": checkpoint_step,
-        "checkpoint_step_matches": checkpoint_step == expected_step,
+        "checkpoint_step_overshoot": checkpoint_step - expected_step,
+        "checkpoint_step_matches": checkpoint_step == natural_checkpoint_step,
         "checkpoint_sha256": sha256(checkpoint / "agent.pkl"),
         "checkpoint_file_sha256": {path.name: sha256(path) for path in checkpoint_files},
         "checkpoint_bytes": sum(path.stat().st_size for path in checkpoint_files),
@@ -174,6 +192,7 @@ def main() -> None:
     parser.add_argument("--run-dir", type=Path, required=True)
     parser.add_argument("--frozen-config", type=Path, required=True)
     parser.add_argument("--expected-step", type=int, required=True)
+    parser.add_argument("--driver-step-quantum", type=int, default=1)
     parser.add_argument("--stdout-log", type=Path, required=True)
     parser.add_argument("--require-scores", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
@@ -182,6 +201,7 @@ def main() -> None:
         args.run_dir,
         args.frozen_config,
         args.expected_step,
+        args.driver_step_quantum,
         args.stdout_log,
         args.require_scores,
     )

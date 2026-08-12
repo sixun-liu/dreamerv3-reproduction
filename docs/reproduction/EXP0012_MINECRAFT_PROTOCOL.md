@@ -63,3 +63,15 @@ checkpoint/replay 完整性、吞吐、资源峰值和视频动态性。
 - 任何非有限值、环境语义错误、重复 GPU 进程、checkpoint/replay 不一致、预计剩余磁盘低于 5 GiB
   或预计墙钟超过 12 小时均停止当前层。
 - 100K 是硬上限；不因未出现正结果自动追加 1M/5M/100M，也不按中途分数换 seed 或调参。
+
+## 执行期 instrumentation 修正（2026-08-12）
+
+4096-step smoke 的训练本体正常退出并在 step 4100 保存完整 checkpoint，但初版 verifier 要求
+`checkpoint_step == 4096`，因此留下了 integrity-only failure。冻结 runtime 的训练循环每次调用
+driver 固定推进 10 environment steps，故请求预算的自然终点为
+`ceil(requested_steps / 10) * 10`：4096 对应 4100，而 formal 的 100000 仍精确对应 100000。
+
+该修正仅改变校验器对停止粒度的建模，不改变训练代码、配置、seed、模型、奖励、动作空间、
+资源门或预算上限。原始 `.failed` 与 `integrity_smoke.json` 永久保留；修正后使用带新 control
+commit 和输入哈希的 `smoke_reconciliation.json` 生成独立 reconciled integrity 与 gate，禁止重跑
+smoke 来覆盖该信号。
