@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-08-12T07:11:12Z
+> Updated: 2026-08-12T07:14:57Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -19,5 +19,5 @@
 
 ## 下一项决策
 
-从原始 EXP-0012 100K 源另做独立 CoW 克隆，正式训练到绝对 200K；随后沿用 agent seed 10000、
-三回合单环境评测和固定 episode-0 视频，比较 L1 是否保持以及 wooden-pickaxe/L2 是否出现。
+正式 200K 前只补一次恢复场景并发阶梯：`envs=4` 相对 EXP-0015 稳态吞吐至少提升 10% 才测试
+`envs=8`，后者至少再提升 5% 才晋级；随后从原始 100K 源另做正式 CoW 克隆和独立评测。

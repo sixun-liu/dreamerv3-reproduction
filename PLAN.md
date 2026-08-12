@@ -1,6 +1,6 @@
 # PLAN
 
-> Updated: 2026-08-12T07:11:12Z
+> Updated: 2026-08-12T07:14:57Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml
 
@@ -26,10 +26,12 @@
 1. `EXP-0012` 保持 canonical baseline；新吞吐探针是诊断工作，不覆盖或混入原训练结果。
 2. EXP-0014 已选择 `envs=2`：端到端提升 `27.36%`、稳态 FPS 提升 `46.10%`；该结果仅用于执行配置。
 3. EXP-0015 已通过隔离恢复门；正式 cycle 必须从原始 EXP-0012 重新克隆，不续接诊断 105040 输出。
-4. 有界增量预算固定为新增 100K、绝对终点 200K；任何 step 重复/丢失、源漂移或 checkpoint
+4. 正式训练前用恢复场景 `envs=4/8` 有界阶梯确定 16 核 CPU 配额下最高性价比配置；只有前档
+   通过预注册增益和资源门才进入后档。
+5. 有界增量预算固定为新增 100K、绝对终点 200K；任何 step 重复/丢失、源漂移或 checkpoint
    不完整均先停止。
-5. 沿用三回合单环境独立评测与固定 episode-0 视频；世界种子不可控，不做逐世界配对因果主张。
-6. 训练、评测、资源账和展示材料必须独立闭环；`script=parallel` 继续 parked。
+6. 沿用三回合单环境独立评测与固定 episode-0 视频；世界种子不可控，不做逐世界配对因果主张。
+7. 训练、评测、资源账和展示材料必须独立闭环；`script=parallel` 继续 parked。
 
 ## Parked Lanes
 
