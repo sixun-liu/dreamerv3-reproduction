@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-11T23:57:37Z'
+updated_at: '2026-08-11T23:59:50Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -51,7 +51,7 @@ workspace:
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
   branch: exp/EXP-0012-minecraft-reduced
-  commit: fde4ce665de4a9c1421787189318431a90e72820
+  commit: b2be55e0d4d1f8c0ef2b91324e9142152a82b138
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
