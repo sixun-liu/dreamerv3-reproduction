@@ -281,3 +281,13 @@
 - Next: 另开同为 5040 步、`debug=false` 的单环境配对诊断，避免把运行长度和 debug 差异误归因于并发数。
 - Approval: 用户批准当前长期 goal；human review pending
 - Git: control analysis `3e22730`；runtime `5168475`
+
+### 2026-08-12T06:35:02Z | result | EXP-0014-minecraft-paired-throughput
+
+- Actor: codex
+- Summary: 同为 5040 步、`debug=false` 时，`envs=2` 相对 `envs=1` 的端到端吞吐提升
+  `27.36%`，固定稳态 policy FPS 提升 `46.10%`，以明显余量通过预注册 `10%/5%` 双门。
+- Evidence: `EVT-0093`--`EVT-0094`；`ART-0090`--`ART-0091`；两臂完整性通过，图像已由 codex 检查。
+- Next: 只晋级 `envs=2` 到 EXP-0012 checkpoint/replay/step 等价恢复验证，不外推为策略质量结论。
+- Approval: 用户批准当前长期 goal；scientific human review pending
+- Git: control freeze `89a2ad9`；analysis `00ce496`；runtime `5168475`

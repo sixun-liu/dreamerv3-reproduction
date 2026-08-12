@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-08-12T06:00:16Z
+> Updated: 2026-08-12T06:35:22Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,16 +8,16 @@
 
 ## 一句话判断
 
-`EXP-0012` 已完成 100K 受限闭环；Minecraft 临时实例已安全迁移到数据盘。`EXP-0013` 的
-`envs=2` 虽完整运行，但未通过预注册扩档门，当前只需用同预算单环境对照完成并发收益归因。
+`EXP-0012` 已完成 100K 受限闭环；Minecraft 临时实例已安全迁移到数据盘。`EXP-0014` 的
+同预算配对诊断选择 `envs=2`，当前只需验证 EXP-0012 checkpoint/replay/step 的等价恢复。
 
 ## 当前主要矛盾
 
-EXP-0013 已证明双 MineRL/Malmo 实例可以只写数据盘并安全清理，但 5040 步双环境的端到端吞吐
-仅为 `17.03 steps/s`，尾窗 policy FPS 相对历史长程基线仅 `1.092x`，低于 `1.10x` 扩档门。
-历史基线同时混有 100K 长程和 `debug=true` 差异，因此还不能把结果因果归因于环境数量。
+同为 5040 步与 `debug=false` 时，`envs=2` 相对 `envs=1` 的端到端吞吐提升 `27.36%`，固定稳态
+policy FPS 提升 `46.10%`，明显通过 `10%/5%` 双门；CPU、内存和磁盘代价仍在资源边界内。
+尚未证明的是从 EXP-0012 终点恢复时，checkpoint、replay 与 environment-step 语义是否保持等价。
 
 ## 下一项决策
 
-只补一个 5040 步 `envs=1/debug=false` 配对诊断，并用同口径端到端与固定稳态窗口比较 `envs=2`。
-若没有足以改变成本判断的收益，就固定单环境资源安全方案并转入 EXP-0012 等价恢复验证。
+在隔离输出中做一个最小 `envs=2` 恢复 smoke，核验起止 step、checkpoint、replay transition 集合、
+metrics 连续性和资源清场；通过后再按实测 ETA 冻结有界增量训练预算。

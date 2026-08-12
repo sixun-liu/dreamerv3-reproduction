@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-08-12T06:00:16Z
+> Updated: 2026-08-12T06:35:22Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,10 +8,9 @@
 
 ## Now
 
-- [ ] [codex] 创建并冻结 EXP-0014 的 5040 步 `envs=1/debug=false` 配对诊断；trigger: EXP-0013 已关闭。
-- [ ] [codex] 运行配对对照并复算同口径端到端、稳态窗口和资源差异；trigger: launch gate 通过。
-- [ ] [codex] 选择 `envs=1` 或有证据支持的 `envs=2`，并关闭吞吐归因；trigger: EXP-0014 结果完整。
-- [ ] [codex] 另开 EXP-0012 checkpoint/replay/step 等价恢复 cycle；trigger: 执行配置已固定。
+- [ ] [codex] 审计 runtime 的 `from_checkpoint`、step 终点与 replay 恢复语义；trigger: EXP-0014 已关闭。
+- [ ] [codex] 另开 EXP-0012 checkpoint/replay/step 等价恢复 cycle；trigger: 恢复协议审计完成。
+- [ ] [codex] 运行隔离的 `envs=2` 恢复 smoke 并核验 transition 连续性；trigger: freeze 与 launch gate 通过。
 - [ ] [codex] 依据恢复实测 ETA 冻结有界增量预算、独立评测和材料；trigger: 恢复完整性通过。
 
 ## Waiting

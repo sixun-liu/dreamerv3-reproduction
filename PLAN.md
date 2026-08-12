@@ -1,6 +1,6 @@
 # PLAN
 
-> Updated: 2026-08-12T06:00:16Z
+> Updated: 2026-08-12T06:35:22Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml
 
@@ -16,16 +16,16 @@
 - [x] EXP-0011 Atari100K Breakout 完成 100K decisions、独立评测和 DQN 协议差异表。
 - [x] EXP-0012 Minecraft 完成依赖/L0、size50m smoke、100K 训练、独立评测与审查材料。
 - [x] Minecraft 临时实例、日志和可控缓存不再消耗系统盘，且多环境 L0 通过。
-- [ ] 完成自适应多环境吞吐探针，找到稳定甜点或形成证据充分的无增益裁决。
+- [x] 完成同预算单/双环境吞吐归因，选择资源安全的 `envs=2` 候选配置。
 - [ ] 若探针通过成本门，完成 EXP-0012 等价恢复、一个有界增量训练及独立评测；否则明确停车。
 - [ ] 固化可复用运行脚本、资源账、恢复方法、展示材料和受限结论。
 
 ## 活动路线
 
 1. `EXP-0012` 保持 canonical baseline；新吞吐探针是诊断工作，不覆盖或混入原训练结果。
-2. EXP-0013 已验证 `envs=2` 资源安全，但未通过扩档门；`envs=4/8` 已停止，不事后放宽门槛。
-3. 只补一个 5040 步 `envs=1/debug=false` 配对诊断，拆分短程开销、debug 与环境数量的影响。
-4. 配对对照若无显著收益，固定 `envs=1/debug=false`；若双环境同口径收益显著，也只先做恢复验证。
+2. EXP-0014 已选择 `envs=2`：端到端提升 `27.36%`、稳态 FPS 提升 `46.10%`；该结果仅用于执行配置。
+3. 下一 cycle 只验证 EXP-0012 终点 checkpoint/replay/step 在 `envs=2` 隔离输出中的等价恢复。
+4. 恢复通过后才冻结增量预算；任何 step 重复/丢失、replay 漂移或 checkpoint 不完整均先停止。
 5. 后续训练预算由实测 ETA、磁盘成本和学习价值共同决定；训练、评测与展示材料必须独立闭环。
 6. `script=parallel` 仅在普通 `train` 多环境收益不足时作为独立候选，不假设跨模式可恢复。
 
