@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly EXPERIMENT=EXP-0017
+readonly EXPERIMENT=${EXPERIMENT_ID:-EXP-0017}
 readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
-readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2026-crossdomain
-readonly RUNTIME_COMMIT=5168475b7a4413f9575933b4580e7073caea2114
+readonly RUNTIME=${DV3_RUNTIME:-/root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2026-crossdomain}
+readonly RUNTIME_COMMIT=${DV3_RUNTIME_COMMIT:-5168475b7a4413f9575933b4580e7073caea2114}
 readonly PYTHON=/root/autodl-tmp/Envs/dv3-minecraft-2026/bin/python
-readonly TRAIN_ROOT=/root/autodl-tmp/Runs/EXP-0017__minecraft-diamond__s000__100k-to-200k-env__20260812T080000Z
+readonly TRAIN_ROOT=${TRAIN_RUN_ROOT:-/root/autodl-tmp/Runs/EXP-0017__minecraft-diamond__s000__100k-to-200k-env__20260812T080000Z}
 readonly CHECKPOINT_ROOT=${TRAIN_ROOT}/train/ckpt
-readonly ROOT=/root/autodl-tmp/Runs/EXP-0017__minecraft-diamond__eval-s10000-3eps__20260812T080000Z
+readonly ROOT=${EVAL_RUN_ROOT:-/root/autodl-tmp/Runs/EXP-0017__minecraft-diamond__eval-s10000-3eps__20260812T080000Z}
 readonly STARTED=${ROOT}.started
 readonly FAILED=${ROOT}/.failed
 readonly START_EPOCH=$(date +%s)
@@ -37,7 +37,7 @@ fail() {
 trap stop_sampler EXIT
 
 if [[ -e "${ROOT}" || -e "${STARTED}" ]]; then
-  echo "Refusing duplicate EXP-0017 evaluation launch" >&2
+  echo "Refusing duplicate ${EXPERIMENT} evaluation launch" >&2
   exit 20
 fi
 if [[ "$(git -C "${CONTROL}" status --porcelain)" ]]; then
@@ -126,8 +126,8 @@ fi
   --output "${ROOT}/temp_cleanup_postprocess.json" --wait-seconds 30 \
   > "${ROOT}/temp_cleanup_postprocess_stdout.log" 2>&1 || fail $? temp_cleanup
 "${PYTHON}" -c \
-  'import json,sys; x=json.load(open(sys.argv[1])); assert x["experiment_id"] == "EXP-0017" and x["episode_count"] == 3 and x["video_frame_count"] >= 2 and x["video_dynamic_adjacent_pairs"] > 0' \
-  "${ROOT}/evaluation/evaluation.json"
+  'import json,sys; x=json.load(open(sys.argv[1])); assert x["experiment_id"] == sys.argv[2] and x["episode_count"] == 3 and x["video_frame_count"] >= 2 and x["video_dynamic_adjacent_pairs"] > 0' \
+  "${ROOT}/evaluation/evaluation.json" "${EXPERIMENT}"
 mapfile -t gpu_after < <(nvidia-smi --query-compute-apps=pid --format=csv,noheader,nounits | sed '/^[[:space:]]*$/d')
 if (( ${#gpu_after[@]} )) || ps -eo comm= | awk '$1 == "java" || $1 == "Xvfb" {found=1} END {exit !found}'; then
   fail 26 cleanup

@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly EXPERIMENT=EXP-0017
+readonly EXPERIMENT=${EXPERIMENT_ID:-EXP-0017}
 readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
-readonly RUNTIME=/root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2026-crossdomain
+readonly RUNTIME=${DV3_RUNTIME:-/root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2026-crossdomain}
 readonly WORKFLOW=/root/autodl-tmp/Tools/research-agent-kit
 readonly PYTHON=/root/autodl-tmp/Envs/dv3-minecraft-2026/bin/python
-readonly RUNTIME_COMMIT=5168475b7a4413f9575933b4580e7073caea2114
+readonly RUNTIME_COMMIT=${DV3_RUNTIME_COMMIT:-5168475b7a4413f9575933b4580e7073caea2114}
 readonly SOURCE=/root/autodl-tmp/Runs/EXP-0012__minecraft-diamond__s000__100k-env__20260812T080000Z/train
-readonly ROOT=/root/autodl-tmp/Runs/EXP-0017__minecraft-diamond__s000__100k-to-200k-env__20260812T080000Z
-readonly CONFIG=${CONTROL}/docs/reproduction/configs/exp0017_minecraft_s000_200k_env.yaml
-readonly MATRIX=${CONTROL}/docs/reproduction/configs/exp0017_minecraft_200k_matrix.yaml
+readonly ROOT=${TRAIN_RUN_ROOT:-/root/autodl-tmp/Runs/EXP-0017__minecraft-diamond__s000__100k-to-200k-env__20260812T080000Z}
+readonly CONFIG=${TRAIN_CONFIG:-${CONTROL}/docs/reproduction/configs/exp0017_minecraft_s000_200k_env.yaml}
+readonly MATRIX=${EXPERIMENT_MATRIX:-${CONTROL}/docs/reproduction/configs/exp0017_minecraft_200k_matrix.yaml}
 readonly BASELINE=${CONTROL}/docs/reproduction/configs/exp0012_minecraft_s000_100k_env.yaml
 readonly SOURCE_STEP=100000
 readonly FINAL_STEP=200000
@@ -48,7 +48,7 @@ fail() {
 trap stop_sampler EXIT
 
 if [[ -e "${ROOT}" || -e "${STARTED}" ]]; then
-  echo "Refusing duplicate EXP-0017 training launch" >&2
+  echo "Refusing duplicate ${EXPERIMENT} training launch" >&2
   exit 20
 fi
 if [[ ! -f "${SOURCE}/../.completed" || ! -f "${SOURCE}/ckpt/latest" ]]; then

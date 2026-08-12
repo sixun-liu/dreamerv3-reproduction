@@ -181,6 +181,7 @@ def learning_verdict(added_replay: dict, evaluation: dict) -> dict:
 
 
 def build_figure(
+    experiment_id: str,
     baseline_eval: dict,
     evaluation: dict,
     added_replay: dict,
@@ -262,7 +263,7 @@ def build_figure(
         axis.grid(axis="y", alpha=0.22)
         axis.spines[["top", "right"]].set_visible(False)
     fig.suptitle(
-        "EXP-0017 DreamerV3 Minecraft | 100K to 200K increment",
+        f"{experiment_id} DreamerV3 Minecraft | 100K to 200K increment",
         fontsize=16,
         fontweight="bold",
     )
@@ -280,6 +281,7 @@ def build_figure(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--experiment-id", default="EXP-0017")
     parser.add_argument("--train-run", type=Path, required=True)
     parser.add_argument("--eval-run", type=Path, required=True)
     parser.add_argument("--source-replay", type=Path, required=True)
@@ -293,8 +295,8 @@ def main() -> None:
         (args.eval_run / "evaluation/evaluation.json").read_text(encoding="utf-8")
     )
     baseline_evaluation = json.loads(args.baseline_evaluation.read_text(encoding="utf-8"))
-    if not integrity["passed"] or evaluation["experiment_id"] != "EXP-0017":
-        raise ValueError("EXP-0017 integrity or evaluation gate failed")
+    if not integrity["passed"] or evaluation["experiment_id"] != args.experiment_id:
+        raise ValueError(f"{args.experiment_id} integrity or evaluation gate failed")
     schema = json.loads(args.inventory_schema.read_text(encoding="utf-8"))
     inventory_keys = list(schema["inventory_keys"])
     added_replay = analyze_added_replay(
@@ -313,10 +315,17 @@ def main() -> None:
     verdict = learning_verdict(added_replay, evaluation)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     figure = args.output_dir / "increment_comparison.png"
-    build_figure(baseline_evaluation, evaluation, added_replay, resources, figure)
+    build_figure(
+        args.experiment_id,
+        baseline_evaluation,
+        evaluation,
+        added_replay,
+        resources,
+        figure,
+    )
     summary = {
         "schema_version": 1,
-        "experiment_id": "EXP-0017",
+        "experiment_id": args.experiment_id,
         "integrity_passed": True,
         "source_step": 100_000,
         "final_step": 200_000,
@@ -341,7 +350,7 @@ def main() -> None:
     summary_path.write_text(
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
-    result = f"""# EXP-0017 Minecraft 200K 增量结果
+    result = f"""# {args.experiment_id} Minecraft 200K 增量结果
 
 ## 受限裁决
 
@@ -372,7 +381,7 @@ def main() -> None:
 """
     (args.output_dir / "RESULT.md").write_text(result, encoding="utf-8")
     (args.output_dir / "README.md").write_text(
-        "# EXP-0017 Review\n\n"
+        f"# {args.experiment_id} Review\n\n"
         "- 受限结论：`RESULT.md`\n"
         "- 对比图：`increment_comparison.png`\n"
         "- 机器可读摘要：`review_summary.json`\n"
