@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-08-12T06:57:54Z
+> Updated: 2026-08-12T07:11:12Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,16 +8,16 @@
 
 ## 一句话判断
 
-`EXP-0012` 已完成 100K 受限闭环；Minecraft 临时实例已安全迁移到数据盘。`EXP-0014` 的
-同预算配对诊断选择 `envs=2`，当前只需验证 EXP-0012 checkpoint/replay/step 的等价恢复。
+`EXP-0015` 已证明 EXP-0012 checkpoint、replay 与 step 可在隔离 CoW 输出中完整恢复到
+`envs=2`。当前可从原始 100K 基线另开正式增量训练，而不混入 5K 诊断结果。
 
 ## 当前主要矛盾
 
-同为 5040 步与 `debug=false` 时，`envs=2` 相对 `envs=1` 的端到端吞吐提升 `27.36%`，固定稳态
-policy FPS 提升 `46.10%`，明显通过 `10%/5%` 双门；CPU、内存和磁盘代价仍在资源边界内。
-尚未证明的是从 EXP-0012 终点恢复时，checkpoint、replay 与 environment-step 语义是否保持等价。
+恢复后恰好保留 100000 个旧 stepid 并新增 5040 个唯一 transition；稳态 policy FPS 为
+`40.51`，新增 100K 训练预计约 45--50 分钟。独立三回合评测历史实测约 51 分钟，因此完整
+训练、评测和材料周期按 1.5--2 小时预算，并保持世界种子不可控的限制口径。
 
 ## 下一项决策
 
-在隔离输出中做一个最小 `envs=2` 恢复 smoke，核验起止 step、checkpoint、replay transition 集合、
-metrics 连续性和资源清场；通过后再按实测 ETA 冻结有界增量训练预算。
+从原始 EXP-0012 100K 源另做独立 CoW 克隆，正式训练到绝对 200K；随后沿用 agent seed 10000、
+三回合单环境评测和固定 episode-0 视频，比较 L1 是否保持以及 wooden-pickaxe/L2 是否出现。

@@ -291,3 +291,16 @@
 - Next: 只晋级 `envs=2` 到 EXP-0012 checkpoint/replay/step 等价恢复验证，不外推为策略质量结论。
 - Approval: 用户批准当前长期 goal；scientific human review pending
 - Git: control freeze `89a2ad9`；analysis `00ce496`；runtime `5168475`
+
+### 2026-08-12T07:09:15Z | result | EXP-0015-minecraft-recovery
+
+- Actor: codex
+- Summary: EXP-0012 的 100K checkpoint 与 replay 经独立 inode 的 XFS CoW 克隆后，在
+  `envs=2` 下精确恢复并自然结束于 105040；源树哈希不变，旧 100000 个 stepid 全保留，新增
+  5040 个唯一 stepid 与两个新 worker 起点全部通过。
+- Evidence: `EVT-0095`--`EVT-0097`；`ART-0092`；训练墙钟 `283 s`，稳态 policy FPS
+  `40.51`，无 OOM、系统盘泄漏或 Minecraft/GPU 残留。
+- Next: 从原始 EXP-0012 另做独立克隆，正式新增 100K 到绝对 200K，再沿用三回合独立评测；
+  不续接或混入 105040 诊断输出。
+- Approval: 用户批准当前长期 goal；本 cycle 为 infrastructure 诊断，无需科学看图裁决
+- Git: control freeze `195d909`；runtime `5168475`
