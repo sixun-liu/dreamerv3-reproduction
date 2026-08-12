@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-08-12T05:08:54Z
+> Updated: 2026-08-12T06:00:16Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,11 +8,11 @@
 
 ## Now
 
-- [ ] [codex] 冻结 EXP-0013 的数据盘重定向、资源采样、完整性与停止门；trigger: 新 goal 已授权。
-- [ ] [codex] 运行多环境 reset/step L0，确认 MineRL 临时实例只落数据盘且进程完整退出；trigger: 工具测试通过。
-- [ ] [codex] 运行 `envs=2` 的 5040-step 首探针；trigger: L0 与 launch gate 通过。
-- [ ] [codex] 按前档证据决定 `envs=4` 和条件性 `envs=8`，随后关闭吞吐 probe；trigger: 完整性、资源与增益门。
-- [ ] [codex] 若吞吐 probe 改变成本判断，另开恢复与增量训练 cycle；trigger: 稳定增益和用户 goal 边界同时满足。
+- [ ] [codex] 创建并冻结 EXP-0014 的 5040 步 `envs=1/debug=false` 配对诊断；trigger: EXP-0013 已关闭。
+- [ ] [codex] 运行配对对照并复算同口径端到端、稳态窗口和资源差异；trigger: launch gate 通过。
+- [ ] [codex] 选择 `envs=1` 或有证据支持的 `envs=2`，并关闭吞吐归因；trigger: EXP-0014 结果完整。
+- [ ] [codex] 另开 EXP-0012 checkpoint/replay/step 等价恢复 cycle；trigger: 执行配置已固定。
+- [ ] [codex] 依据恢复实测 ETA 冻结有界增量预算、独立评测和材料；trigger: 恢复完整性通过。
 
 ## Waiting
 

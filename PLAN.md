@@ -1,6 +1,6 @@
 # PLAN
 
-> Updated: 2026-08-12T05:08:54Z
+> Updated: 2026-08-12T06:00:16Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml
 
@@ -15,7 +15,7 @@
 - [x] EXP-0010 DMC Vision 完成 100K gate、1M 续训、独立评测和图像材料。
 - [x] EXP-0011 Atari100K Breakout 完成 100K decisions、独立评测和 DQN 协议差异表。
 - [x] EXP-0012 Minecraft 完成依赖/L0、size50m smoke、100K 训练、独立评测与审查材料。
-- [ ] Minecraft 临时实例、日志和可控缓存不再消耗系统盘，且多环境 L0 通过。
+- [x] Minecraft 临时实例、日志和可控缓存不再消耗系统盘，且多环境 L0 通过。
 - [ ] 完成自适应多环境吞吐探针，找到稳定甜点或形成证据充分的无增益裁决。
 - [ ] 若探针通过成本门，完成 EXP-0012 等价恢复、一个有界增量训练及独立评测；否则明确停车。
 - [ ] 固化可复用运行脚本、资源账、恢复方法、展示材料和受限结论。
@@ -23,9 +23,9 @@
 ## 活动路线
 
 1. `EXP-0012` 保持 canonical baseline；新吞吐探针是诊断工作，不覆盖或混入原训练结果。
-2. 首阶段仅改变环境并发数和运行时存储位置，不改变模型、task、reward、wrapper、ratio 或 batch。
-3. 按 `2 -> 4 -> 条件性 8` 自适应扩档，每档 5040 累计 environment steps；无增益或资源异常即停。
-4. 只有吞吐、replay ratio、checkpoint、CPU/RAM/Java 和磁盘门均通过，才进入恢复验证。
+2. EXP-0013 已验证 `envs=2` 资源安全，但未通过扩档门；`envs=4/8` 已停止，不事后放宽门槛。
+3. 只补一个 5040 步 `envs=1/debug=false` 配对诊断，拆分短程开销、debug 与环境数量的影响。
+4. 配对对照若无显著收益，固定 `envs=1/debug=false`；若双环境同口径收益显著，也只先做恢复验证。
 5. 后续训练预算由实测 ETA、磁盘成本和学习价值共同决定；训练、评测与展示材料必须独立闭环。
 6. `script=parallel` 仅在普通 `train` 多环境收益不足时作为独立候选，不假设跨模式可恢复。
 

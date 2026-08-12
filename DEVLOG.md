@@ -271,3 +271,13 @@
   预算之间只选择一个有界问题；不自动追加训练。
 - Approval: user-approved cross-domain long run；scientific human review pending
 - Git: runtime `5168475`；formal/evaluation freeze `f76236e`；analysis `3842dda`
+
+### 2026-08-12T05:59:31Z | result | EXP-0013-minecraft-throughput
+
+- Actor: codex
+- Summary: 双环境 5040 步完整性、数据盘定向与资源门全部通过，但端到端吞吐仅为历史长程基线
+  `0.690x`，尾窗 policy FPS `1.092x` 未通过预注册 `1.10x` 扩档门；`envs=4/8` 因此停止。
+- Evidence: `EVT-0090`--`EVT-0091`；`ART-0089`；无 OOM、系统盘净增仅 64 KiB、临时实例已安全清理。
+- Next: 另开同为 5040 步、`debug=false` 的单环境配对诊断，避免把运行长度和 debug 差异误归因于并发数。
+- Approval: 用户批准当前长期 goal；human review pending
+- Git: control analysis `3e22730`；runtime `5168475`
