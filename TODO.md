@@ -8,9 +8,10 @@
 
 ## Now
 
-- [ ] [codex] 建立 Minecraft 终点评测吞吐 probe；trigger: EXP-0020 评测与材料闭环后。先用短回合
-  smoke 验证三环境并行 evaluator 的逐环境终止、回报/里程碑统计、固定 episode-0 视频、checkpoint
-  绑定和清场语义，再以同一冻结 checkpoint、agent seed、3 回合和 36K 上限比较串行与并行墙钟。
+- [ ] [codex] 完成 Minecraft 终点评测吞吐 probe。EXP-0021 已验证三环境单 episode 调度、动态视频
+  与清场，但因静态 inventory 顺序产生伪里程碑而以 `invalid_provenance` 结案；EXP-0022 仅修复为
+  各环境运行时 `_inv_keys` 映射，并增加 reset 全零、索引有效及跨 worker 一致性 gate。短 smoke
+  全绿后，再以同一冻结 checkpoint、agent seed、3 回合和 36K 上限比较串行与并行墙钟。
   只有并行方案端到端至少加速 `1.5x`，且无 episode 丢失、best-of-N、资源越界或协议漂移，才晋级为
   后续 500K/1M checkpoint 的默认评测路径；x264 preset 和 video stride 仅作次要写入开销对照。
 

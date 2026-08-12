@@ -1,0 +1,54 @@
+schema_version: 1
+experiment_id: EXP-0022
+purpose: runtime-derived Minecraft milestone integrity repair and throughput probe
+diagnostic_only: true
+runtime:
+  path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-exp0018-exact-stop
+  commit: 6723fc1620636cc8a52e0ddc0b7a9cbe946625b0
+checkpoint:
+  experiment_id: EXP-0020
+  path: /root/autodl-tmp/Runs/EXP-0020__minecraft-diamond__s000__100k-to-200k-env__20260812T100000Z/train/ckpt/20260812T182951F182513
+  step: 200000
+  agent_sha256: 2bc4067c82eabc241342a6bf83cb02d712f648eb2a9614ca214aee6d7255a01e
+  step_sha256: d1250773c386047218484445fdab43ca63193d95993ccd89221576a4d4fa787b
+serial_baseline:
+  run: /root/autodl-tmp/Runs/EXP-0020__minecraft-diamond__eval-s10000-3eps__20260812T100000Z
+  evaluation_sha256: d23f540650cf044c7ff60ed959aca9de99711140f0980ba012f5614013234220
+  total_wall_seconds: 1972
+  active_actions: 55979
+  average_cpu_cores: 3.4169
+  mean_gpu_util_percent: 0.8912
+probe:
+  agent_seed: 10000
+  environment_count: 3
+  episodes_per_environment: 1
+  task: minecraft_diamond
+  model: size50m
+  eval_mode: sampled_categorical
+  episode_length: 36000
+  video_worker: 0
+  video_stride: 4
+  smoke_episode_length: 128
+  cache_mode: independent_cold_per_arm
+  milestone_mapping_source: runtime _MinecraftBase._inv_keys per worker
+gates:
+  minimum_wall_speedup: 1.5
+  maximum_cgroup_memory_bytes: 77309411328
+  root_disk_minimum_free_bytes: 5368709120
+  data_disk_minimum_free_bytes: 10737418240
+  exactly_one_first_and_last_per_worker: true
+  no_worker_reset_after_completion: true
+  no_extra_episode: true
+  runtime_milestone_indices_valid: true
+  runtime_milestone_indices_cross_worker_consistent: true
+  reset_milestones_zero: true
+  checkpoint_hashes_fixed: true
+  no_oom: true
+  cleanup_required: true
+forbidden:
+  - score_or_inventory_conditioned_implementation_selection
+  - best_of_n_video_selection
+  - changing_checkpoint_agent_seed_reward_wrapper_or_episode_limit
+  - treating_uncontrolled_worlds_as_paired_episodes
+run_root: /root/autodl-tmp/Runs/EXP-0022__minecraft-runtime-milestones__s10000__3eps__20260812T200000Z
+review: /root/autodl-tmp/Artifacts/dreamerv3/review/EXP-0022-minecraft-runtime-milestones
