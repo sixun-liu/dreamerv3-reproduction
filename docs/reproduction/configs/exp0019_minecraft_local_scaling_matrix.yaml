@@ -1,0 +1,33 @@
+schema_version: 1
+experiment_id: EXP-0019
+purpose: patched-runtime envs4 versus envs5 local throughput selection
+diagnostic_only: true
+runtime:
+  path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-exp0018-exact-stop
+  commit: 6723fc1620636cc8a52e0ddc0b7a9cbe946625b0
+source:
+  run: /root/autodl-tmp/Runs/EXP-0012__minecraft-diamond__s000__100k-env__20260812T080000Z
+  absolute_step: 100000
+budget:
+  added_environment_steps: 5040
+  absolute_final_step: 105040
+arms:
+  - environment_count: 4
+    cache_mode: independent_cold
+    config: docs/reproduction/configs/exp0019_minecraft_recovery_envs4_s000_105040_env.yaml
+  - environment_count: 5
+    cache_mode: independent_cold
+    config: docs/reproduction/configs/exp0019_minecraft_recovery_envs5_s000_105040_env.yaml
+selection:
+  minimum_samples_per_arm: 5
+  steady_window_fraction: [0.20, 0.90]
+  replay_ratio_range: [28.0, 36.0]
+  minimum_envs5_policy_fps_speedup: 1.05
+  minimum_envs5_predicted_eta_reduction: 0.05
+  maximum_cgroup_memory_bytes: 77309411328
+  tie_breaker: retain smaller environment count
+forbidden_outcomes:
+  - score
+  - inventory
+  - video
+run_root: /root/autodl-tmp/Runs/EXP-0019__minecraft-local-scaling__s000__100k-to-105040-env__20260812T093000Z
