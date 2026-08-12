@@ -206,6 +206,25 @@ class Exp0015RecoveryTest(unittest.TestCase):
             self.assertFalse(insufficient["passed"])
             self.assertFalse(insufficient["replay"]["new_worker_starts_observed"])
 
+    def test_short_smoke_can_waive_ratio_sample_only(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            args = self._fixture(Path(directory))
+            metrics = args.run_dir / "train/metrics.jsonl"
+            row = json.loads(metrics.read_text(encoding="utf-8"))
+            row["replay/replay_ratio"] = float("nan")
+            metrics.write_text(json.dumps(row) + "\n", encoding="utf-8")
+
+            regular = verify(args)
+            self.assertFalse(regular["passed"])
+            self.assertTrue(regular["metrics"]["ratio32_required"])
+            self.assertFalse(regular["metrics"]["ratio32_gate_passed"])
+
+            args.allow_short_smoke_without_ratio = True
+            short_smoke = verify(args)
+            self.assertTrue(short_smoke["passed"])
+            self.assertFalse(short_smoke["metrics"]["ratio32_required"])
+            self.assertTrue(short_smoke["metrics"]["ratio32_gate_passed"])
+
 
 if __name__ == "__main__":
     unittest.main()

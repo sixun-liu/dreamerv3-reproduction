@@ -129,6 +129,7 @@ def matching_original_files(source_manifest: dict, target_root: Path) -> dict:
 def verify(args: argparse.Namespace) -> dict:
     experiment_id = getattr(args, "experiment_id", "EXP-0015")
     expected_envs = getattr(args, "expected_envs", 2)
+    require_ratio32 = not getattr(args, "allow_short_smoke_without_ratio", False)
     train = args.run_dir / "train"
     required = (
         args.clone_manifest,
@@ -230,7 +231,11 @@ def verify(args: argparse.Namespace) -> dict:
         "finite": bool(metrics) and not unexpected,
         "finite_replay_ratios": replay_ratios,
         "ratio32_observed": any(28.0 <= value <= 36.0 for value in replay_ratios),
+        "ratio32_required": require_ratio32,
     }
+    metric_checks["ratio32_gate_passed"] = (
+        metric_checks["ratio32_observed"] or not require_ratio32
+    )
 
     system = load_csv(args.resource_system)
     first_system = system[0] if system else {}
@@ -337,7 +342,7 @@ def verify(args: argparse.Namespace) -> dict:
         and metric_checks["only_post_source_steps"]
         and metric_checks["has_training_loss"]
         and metric_checks["finite"]
-        and metric_checks["ratio32_observed"]
+        and metric_checks["ratio32_gate_passed"]
         and resource_checks["samples"] >= 2
         and resource_checks["memory_within_limit"]
         and resource_checks["max_java_count"] >= expected_envs
@@ -369,6 +374,15 @@ def main() -> None:
     parser.add_argument("--max-system-disk-loss", type=int, default=536870912)
     parser.add_argument("--max-cgroup-memory-bytes", type=int, default=75161927680)
     parser.add_argument("--skip-live-process-check", action="store_true")
+    parser.add_argument(
+        "--allow-short-smoke-without-ratio",
+        action="store_true",
+        help=(
+            "Do not require a finite ratio32 sample for a deliberately short "
+            "instrumentation smoke; all integrity, finite-loss, resource, and "
+            "cleanup gates remain mandatory."
+        ),
+    )
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     result = verify(args)

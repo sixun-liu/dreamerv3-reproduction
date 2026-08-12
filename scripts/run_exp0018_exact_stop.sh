@@ -154,6 +154,7 @@ readonly TRAIN_WALL_SECONDS=$(( $(date +%s) - TRAIN_START_EPOCH ))
   --source-step "${SOURCE_STEP}" --final-step "${FINAL_STEP}" \
   --stdout-log "${STDOUT_LOG}" --resource-system "${ROOT}/resource_system.csv" \
   --max-cgroup-memory-bytes 77309411328 \
+  --allow-short-smoke-without-ratio \
   --temp-root "${ROOT}/work/tmp" --output "${ROOT}/integrity.json" \
   > "${ROOT}/integrity_stdout.log" 2>&1 || fail $? integrity
 readonly WALL_SECONDS=$(( $(date +%s) - START_EPOCH ))
