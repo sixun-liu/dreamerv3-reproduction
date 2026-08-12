@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-08-12T07:14:57Z
+> Updated: 2026-08-12T07:47:00Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,16 +8,16 @@
 
 ## 一句话判断
 
-`EXP-0015` 已证明 EXP-0012 checkpoint、replay 与 step 可在隔离 CoW 输出中完整恢复到
-`envs=2`。当前可从原始 100K 基线另开正式增量训练，而不混入 5K 诊断结果。
+`EXP-0016` 已在恢复场景的 `envs=2/4/8` 阶梯中选择 `envs=4`；当前可从原始
+EXP-0012 100K 基线另开正式增量训练，而不混入任一 5K 诊断结果。
 
 ## 当前主要矛盾
 
-恢复后恰好保留 100000 个旧 stepid 并新增 5040 个唯一 transition；稳态 policy FPS 为
-`40.51`，新增 100K 训练预计约 45--50 分钟。独立三回合评测历史实测约 51 分钟，因此完整
-训练、评测和材料周期按 1.5--2 小时预算，并保持世界种子不可控的限制口径。
+`envs=4` 稳态 policy FPS 为 `53.84`，较 `envs=2` 提升 `32.33%`，预测新增 100K
+约 `34.01` 分钟；`envs=8` 因 16 核 CPU 配额争用退化至 `42.05 FPS` 和 `43.70` 分钟。
+因此当前瓶颈在 Minecraft 环境侧 CPU 并发，不在显存容量；独立三回合评测仍按历史约 51 分钟预算。
 
 ## 下一项决策
 
-正式 200K 前只补一次恢复场景并发阶梯：`envs=4` 相对 EXP-0015 稳态吞吐至少提升 10% 才测试
-`envs=8`，后者至少再提升 5% 才晋级；随后从原始 100K 源另做正式 CoW 克隆和独立评测。
+从原始 EXP-0012 100K 源另做独立 CoW 克隆，以 `envs=4` 正式训练到绝对 200K；通过
+checkpoint/replay/step 完整性门后，沿用 agent seed 10000 的三回合单环境评测和固定 episode-0 视频。

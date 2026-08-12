@@ -304,3 +304,16 @@
   不续接或混入 105040 诊断输出。
 - Approval: 用户批准当前长期 goal；本 cycle 为 infrastructure 诊断，无需科学看图裁决
 - Git: control freeze `195d909`；runtime `5168475`
+
+### 2026-08-12T07:45:19Z | result | EXP-0016-minecraft-recovery-scaling
+
+- Actor: codex
+- Summary: 恢复场景 `envs=4` 稳态 policy FPS 为 `53.84`，相对 `envs=2` 提升
+  `32.33%`，预测新增 100K ETA 从 `43.62` 降至 `34.01` 分钟；`envs=8` 受 16 核 CPU
+  配额争用影响，FPS 退化至 `42.05`、ETA 增至 `43.70` 分钟，因此选择 `envs=4`。
+- Evidence: `EVT-0098`--`EVT-0100`；`ART-0093`--`ART-0094`；两档均精确结束于
+  105040，源哈希、checkpoint、replay、ratio32、OOM、临时目录与进程清场全部通过。
+- Next: 从原始 EXP-0012 另开独立 CoW 正式输出，以 `envs=4` 新增 100K 到绝对 200K，
+  再做固定 agent seed 10000 的三回合单环境评测与里程碑材料。
+- Approval: 用户批准当前长期 goal；本 cycle 为执行配置诊断，不评价策略质量
+- Git: control freeze `73ffe58`；analysis `496f397`；runtime `5168475`
