@@ -132,17 +132,38 @@ def main() -> None:
     config = config.update({"env.minecraft.length": args.episode_length})
     config.save(output / "config.yaml")
 
-    agent = dv3_main.make_agent(config)
-    checkpoint = elements.Checkpoint()
-    checkpoint.agent = agent
-    checkpoint.load(str(checkpoint_path), keys=["agent"])
-
+    # Start Malmo before importing and initializing the multithreaded JAX agent.
     env = dv3_main.make_env(config, 0)
     base = find_minecraft_base(env)
     inventory_keys = list(base._inv_keys)
     milestone_columns = {
         item: inventory_keys.index(f"inventory/{item}") for item in MILESTONES
     }
+    from dreamerv3.agent import Agent  # noqa: PLC0415
+
+    notlog = lambda key: not key.startswith("log/")
+    obs_space = {key: value for key, value in env.obs_space.items() if notlog(key)}
+    act_space = {key: value for key, value in env.act_space.items() if key != "reset"}
+    agent = Agent(
+        obs_space,
+        act_space,
+        elements.Config(
+            **config.agent,
+            logdir=config.logdir,
+            seed=config.seed,
+            jax=config.jax,
+            batch_size=config.batch_size,
+            batch_length=config.batch_length,
+            replay_context=config.replay_context,
+            report_length=config.report_length,
+            replica=config.replica,
+            replicas=config.replicas,
+        ),
+    )
+    checkpoint = elements.Checkpoint()
+    checkpoint.agent = agent
+    checkpoint.load(str(checkpoint_path), keys=["agent"])
+
     driver = embodied.Driver([lambda: env], parallel=False)
     video_path = output / "episode_000_preregistered_stride4.mp4"
     first_frame_path = output / "episode_000_first_frame.png"
@@ -268,8 +289,9 @@ def main() -> None:
         "video_dynamic_adjacent_pairs": video.dynamic_pairs,
         "first_frame": str(first_frame_path),
         "comparison_boundary": (
-            "Three complete terminal-checkpoint episodes with uncontrolled Minecraft "
-            "worlds; not sample-equivalent to the training curve or paper-scale result."
+            f"{args.episodes} complete terminal-checkpoint episode(s) with uncontrolled "
+            "Minecraft worlds; not sample-equivalent to the training curve or "
+            "paper-scale result."
         ),
     }
     (output / "evaluation.json").write_text(
