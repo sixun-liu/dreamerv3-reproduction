@@ -27,6 +27,12 @@ ALLOWED_CONFIG_CHANGES = {
     "run.save_every",
     "run.steps",
 }
+REQUIRED_RECOVERY_CONFIG_CHANGES = {
+    "logdir",
+    "run.debug",
+    "run.envs",
+    "run.steps",
+}
 
 
 def load_jsonl(path: Path) -> list[dict]:
@@ -158,7 +164,8 @@ def verify(args: argparse.Namespace) -> dict:
     config_differences = changed_paths(source_config, frozen)
     config_checks = {
         "runtime_matches_frozen": generated == frozen,
-        "only_allowed_changes": config_differences == ALLOWED_CONFIG_CHANGES,
+        "only_allowed_changes": config_differences <= ALLOWED_CONFIG_CHANGES,
+        "required_changes_present": REQUIRED_RECOVERY_CONFIG_CHANGES <= config_differences,
         "changed_paths": sorted(config_differences),
         "task": generated.get("task") == "minecraft_diamond",
         "seed": generated.get("seed") == 0,
@@ -258,6 +265,11 @@ def verify(args: argparse.Namespace) -> dict:
         "temp_remaining": [str(path) for path in temp_remaining],
         "temp_clean": bool(cleanup.get("passed")) and not temp_remaining,
     }
+    maximum_memory_bytes = getattr(args, "max_cgroup_memory_bytes", 75161927680)
+    resource_checks["memory_limit_bytes"] = maximum_memory_bytes
+    resource_checks["memory_within_limit"] = (
+        resource_checks["max_cgroup_memory_bytes"] <= maximum_memory_bytes
+    )
     process_checks = {"passed": True, "skipped": True}
     if not getattr(args, "skip_live_process_check", False):
         process_checks = live_process_state()
@@ -299,6 +311,7 @@ def verify(args: argparse.Namespace) -> dict:
         and all(source_unchanged.values())
         and config_checks["runtime_matches_frozen"]
         and config_checks["only_allowed_changes"]
+        and config_checks["required_changes_present"]
         and all(
             config_checks[key]
             for key in (
@@ -326,6 +339,7 @@ def verify(args: argparse.Namespace) -> dict:
         and metric_checks["finite"]
         and metric_checks["ratio32_observed"]
         and resource_checks["samples"] >= 2
+        and resource_checks["memory_within_limit"]
         and resource_checks["max_java_count"] >= expected_envs
         and resource_checks["max_temp_dir_count"] >= expected_envs
         and resource_checks["system_disk_loss_within_limit"]
@@ -353,6 +367,7 @@ def main() -> None:
     parser.add_argument("--resource-system", type=Path, required=True)
     parser.add_argument("--temp-root", type=Path, required=True)
     parser.add_argument("--max-system-disk-loss", type=int, default=536870912)
+    parser.add_argument("--max-cgroup-memory-bytes", type=int, default=75161927680)
     parser.add_argument("--skip-live-process-check", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()

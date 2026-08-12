@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly CONTROL=/root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
+readonly PYTHON=/root/autodl-tmp/Envs/dv3-minecraft-2026/bin/python
+readonly TRAIN=/root/autodl-tmp/Runs/EXP-0017__minecraft-diamond__s000__100k-to-200k-env__20260812T080000Z
+readonly EVAL=/root/autodl-tmp/Runs/EXP-0017__minecraft-diamond__eval-s10000-3eps__20260812T080000Z
+readonly SOURCE=/root/autodl-tmp/Runs/EXP-0012__minecraft-diamond__s000__100k-env__20260812T080000Z
+readonly BASELINE_EVAL=/root/autodl-tmp/Runs/EXP-0012__minecraft-diamond__eval-s10000-3eps__20260812T015527Z/evaluation/evaluation.json
+readonly INVENTORY=/root/autodl-tmp/Runs/EXP-0012__minecraft-diamond__s31415__l0-32-step__20260812T080000Z/l0/minecraft_l0.json
+readonly OUTPUT=/root/autodl-tmp/Artifacts/dreamerv3/review/EXP-0017-minecraft-200k-increment
+
+if [[ -e "${OUTPUT}" ]]; then
+  mapfile -t existing < <(find "${OUTPUT}" -mindepth 1 -maxdepth 1 -printf '%f\n')
+  if (( ${#existing[@]} != 1 )) || [[ "${existing[0]}" != README.md ]] || \
+      ! grep -q '尚未生成紧凑图' "${OUTPUT}/README.md"; then
+    echo "Refusing to overwrite non-placeholder EXP-0017 review output" >&2
+    exit 20
+  fi
+fi
+"${PYTHON}" "${CONTROL}/scripts/analyze_exp0017_increment.py" \
+  --train-run "${TRAIN}" --eval-run "${EVAL}" \
+  --source-replay "${SOURCE}/train/replay" \
+  --baseline-evaluation "${BASELINE_EVAL}" --inventory-schema "${INVENTORY}" \
+  --output-dir "${OUTPUT}"
+sha256sum "${OUTPUT}"/* > "${OUTPUT}/SHA256SUMS"

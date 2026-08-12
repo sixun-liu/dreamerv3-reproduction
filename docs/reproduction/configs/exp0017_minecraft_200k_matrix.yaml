@@ -1,0 +1,55 @@
+schema_version: 1
+experiment_id: EXP-0017
+purpose: isolated_100k_to_200k_increment_and_evaluation
+runtime:
+  path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2026-crossdomain
+  commit: 5168475b7a4413f9575933b4580e7073caea2114
+source:
+  experiment_id: EXP-0012
+  run: /root/autodl-tmp/Runs/EXP-0012__minecraft-diamond__s000__100k-env__20260812T080000Z
+  checkpoint_step: 100000
+  checkpoint_tree_sha256: 768e088455502cadbee875022f7754c7703b5df6708aa7f9fed4df4c70775fe0
+  replay_tree_sha256: f103990afb0a5f484aa965a03df110d0a0a8ae9c12f2a9c823757bac95127fc2
+training:
+  source_step: 100000
+  added_environment_steps: 100000
+  absolute_final_step: 200000
+  environment_count: 4
+  agent_seed: 0
+  train_ratio: 32
+  task: minecraft_diamond
+  model: size50m
+  debug: false
+evaluation:
+  agent_seed: 10000
+  environment_count: 1
+  episodes: 3
+  episode_length: 36000
+  video_selection: episode_0_preregistered_not_best_of_n
+  video_stride: 4
+  world_seed_controlled: false
+gates:
+  source_unchanged: true
+  target_unique_stepids: 200000
+  new_unique_stepids: 100000
+  final_checkpoint_step: 200000
+  maximum_cgroup_memory_bytes: 77309411328
+  root_disk_minimum_free_bytes: 5368709120
+  data_disk_minimum_free_bytes: 10737418240
+  no_oom: true
+  cleanup_required: true
+learning_hypothesis:
+  l1_evaluation_item: crafting_table
+  l1_minimum_successful_episodes: 2
+  advance_item: wooden_pickaxe
+  advance_observed_in: added_replay_or_terminal_evaluation
+forbidden:
+  - continue_from_exp0015_or_exp0016_diagnostic_output
+  - algorithm_reward_wrapper_or_ratio_change
+  - score_conditioned_seed_or_budget_change
+  - best_of_n_video_selection
+  - training_beyond_absolute_step_200000
+storage:
+  train_run: /root/autodl-tmp/Runs/EXP-0017__minecraft-diamond__s000__100k-to-200k-env__20260812T080000Z
+  eval_run: /root/autodl-tmp/Runs/EXP-0017__minecraft-diamond__eval-s10000-3eps__20260812T080000Z
+  temporary_and_cache_root: each_run/work

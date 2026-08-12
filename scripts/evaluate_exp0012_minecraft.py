@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Evaluate the frozen EXP-0012 checkpoint for three Minecraft episodes."""
+"""Evaluate a frozen Minecraft checkpoint for three episodes."""
 
 from __future__ import annotations
 
@@ -86,6 +86,7 @@ class StreamingVideo:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--experiment-id", default="EXP-0012")
     parser.add_argument("--runtime", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
@@ -260,7 +261,7 @@ def main() -> None:
         }
     summary = {
         "schema_version": 1,
-        "experiment_id": "EXP-0012",
+        "experiment_id": args.experiment_id,
         "task": "minecraft_diamond",
         "policy_mode": "eval; categorical policy remains sampled with fixed agent RNG seed",
         "agent_seed": args.agent_seed,

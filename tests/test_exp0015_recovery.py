@@ -168,6 +168,7 @@ class Exp0015RecoveryTest(unittest.TestCase):
             resource_system=resource,
             temp_root=temp_root,
             max_system_disk_loss=536870912,
+            max_cgroup_memory_bytes=200,
             skip_live_process_check=True,
             experiment_id="EXP-TEST",
             expected_envs=expected_envs,
@@ -185,6 +186,14 @@ class Exp0015RecoveryTest(unittest.TestCase):
             drifted = verify(args)
             self.assertFalse(drifted["passed"])
             self.assertFalse(drifted["source_unchanged"]["replay"])
+
+    def test_verifier_rejects_memory_above_preregistered_limit(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            args = self._fixture(Path(directory))
+            args.max_cgroup_memory_bytes = 99
+            result = verify(args)
+            self.assertFalse(result["passed"])
+            self.assertFalse(result["resources"]["memory_within_limit"])
 
     def test_verifier_requires_every_declared_worker_start(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
