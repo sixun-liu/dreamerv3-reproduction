@@ -1,13 +1,13 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T07:01:00Z'
+updated_at: '2026-08-12T06:56:40Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在现有硬件和存储条件下建立可复现、资源安全且高效的DreamerV3 Minecraft训练方案，并依据实测性价比闭环适当规模的增量训练、评测与材料。
 primary_problem: EXP-0014已在同预算配对下选择envs=2；当前需从EXP-0012终点隔离恢复checkpoint、replay与step，证明源证据不变且新增transition无重复或丢失，再依据实测ETA冻结有界增量训练。
-active_experiment_id: null
+active_experiment_id: EXP-0015
 active_candidate: null
 canonical_baseline:
   id: DV3-2026-MINECRAFT-DIAMOND-50M-100K
