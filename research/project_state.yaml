@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T06:56:40Z'
+updated_at: '2026-08-12T07:01:08Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -52,8 +52,8 @@ workspace:
     to: /root/autodl-tmp/ThirdParty
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
-  branch: exp/EXP-0014-minecraft-paired-throughput
-  commit: 703c6a62d7b695803ba1a2a9f878acdf8c916769
+  branch: exp/EXP-0015-minecraft-recovery
+  commit: 195d909b51c1703a9afcda8ff00a11c444d67674
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
