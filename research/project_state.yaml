@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T05:12:05Z'
+updated_at: '2026-08-12T05:31:57Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -53,7 +53,7 @@ workspace:
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
   branch: exp/EXP-0013-minecraft-throughput
-  commit: e093341ad6298e600e201da29a594b8ac84583c9
+  commit: 4d7e1bdc45eade47bd843f362b5f87c2e77557da
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
