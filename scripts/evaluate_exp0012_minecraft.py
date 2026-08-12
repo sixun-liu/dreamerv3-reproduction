@@ -132,7 +132,7 @@ def main() -> None:
     config = config.update({"env.minecraft.length": args.episode_length})
     config.save(output / "config.yaml")
 
-    # Start Malmo before importing and initializing the multithreaded JAX agent.
+    # Reuse this environment's spaces to avoid constructing a second Malmo instance.
     env = dv3_main.make_env(config, 0)
     base = find_minecraft_base(env)
     inventory_keys = list(base._inv_keys)
