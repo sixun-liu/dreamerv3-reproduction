@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-08-12T11:07:00Z
+> Updated: 2026-08-12T14:43:00Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -375,3 +375,16 @@
 - Next: 先验证三环境并行 evaluator 是否在逐局语义不变时至少端到端加速 `1.5x`；再决定 500K。
 - Approval: 用户批准长期 goal；主图与视频 human review pending
 - Git: control freeze `4a05ca5`；runtime `6723fc1`
+
+### 2026-08-12T14:43:00Z | result | EXP-0023-minecraft-exact-500k
+
+- Actor: codex
+- Summary: 从精确 200K 只读源以 `size50m`、`envs=4` 和 ratio32 有界推进到精确 500K；
+  新增 replay 的木镐/圆石轨迹为 `185/304`、`120/304`，固定三局中 `2/3` 局达到两项。
+  铁矿/铁锭各为 `5/304`，但铁镐和钻石为零，裁决为 `promising_unresolved`。
+- Evidence: `EVT-0119`--`EVT-0121`；`ART-0110`--`ART-0114`；训练完整性、固定评测、视频、
+  资源与清场门全绿，主图明确标注 200K/500K 世界不配对。
+- Next: 独立预注册 50M/100M 初始化、活跃显存、编译峰值和约 5K 同预算吞吐 gate；不自动续训
+  到 1M，也不将有限 L3 前置信号表述为论文 Diamond 复现。
+- Approval: 用户批准长期 goal；主图与固定 worker0 视频 human review pending
+- Git: control freeze `253d8bb`；runtime `6723fc1`

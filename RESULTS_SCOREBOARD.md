@@ -1,6 +1,6 @@
 # RESULTS_SCOREBOARD
 
-> Updated: 2026-08-12T02:57:14Z
+> Updated: 2026-08-12T14:36:00Z
 > Maintainer: codex
 > Source of truth: research/experiments.jsonl and research/artifacts.jsonl
 
@@ -17,3 +17,4 @@
 | `EXP-0010` | Author 2024 runtime `2411f7d`+compat；DMC Vision walker_walk；12M；repeat2；ratio512；agent seed0；1M env steps | final-100K mean959.43，进入官方10-seed范围954.96--964.79；独立10局均值956.43 | early-20K mean83.93；fixed-bin AUC849.43，进入官方逐seed范围820.10--901.78；前约200K慢于官方均值；checkpoint step500000、完整性通过 | `/root/autodl-tmp/Artifacts/dreamerv3/review/EXP-0010-dmc-vision-walker-staged/` | `promising_unresolved`；单seed数值对齐实例，非跨seed或DMC Vision全域复现 |
 | `EXP-0011` | Author 2026 runtime `5168475`；Atari100K Breakout；50M；repeat4；ratio256；agent seed0；100K decisions | tail-40K frame mean7.54，early mean1.29，改善6.26；通过冻结趋势门；官方200M/ratio128五seed tail范围6.20--11.00仅作上下文 | 独立固定checkpoint 10局均值9.10、范围5--16；训练258回合；checkpoint step100000、完整性通过；54.1min、峰值显存24645MiB | `/root/autodl-tmp/Artifacts/dreamerv3/review/EXP-0011-atari100k-breakout/`；固定第0局448帧视频 | `promising_unresolved`；单seed降规模学习实例，非论文200M严格复现或DQN排行榜比较 |
 | `EXP-0012` | Author 2026 runtime `5168475`；Minecraft Diamond；50M；ratio32；agent seed0；100K env steps | 训练中 log/planks/crafting_table 首次步2057/2103/2147，L1全链出现；独立3局中成功3/3、3/3、2/3 | wooden_pickaxe 0次；仅训练中一次cobblestone，故L2链未闭合；精确100K checkpoint、100K唯一replay transitions；训练67.6min、峰值显存24647MiB | `/root/autodl-tmp/Artifacts/dreamerv3/review/EXP-0012-minecraft-diamond-reduced/`；固定episode0视频9001帧 | `promising_unresolved`；100K早期L1里程碑成立，非论文约100M Diamond数值复现 |
+| `EXP-0023` | Author 2026 runtime `6723fc1`；Minecraft Diamond；50M；ratio32；seed0；exact 200K→500K；envs4 | 新增 replay 木镐 `185/304`、圆石 `120/304` 条轨迹；固定三局两局达到木镐/圆石，预注册 L2 推进门通过 | 铁矿/铁锭 `5/304`，铁镐/钻石为0；训练87.38min，峰值 RAM/VRAM `53.61/24.07GiB`；世界不配对 | `/root/autodl-tmp/Artifacts/dreamerv3/review/EXP-0023-minecraft-exact-500k/`；固定worker0动态视频 | `promising_unresolved`；支持500K有界L2推进和有限L3前置信号，非稳定L3或论文Diamond复现 |
