@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T11:50:00Z'
+updated_at: '2026-08-12T11:55:31Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -53,8 +53,8 @@ workspace:
     to: /root/autodl-tmp/ThirdParty
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
-  branch: exp/EXP-0021-minecraft-parallel-eval
-  commit: a6bcf4b0a7e90e109714d07c432ff6ec099b5299
+  branch: exp/EXP-0022-minecraft-runtime-milestones
+  commit: 83ab45b29ed12166678627fbfb369c93819d1ad2
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
