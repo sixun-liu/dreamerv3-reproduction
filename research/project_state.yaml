@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T07:52:14Z'
+updated_at: '2026-08-12T08:07:35Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -52,8 +52,8 @@ workspace:
     to: /root/autodl-tmp/ThirdParty
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
-  branch: exp/EXP-0016-minecraft-recovery-scaling
-  commit: f3c7a7f2dcc41b5df81de7f9c63a30a2315f60b5
+  branch: exp/EXP-0017-minecraft-200k-increment
+  commit: 855c51fda31e42b6de1477dfdf27c3594f7d91c0
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
