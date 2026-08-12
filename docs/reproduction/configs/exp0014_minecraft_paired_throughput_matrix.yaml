@@ -1,0 +1,54 @@
+schema_version: 1
+experiment_id: EXP-0014
+purpose: minecraft_equal_budget_environment_count_attribution
+runtime:
+  path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2026-crossdomain
+  commit: 5168475b7a4413f9575933b4580e7073caea2114
+environment:
+  python: /root/autodl-tmp/Envs/dv3-minecraft-2026/bin/python
+  task: minecraft_diamond
+  configs: [minecraft, size50m]
+  minerl_version: 0.4.4
+  seed: 31415
+training:
+  script: train
+  debug: false
+  steps: 5040
+  train_ratio: 32
+  batch_size: 16
+  batch_length: 64
+arms:
+  envs1:
+    source: new
+    environment_count: 1
+    driver_step_quantum: 10
+  envs2:
+    source: EXP-0013-read-only
+    environment_count: 2
+    run: /root/autodl-tmp/Runs/EXP-0013__minecraft-throughput__s31415__5040-env__20260812T060000Z/envs2
+    integrity_sha256: 91b23ec2acb1831e851cc6989dd5a367d17e236a21eb3772c9ef294445491854
+    completed_sha256: 0f34fd25a31b035231552579b3bccb6590439dc77707cbf52136b3ff99663ebb
+    metrics_sha256: 31616be2de73752f21718deb71d68119400b705a2fc0ff3a6f69a81deabfddff
+    resource_system_sha256: bd698bd7085dbb8d3b998e7add57966388939fed011aaeedbedd5e961ac1837b
+    resource_gpu_sha256: 1c5152b5762bf3f2540ffb8306268d766b79a610a3a1309c0d6c482a2923a670
+comparison:
+  steady_step_fraction: [0.40, 0.85]
+  replay_ratio_range: [28.0, 36.0]
+  minimum_samples_per_arm: 3
+  select_envs2_if:
+    minimum_end_to_end_speedup: 1.10
+    minimum_steady_policy_speedup: 1.05
+  otherwise: envs1
+storage:
+  run_root: /root/autodl-tmp/Runs/EXP-0014__minecraft-paired-throughput__s31415__5040-env__20260812T061500Z
+  temp_and_cache_root: envs1/work
+controls:
+  - Run only the new envs1 arm; EXP-0013 envs2 evidence is read-only.
+  - Do not load EXP-0012 checkpoints or replay.
+  - Do not use policy scores, inventory milestones, or gameplay quality for selection.
+  - Treat the result as diagnostic infrastructure evidence only.
+forbidden:
+  - envs4
+  - envs8
+  - script_parallel
+  - training_beyond_5040_steps
