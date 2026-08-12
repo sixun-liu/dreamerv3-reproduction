@@ -1,13 +1,13 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T08:07:35Z'
+updated_at: '2026-08-12T08:43:23Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在现有硬件和存储条件下建立可复现、资源安全且高效的DreamerV3 Minecraft训练方案，并依据实测性价比闭环适当规模的增量训练、评测与材料。
 primary_problem: EXP-0016已在恢复场景选择envs=4；当前需从原始EXP-0012 100K源独立恢复到绝对200K，并以三回合单环境评测判断额外100K是否维持L1并推动wooden-pickaxe/L2链。
-active_experiment_id: EXP-0017
+active_experiment_id: null
 active_candidate: envs4_incremental_200k
 canonical_baseline:
   id: DV3-2026-MINECRAFT-DIAMOND-50M-100K

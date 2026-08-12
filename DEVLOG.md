@@ -317,3 +317,18 @@
   再做固定 agent seed 10000 的三回合单环境评测与里程碑材料。
 - Approval: 用户批准当前长期 goal；本 cycle 为执行配置诊断，不评价策略质量
 - Git: control freeze `73ffe58`；analysis `496f397`；runtime `5168475`
+
+### 2026-08-12T08:43:23Z | invalid-run | EXP-0017-minecraft-200k-increment
+
+- Actor: codex
+- Summary: `envs=4` 训练主体自然完成并保存 checkpoint，但最终 step/replay 为
+  `200008/200008`，比冻结的绝对 200K 与新增 100K 门各多 8；完整性门因此拒绝该输出，未启动评测。
+- Root cause: 同步 Driver 每次推进 4 个环境；`train.py` 固定请求 10 步，实际每轮推进 12 步，
+  从 100K 恢复时确定性得到 `100000 + ceil(100000/12) * 12 = 200008`。
+- Evidence: `EVT-0101`--`EVT-0103`；`ART-0095`。源树不变、所有 stepid 唯一、metrics 有限、
+  ratio32、OOM、系统盘和清场门均通过；120K--195K policy FPS 中位 `68.90`，训练墙钟
+  `28.66 min`，峰值内存 `31.37 GiB`、显存 `24645 MiB`。
+- Next: 独立 runtime 只修复最后一轮 remaining-step 请求；先单测与真实恢复 smoke，精确停止通过后
+  再从原始 EXP-0012 新输出重跑，越界 checkpoint 不进入学习裁决。
+- Approval: 用户批准当前长期 goal；失败证据无需人工视觉审查
+- Git: control freeze `855c51f`；runtime `5168475`

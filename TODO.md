@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-08-12T07:47:00Z
+> Updated: 2026-08-12T08:44:00Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,8 +8,9 @@
 
 ## Now
 
-- [ ] [codex] 冻结并运行从原始 EXP-0012 到绝对 200K 的新增 100K 正式训练；trigger: EXP-0016 已选择 `envs=4`。
-- [ ] [codex] 沿用固定 agent seed 10000 的三回合独立评测与 episode-0 视频；trigger: 200K 完整性通过。
+- [ ] [codex] 修复同步 Driver 最后一轮停止粒度并完成真实 `envs=4` 恢复 smoke；trigger: EXP-0017 在 `200008` 被完整性门拒绝。
+- [ ] [codex] 从原始 EXP-0012 新输出重跑绝对 200K 正式训练；trigger: 精确停止 smoke 通过。
+- [ ] [codex] 沿用固定 agent seed 10000 的三回合独立评测与 episode-0 视频；trigger: 新 200K 完整性通过。
 - [ ] [codex] 对比 100K/200K 里程碑、评测、资源账并生成审查/日报材料；trigger: 独立评测完成。
 
 ## Waiting
