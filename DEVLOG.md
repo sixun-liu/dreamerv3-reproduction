@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-08-12T02:57:14Z
+> Updated: 2026-08-12T11:07:00Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -360,3 +360,18 @@
   `6723fc1` 精确训练到 200K，再做固定三回合评测和材料闭环。
 - Approval: 用户批准当前长期 goal；human review pending
 - Git: control/runtime freeze `9a1fc48`/`6723fc1`
+
+### 2026-08-12T11:06:17Z | result | EXP-0020-minecraft-exact-200k
+
+- Actor: codex
+- Summary: 从只读 EXP-0012 100K 源以 patched runtime `6723fc1`、`envs=4` 精确新增
+  100K；checkpoint 与 replay 恰为 200K unique stepid，源哈希、ratio32、有限 loss、OOM、磁盘和
+  清场门全绿。新增 replay 的 2 条轨迹与固定终点评测 `1/3` 回合首次出现 wooden_pickaxe，
+  crafting_table 为 `2/3`，cobblestone 为 `0/3`。
+- Evidence: `EVT-0110`--`EVT-0112`；`ART-0099`--`ART-0103`；训练 `32.18 min`，评测
+  `32.87 min`；主图和机器摘要位于 `Artifacts/dreamerv3/review/EXP-0020-minecraft-exact-200k-increment/`。
+- Decision: 晋级 `exact-stop + envs4` 为本机同步训练方案，并支持“推进到木镐”的受限主张；不宣称
+  完整 L2、稳定木镐策略或论文 Diamond 复现。固定 episode-0 视频为零里程碑死亡局，不按结果换片。
+- Next: 先验证三环境并行 evaluator 是否在逐局语义不变时至少端到端加速 `1.5x`；再决定 500K。
+- Approval: 用户批准长期 goal；主图与视频 human review pending
+- Git: control freeze `4a05ca5`；runtime `6723fc1`

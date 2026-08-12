@@ -1,14 +1,14 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T09:52:16Z'
+updated_at: '2026-08-12T11:06:17Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在现有硬件和存储条件下建立可复现、资源安全且高效的DreamerV3 Minecraft训练方案，并依据实测性价比闭环适当规模的增量训练、评测与材料。
-primary_problem: EXP-0018已验证精确停止且EXP-0019已选择envs4；当前从原始EXP-0012独立重跑精确200K正式增量，并用冻结三回合评测判断L1保持与wooden-pickaxe推进。
-active_experiment_id: EXP-0020
-active_candidate: patched-runtime-envs4-exact-200k
+primary_problem: EXP-0020已验证envs4精确200K训练、L1保持与wooden-pickaxe推进；当前需在不改变逐局评测语义的前提下验证三环境并行evaluator能否显著降低终点评测墙钟，再决定500K增量。
+active_experiment_id: null
+active_candidate: patched-runtime-envs4-exact-200k-plus-parallel-eval-candidate
 canonical_baseline:
   id: DV3-2026-MINECRAFT-DIAMOND-50M-100K
   name: DreamerV3 2026 author reimplementation Minecraft Diamond size50m reduced

@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-08-12T09:44:00Z
+> Updated: 2026-08-12T11:07:00Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,17 +8,18 @@
 
 ## 一句话判断
 
-EXP-0019 已排除 `envs=5`：它相对 `envs=4` 稳态 FPS 低 `6.67%`、预测新增 100K 时间
-高 `6.51%`，因此 `envs=4` 是当前 `script=train` 路线已测 `2/4/5/8` 档的实用最优。
+EXP-0020 已以 `envs=4` 从只读 100K 源精确训练到 200K：工程门全绿，固定三回合评测
+维持 crafting table `2/3`，并首次在新增 replay 与评测中观察到 wooden pickaxe；尚无 cobblestone。
 
 ## 当前主要矛盾
 
-EXP-0019 的同预算对照中，`envs=4/5` 稳态 FPS 分别为 `61.39/57.30`，预测新增 100K
-分别为 `30.33/32.30` 分钟。`envs=5` 平均 CPU 从 `7.60` 增至 `8.80` 核，throttled
-CPU-sec/wall-sec 从 `2.44` 增至 `3.84`，峰值内存从 `28.70` 增至 `34.07 GiB`；两臂显存峰值
-同为约 `24.64 GiB`。这说明瓶颈是本地 Minecraft/同步 Driver 的 CPU 与尾延迟，而不是显存容量。
+新增 100K 训练墙钟 `32.18` 分钟，平均 CPU `10.73` 核、峰值内存 `36.15 GiB`、GPU 平均
+利用率 `12.35%`、峰值 `94%`；精确终点、200K unique stepid、ratio32、源隔离、OOM、磁盘和
+清场全部通过。单环境三回合评测却耗时 `32.87` 分钟，主要只使用约 3 核 Java、不到 1 核 Python
+和低 GPU 利用率，当前效率矛盾已从训练转移到终点评测。
 
 ## 下一项决策
 
-从原始 EXP-0012 新输出，以 patched runtime `6723fc1`、`envs=4` 和独立冷缓存精确重跑到
-200K；完整性通过后沿用固定三回合评测。`script=parallel`、NUMA/taskset 和更多环境数不混入本轮。
+先做三环境并行终点评测的短 smoke 与同 checkpoint 配对 probe；只有端到端至少加速 `1.5x`，且
+逐局终止、回报/里程碑、固定 episode-0 视频、checkpoint 绑定和清场语义不漂移，才替换后续默认
+评测。随后再决定是否从当前 200K 模型有界推进到 500K。

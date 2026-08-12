@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-08-12T10:42:00Z
+> Updated: 2026-08-12T11:07:00Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,17 +8,16 @@
 
 ## Now
 
-- [ ] [codex] 从原始 EXP-0012 新输出重跑绝对 200K 正式训练；trigger: EXP-0019 已选择 `envs=4`。
-- [ ] [codex] 沿用固定 agent seed 10000 的三回合独立评测与 episode-0 视频；trigger: 新 200K 完整性通过。
-- [ ] [codex] 对比 100K/200K 里程碑、评测、资源账并生成审查/日报材料；trigger: 独立评测完成。
-
-## Next
-
 - [ ] [codex] 建立 Minecraft 终点评测吞吐 probe；trigger: EXP-0020 评测与材料闭环后。先用短回合
   smoke 验证三环境并行 evaluator 的逐环境终止、回报/里程碑统计、固定 episode-0 视频、checkpoint
   绑定和清场语义，再以同一冻结 checkpoint、agent seed、3 回合和 36K 上限比较串行与并行墙钟。
   只有并行方案端到端至少加速 `1.5x`，且无 episode 丢失、best-of-N、资源越界或协议漂移，才晋级为
   后续 500K/1M checkpoint 的默认评测路径；x264 preset 和 video stride 仅作次要写入开销对照。
+
+## Next
+
+- [ ] [codex] 依据评测 probe 裁决是否从精确 200K 有界推进到 500K；trigger: 并行 evaluator
+  晋级或串行协议明确保留。不得因本轮 wooden_pickaxe 正例自动追加训练预算。
 
 ## Waiting
 
