@@ -15,6 +15,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from cleanup_exp0013_temp import process_references  # noqa: E402
 from generate_exp0013_configs import render  # noqa: E402
 from sample_exp0013_resources import descendants  # noqa: E402
 from verify_exp0013_throughput import natural_stop_step, verify  # noqa: E402
@@ -47,6 +48,10 @@ class Exp0013ThroughputTest(unittest.TestCase):
             13: {"ppid": 1, "comm": "other", "rss_bytes": 1},
         }
         self.assertEqual(descendants(table, 10), {10, 11, 12})
+
+    def test_cleanup_reference_scan_does_not_match_command_text(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            self.assertEqual(process_references(Path(directory).resolve()), [])
 
     def test_verifier_passes_valid_synthetic_run_and_rejects_temp_leak(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -98,6 +103,9 @@ class Exp0013ThroughputTest(unittest.TestCase):
             temp_root = run_dir / "work/tmp"
             (run_dir / "work/malmo/logs").mkdir(parents=True)
             temp_root.mkdir(parents=True)
+            (run_dir / "temp_cleanup_postprocess.json").write_text(
+                json.dumps({"passed": True}), encoding="utf-8"
+            )
             for index in range(2):
                 (run_dir / f"work/malmo/logs/mc_{index}.log").touch()
             resource = run_dir / "resource_system.csv"

@@ -148,6 +148,12 @@ def verify(args: argparse.Namespace) -> dict:
         - int(first_system.get("memory_events_oom_kill", 0))
     )
     remaining_temp_dirs = [path for path in args.temp_root.iterdir() if path.is_dir()]
+    cleanup_path = args.run_dir / "temp_cleanup_postprocess.json"
+    cleanup = (
+        json.loads(cleanup_path.read_text(encoding="utf-8"))
+        if cleanup_path.is_file()
+        else {}
+    )
     malmo_logs = list((args.run_dir / "work/malmo/logs").glob("mc_*.log"))
     natural_step = natural_stop_step(args.expected_step, args.driver_step_quantum)
     checks = {
@@ -171,7 +177,8 @@ def verify(args: argparse.Namespace) -> dict:
         "max_temp_dir_count": max_temp_dirs,
         "temp_instances_observed": max_temp_dirs >= args.expected_envs,
         "remaining_temp_dirs": [str(path) for path in remaining_temp_dirs],
-        "temp_instances_cleaned": not remaining_temp_dirs,
+        "temp_cleanup_postprocess": cleanup,
+        "temp_instances_cleaned": bool(cleanup.get("passed")) and not remaining_temp_dirs,
         "max_java_count": max_java_count,
         "java_instances_observed": max_java_count >= args.expected_envs,
         "malmo_log_count": len(malmo_logs),

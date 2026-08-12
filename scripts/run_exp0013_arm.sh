@@ -51,7 +51,7 @@ fail() {
 }
 trap stop_sampler EXIT
 
-if [[ ! -f "${RUN_ROOT}/l0-envs2/.completed" ]]; then
+if [[ ! -f "${RUN_ROOT}/l0-envs2-r1/.completed" ]]; then
   echo "EXP-0013 multi-environment L0 is missing" >&2
   exit 20
 fi
@@ -152,12 +152,10 @@ if (( train_status != 0 )); then
   fail "${train_status}" train
 fi
 readonly TRAIN_WALL_SECONDS=$(( $(date +%s) - TRAIN_START_EPOCH ))
-for _ in $(seq 1 30); do
-  if ! find "${ROOT}/work/tmp" -mindepth 1 -maxdepth 1 -type d -print -quit | grep -q .; then
-    break
-  fi
-  sleep 1
-done
+"${PYTHON}" "${CONTROL}/scripts/cleanup_exp0013_temp.py" \
+  --temp-root "${ROOT}/work/tmp" --output "${ROOT}/temp_cleanup_postprocess.json" \
+  --wait-seconds 30 > "${ROOT}/temp_cleanup_postprocess_stdout.log" 2>&1 \
+  || fail $? temp_cleanup
 
 "${PYTHON}" "${CONTROL}/scripts/verify_exp0013_throughput.py" \
   --run-dir "${ROOT}" --frozen-config "${CONFIG}" \
