@@ -1,28 +1,30 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T03:02:02Z'
+updated_at: '2026-08-12T05:11:01Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
-north_star: 在可审计的作者重实现上建立 DreamerV3 跨域最小证据闭环，并把复现结果转化为可讲清楚的机制问题。
-primary_problem: DMC Vision、Atari100K与Minecraft Reduced三个跨域最小闭环已完成；当前需人工审查EXP-0012并在已有replay机制分析与新授权扩预算之间选择一个有界问题。
+north_star: 在现有硬件和存储条件下建立可复现、资源安全且高效的DreamerV3 Minecraft训练方案，并依据实测性价比闭环适当规模的增量训练、评测与材料。
+primary_problem: EXP-0012已建立单环境100K基线；当前需把MineRL临时写入迁移至数据盘并通过有界多环境探针找到稳定吞吐甜点，再按证据决定恢复与增量训练预算。
 active_experiment_id: null
 active_candidate: null
 canonical_baseline:
   id: DV3-2026-MINECRAFT-DIAMOND-50M-100K
   name: DreamerV3 2026 author reimplementation Minecraft Diamond size50m reduced
-  repo_commit: d60cbebd07792ef0ad2cc11d6df8da6952c07fd9
+  repo_commit: e093341ad6298e600e201da29a594b8ac84583c9
   config: runtime5168475; minecraft+size50m; MineRL mirror0.4.4; 64x64 RGB; break_speed100; envs1; ratio32; seed0; hard100K environment steps
   evaluation_protocol: 训练逐回合原始回报与inventory里程碑；终点checkpoint固定agent seed独立评测3局并固定第0局视频；wrapper不暴露world seed，环境随机性明确记录。
 parked_lanes:
 - EXP-0009 Figure 18 paired seeds1,2与10M/14-task扩展
 - DMC Vision、Atari100K与Minecraft的多seed/full-suite扩展
-- Minecraft 1M/5M/100M预算；未经新授权不得启动
+- Minecraft 1M/5M/100M论文尺度预算
+- script=parallel有限停止、三部分checkpoint与跨模式恢复验证
 stage_exit_gates:
-- EXP-0010 DMC Vision完成100K gate、1M续训、独立评测和图像材料。
-- EXP-0011 Atari100K Breakout完成100K decisions、独立评测和协议边界裁决。
-- EXP-0012 Minecraft完成依赖/L0、size50m smoke、精确100K、独立评测和受限裁决。
+- Minecraft临时实例、日志和可控缓存不再消耗系统盘，且多环境L0通过。
+- 完成自适应多环境吞吐探针，找到稳定甜点或形成证据充分的无增益裁决。
+- 若探针通过成本门，完成EXP-0012等价恢复、一个有界增量训练及独立评测；否则明确停车。
+- 固化可复用运行脚本、资源账、恢复方法、展示材料和受限结论。
 repository_manifest: research/repositories.yaml
 workspace:
   path_aliases:
@@ -50,8 +52,8 @@ workspace:
     to: /root/autodl-tmp/ThirdParty
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
-  branch: exp/EXP-0012-minecraft-reduced
-  commit: d60cbebd07792ef0ad2cc11d6df8da6952c07fd9
+  branch: exp/EXP-0013-minecraft-throughput
+  commit: e093341ad6298e600e201da29a594b8ac84583c9
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
@@ -59,8 +61,8 @@ human_review:
 repository_snapshots:
   control:
     repo: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
-    branch: exp/EXP-0012-minecraft-reduced
-    commit: d60cbebd07792ef0ad2cc11d6df8da6952c07fd9
+    branch: exp/EXP-0013-minecraft-throughput
+    commit: e093341ad6298e600e201da29a594b8ac84583c9
     tracked_clean: true
     worktree_clean: true
     untracked_count: 0
