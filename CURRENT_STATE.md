@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-08-12T08:44:00Z
+> Updated: 2026-08-12T09:18:00Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,17 +8,19 @@
 
 ## 一句话判断
 
-`envs=4` 仍是当前吞吐最优档，但 EXP-0017 的正式 200K 门因同步 Driver 确定性结束于
-`200008` 而失效；当前先修复并验证精确停止，不能评测或采用该越界 checkpoint。
+EXP-0018 已证明 patched runtime 能从 `100000` 精确结束于 `100040` 并恰好新增 40 个
+transition；当前 `envs=4` 是已测最优档，正式重跑前只补一个可达的 `envs=5` 局部对照。
 
 ## 当前主要矛盾
 
-EXP-0017 训练主体在 `28.66` 分钟完成，120K--195K policy FPS 中位 `68.90`，峰值内存
-`31.37 GiB`、峰值显存 `24645 MiB` 且无 OOM，进一步确认瓶颈不在显存容量。但 `train.py`
-每轮固定请求 10 步，4 环境同步 Driver 每轮实际推进 12 步，导致
-`100000 + ceil(100000/12) * 12 = 200008`；严格完整性门已正确拒绝该输出。
+EXP-0017 长跑显示 `envs=4` 的 120K--195K policy FPS 中位为 `68.90`，GPU 利用率均值
+`16.85%`、中位 `1%`，但显存峰值 `24645 MiB`；这是同步环境与 learner 交替等待，不是显存不足。
+EXP-0016 中 `envs=8` 已因 CPU 配额争用退化，故不能靠继续增加环境数填满 GPU。精确停止根因
+和补丁已由 EXP-0018 的单测与真实 Minecraft smoke 闭合，原始短 smoke 的 ratio32 日志不足已与
+checkpoint/replay 完整性门分离。
 
 ## 下一项决策
 
-在独立 runtime 中把最后一轮 Driver 请求限制为剩余步数，先以单测和真实 `envs=4` 恢复 smoke
-证明精确终点；通过后才从原始 EXP-0012 新输出重跑正式 200K，并沿用冻结的三回合评测。
+只比较同一 patched runtime 下的 `envs=4` 与 `envs=5`。若 `envs=5` 未带来至少 `5%` 的稳定
+policy FPS 和预测 ETA 收益，则冻结 `envs=4`；随后从原始 EXP-0012 新输出重跑正式 200K，
+并沿用固定三回合评测。`script=parallel` 不混入本轮。

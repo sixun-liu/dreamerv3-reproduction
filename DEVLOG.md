@@ -332,3 +332,17 @@
   再从原始 EXP-0012 新输出重跑，越界 checkpoint 不进入学习裁决。
 - Approval: 用户批准当前长期 goal；失败证据无需人工视觉审查
 - Git: control freeze `855c51f`；runtime `5168475`
+
+### 2026-08-12T09:16:59Z | result | EXP-0018-exact-step-stop
+
+- Actor: codex
+- Summary: patched runtime 将同步 Driver 最后一轮请求限制为剩余步数；边界单测 `8/8` 通过，
+  真实 Minecraft 从 `100000` 精确结束于 `100040`，checkpoint 与 replay 均恰好新增 40 个
+  transition，4 个 worker 起点完整且源树不变。
+- Evidence: `EVT-0104`--`EVT-0106`；`ART-0096`；峰值内存 `27.99 GiB`、无 OOM、系统盘
+  零净损失，GPU/Java/Xvfb 与临时目录全部清场。原通用 verifier 因 40 步只有一行 metrics、
+  replay ratio 为 NaN 写入 `.failed`；派生复核只将长程 ratio32 日志门标为不适用，其余门不变。
+- Next: 在同一 patched runtime 下只补 `envs=5` 对照；无至少 `5%` 实际收益则保留 `envs=4`，
+  再从原始 EXP-0012 新输出重跑正式 200K。
+- Approval: 用户批准当前长期 goal；本 cycle 为 instrumentation，不评价策略质量
+- Git: runtime `6723fc1`；control analysis `0b10203`

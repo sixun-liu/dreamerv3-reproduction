@@ -1,13 +1,13 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T08:58:37Z'
+updated_at: '2026-08-12T09:16:59Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在现有硬件和存储条件下建立可复现、资源安全且高效的DreamerV3 Minecraft训练方案，并依据实测性价比闭环适当规模的增量训练、评测与材料。
 primary_problem: EXP-0017因同步Driver停止粒度结束于200008；当前先以单测和真实envs4恢复smoke验证精确停止修复，再恢复正式200K路线。
-active_experiment_id: EXP-0018
+active_experiment_id: null
 active_candidate: runtime_exact_remaining_step_stop
 canonical_baseline:
   id: DV3-2026-MINECRAFT-DIAMOND-50M-100K
