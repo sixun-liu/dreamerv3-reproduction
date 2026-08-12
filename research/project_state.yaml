@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T09:26:34Z'
+updated_at: '2026-08-12T09:31:08Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -54,7 +54,7 @@ workspace:
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
   branch: exp/EXP-0019-minecraft-local-scaling
-  commit: df978c48ced6972b9a6dcb45ff35e9cd8ec7583f
+  commit: b7c4b54c899103a1c5342c4751ddd4f24c3c08e5
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
