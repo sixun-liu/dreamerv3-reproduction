@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-08-12T02:57:14Z
+> Updated: 2026-08-12T05:08:54Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,7 +8,11 @@
 
 ## Now
 
-- 当前无自动运行项；GPU 空闲，Minecraft 更大预算保持 parked。
+- [ ] [codex] 冻结 EXP-0013 的数据盘重定向、资源采样、完整性与停止门；trigger: 新 goal 已授权。
+- [ ] [codex] 运行多环境 reset/step L0，确认 MineRL 临时实例只落数据盘且进程完整退出；trigger: 工具测试通过。
+- [ ] [codex] 运行 `envs=2` 的 5040-step 首探针；trigger: L0 与 launch gate 通过。
+- [ ] [codex] 按前档证据决定 `envs=4` 和条件性 `envs=8`，随后关闭吞吐 probe；trigger: 完整性、资源与增益门。
+- [ ] [codex] 若吞吐 probe 改变成本判断，另开恢复与增量训练 cycle；trigger: 稳定增益和用户 goal 边界同时满足。
 
 ## Waiting
 
