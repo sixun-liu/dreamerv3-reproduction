@@ -7,16 +7,19 @@ readonly RUNTIME=${DV3_RUNTIME:-/root/autodl-tmp/Code/DreamerV3/dreamerv3-runtim
 readonly WORKFLOW=/root/autodl-tmp/Tools/research-agent-kit
 readonly PYTHON=/root/autodl-tmp/Envs/dv3-minecraft-2026/bin/python
 readonly RUNTIME_COMMIT=${DV3_RUNTIME_COMMIT:-5168475b7a4413f9575933b4580e7073caea2114}
-readonly SOURCE=/root/autodl-tmp/Runs/EXP-0012__minecraft-diamond__s000__100k-env__20260812T080000Z/train
+readonly SOURCE=${SOURCE_TRAIN:-/root/autodl-tmp/Runs/EXP-0012__minecraft-diamond__s000__100k-env__20260812T080000Z/train}
 readonly ROOT=${TRAIN_RUN_ROOT:-/root/autodl-tmp/Runs/EXP-0017__minecraft-diamond__s000__100k-to-200k-env__20260812T080000Z}
 readonly CONFIG=${TRAIN_CONFIG:-${CONTROL}/docs/reproduction/configs/exp0017_minecraft_s000_200k_env.yaml}
 readonly MATRIX=${EXPERIMENT_MATRIX:-${CONTROL}/docs/reproduction/configs/exp0017_minecraft_200k_matrix.yaml}
-readonly BASELINE=${CONTROL}/docs/reproduction/configs/exp0012_minecraft_s000_100k_env.yaml
-readonly SOURCE_STEP=100000
-readonly FINAL_STEP=200000
-readonly ENVS=4
-readonly SOURCE_CHECKPOINT_TREE_SHA256=768e088455502cadbee875022f7754c7703b5df6708aa7f9fed4df4c70775fe0
-readonly SOURCE_REPLAY_TREE_SHA256=f103990afb0a5f484aa965a03df110d0a0a8ae9c12f2a9c823757bac95127fc2
+readonly BASELINE=${SOURCE_CONFIG:-${CONTROL}/docs/reproduction/configs/exp0012_minecraft_s000_100k_env.yaml}
+readonly SOURCE_STEP=${SOURCE_STEP_OVERRIDE:-100000}
+readonly FINAL_STEP=${FINAL_STEP_OVERRIDE:-200000}
+readonly ENVS=${ENVIRONMENT_COUNT_OVERRIDE:-4}
+readonly SOURCE_CHECKPOINT_TREE_SHA256=${SOURCE_CHECKPOINT_TREE_SHA256_OVERRIDE:-768e088455502cadbee875022f7754c7703b5df6708aa7f9fed4df4c70775fe0}
+readonly SOURCE_REPLAY_TREE_SHA256=${SOURCE_REPLAY_TREE_SHA256_OVERRIDE:-f103990afb0a5f484aa965a03df110d0a0a8ae9c12f2a9c823757bac95127fc2}
+readonly CONFIG_GENERATOR=${CONFIG_GENERATOR_OVERRIDE:-${CONTROL}/scripts/generate_exp0017_config.py}
+readonly TRAIN_TIMEOUT_SECONDS=${TRAIN_TIMEOUT_SECONDS_OVERRIDE:-7200}
+readonly REQUIRED_CONFIG_CHANGES=${REQUIRED_CONFIG_CHANGES_OVERRIDE:-}
 readonly STARTED=${ROOT}.started
 readonly COMPLETED=${ROOT}/.completed
 readonly FAILED=${ROOT}/.failed
@@ -52,7 +55,7 @@ if [[ -e "${ROOT}" || -e "${STARTED}" ]]; then
   exit 20
 fi
 if [[ ! -f "${SOURCE}/../.completed" || ! -f "${SOURCE}/ckpt/latest" ]]; then
-  echo "EXP-0012 recovery source is incomplete" >&2
+  echo "Recovery source is incomplete: ${SOURCE}" >&2
   exit 21
 fi
 if [[ "$(git -C "${CONTROL}" status --porcelain)" ]]; then
@@ -64,7 +67,7 @@ if [[ "$(git -C "${RUNTIME}" status --porcelain)" || \
   echo "Runtime provenance drift" >&2
   exit 23
 fi
-"${PYTHON}" "${CONTROL}/scripts/generate_exp0017_config.py" \
+"${PYTHON}" "${CONFIG_GENERATOR}" \
   --baseline "${BASELINE}" --run-root "${ROOT}" --output "${CONFIG}" \
   --check >/dev/null
 mapfile -t gpu_pids < <(nvidia-smi --query-compute-apps=pid --format=csv,noheader,nounits | sed '/^[[:space:]]*$/d')
@@ -119,7 +122,7 @@ readonly TRAIN_START_EPOCH=$(date +%s)
     XDG_CACHE_HOME="${ROOT}/work/cache" MESA_SHADER_CACHE_DIR="${ROOT}/work/mesa-cache" \
     CUDA_CACHE_PATH="${ROOT}/work/cuda-cache" \
     PYTHONUNBUFFERED=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
-    timeout --signal=TERM --kill-after=60s 7200s \
+    timeout --signal=TERM --kill-after=60s "${TRAIN_TIMEOUT_SECONDS}s" \
     xvfb-run -a -s '-screen 0 1024x768x24 -ac +extension GLX +render -noreset' \
     "${PYTHON}" "${RUNTIME}/dreamerv3/main.py" \
     --logdir "${ROOT}/train" --configs minecraft size50m \
@@ -146,6 +149,13 @@ readonly TRAIN_WALL_SECONDS=$(( $(date +%s) - TRAIN_START_EPOCH ))
   --experiment-id "${EXPERIMENT}" --temp-root "${ROOT}/work/tmp" \
   --output "${ROOT}/temp_cleanup_postprocess.json" --wait-seconds 30 \
   > "${ROOT}/temp_cleanup_postprocess_stdout.log" 2>&1 || fail $? temp_cleanup
+verify_config_change_args=()
+if [[ -n "${REQUIRED_CONFIG_CHANGES}" ]]; then
+  IFS=',' read -ra required_changes <<< "${REQUIRED_CONFIG_CHANGES}"
+  for path in "${required_changes[@]}"; do
+    verify_config_change_args+=(--required-config-change "${path}")
+  done
+fi
 "${PYTHON}" "${CONTROL}/scripts/verify_exp0015_recovery.py" \
   --experiment-id "${EXPERIMENT}" --expected-envs "${ENVS}" \
   --run-dir "${ROOT}" --source-train "${SOURCE}" --source-config "${BASELINE}" \
@@ -153,6 +163,7 @@ readonly TRAIN_WALL_SECONDS=$(( $(date +%s) - TRAIN_START_EPOCH ))
   --source-step "${SOURCE_STEP}" --final-step "${FINAL_STEP}" \
   --stdout-log "${STDOUT_LOG}" --resource-system "${ROOT}/resource_system.csv" \
   --max-cgroup-memory-bytes 77309411328 \
+  "${verify_config_change_args[@]}" \
   --temp-root "${ROOT}/work/tmp" --output "${ROOT}/integrity.json" \
   > "${ROOT}/integrity_stdout.log" 2>&1 || fail $? integrity
 readonly WALL_SECONDS=$(( $(date +%s) - START_EPOCH ))

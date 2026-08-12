@@ -1,0 +1,64 @@
+schema_version: 1
+experiment_id: EXP-0023
+purpose: exact isolated 200K to 500K increment and parallel terminal evaluation
+runtime:
+  base_commit: 5168475b7a4413f9575933b4580e7073caea2114
+  patched_commit: 6723fc1620636cc8a52e0ddc0b7a9cbe946625b0
+  patch: exact remaining-step stop for synchronous multi-environment training
+source:
+  experiment_id: EXP-0020
+  run: /root/autodl-tmp/Runs/EXP-0020__minecraft-diamond__s000__100k-to-200k-env__20260812T100000Z
+  checkpoint_step: 200000
+  checkpoint_tree_sha256: dea72ee54c7c36be275026d0140902c706270af98b278fc61e54c190e5538865
+  replay_tree_sha256: 3b78b03266d7564ed33c4bd80dd9eab760ce11f5e311149db167d407900198ad
+training:
+  source_step: 200000
+  added_environment_steps: 300000
+  absolute_final_step: 500000
+  environment_count: 4
+  agent_seed: 0
+  train_ratio: 32
+  task: minecraft_diamond
+  model: size50m
+  debug: false
+  jax_compilation_cache: independent_cold
+evaluation:
+  agent_seed: 10000
+  environment_count: 3
+  episodes_per_environment: 1
+  episode_length: 36000
+  milestone_mapping_source: runtime _MinecraftBase._inv_keys per worker
+  video_selection: worker_0_preregistered_not_best_of_n
+  video_stride: 4
+  world_seed_controlled: false
+gates:
+  source_unchanged: true
+  target_unique_stepids: 500000
+  new_unique_stepids: 300000
+  final_checkpoint_step: 500000
+  replay_ratio_range: [28.0, 36.0]
+  runtime_milestone_indices_valid: true
+  runtime_milestone_indices_cross_worker_consistent: true
+  offline_replay_schema_matches_runtime_indices: true
+  reset_milestones_zero: true
+  maximum_cgroup_memory_bytes: 77309411328
+  root_disk_minimum_free_bytes: 5368709120
+  data_disk_minimum_free_bytes: 10737418240
+  no_oom: true
+  cleanup_required: true
+learning_hypothesis:
+  maintenance_item: wooden_pickaxe
+  maintenance_observed_in: added_replay
+  advance_item: cobblestone
+  advance_observed_in: added_replay_or_terminal_evaluation
+forbidden:
+  - algorithm_reward_wrapper_ratio_model_size_or_seed_change
+  - score_or_inventory_conditioned_checkpoint_budget_or_video_selection
+  - treating_uncontrolled_worlds_as_paired_episodes
+  - training_beyond_absolute_step_500000
+  - automatically_continuing_to_1m
+storage:
+  train_run: /root/autodl-tmp/Runs/EXP-0023__minecraft-diamond__s000__200k-to-500k-env__20260812T123000Z
+  eval_run: /root/autodl-tmp/Runs/EXP-0023__minecraft-parallel-eval__s10000__3eps__20260812T123000Z
+  review: /root/autodl-tmp/Artifacts/dreamerv3/review/EXP-0023-minecraft-exact-500k
+  temporary_and_cache_root: each_run/work

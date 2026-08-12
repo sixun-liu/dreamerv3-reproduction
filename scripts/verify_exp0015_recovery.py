@@ -130,6 +130,10 @@ def verify(args: argparse.Namespace) -> dict:
     experiment_id = getattr(args, "experiment_id", "EXP-0015")
     expected_envs = getattr(args, "expected_envs", 2)
     require_ratio32 = not getattr(args, "allow_short_smoke_without_ratio", False)
+    required_config_changes = set(
+        getattr(args, "required_config_change", None)
+        or REQUIRED_RECOVERY_CONFIG_CHANGES
+    )
     train = args.run_dir / "train"
     required = (
         args.clone_manifest,
@@ -166,7 +170,8 @@ def verify(args: argparse.Namespace) -> dict:
     config_checks = {
         "runtime_matches_frozen": generated == frozen,
         "only_allowed_changes": config_differences <= ALLOWED_CONFIG_CHANGES,
-        "required_changes_present": REQUIRED_RECOVERY_CONFIG_CHANGES <= config_differences,
+        "required_changes_present": required_config_changes <= config_differences,
+        "required_changed_paths": sorted(required_config_changes),
         "changed_paths": sorted(config_differences),
         "task": generated.get("task") == "minecraft_diamond",
         "seed": generated.get("seed") == 0,
@@ -373,6 +378,14 @@ def main() -> None:
     parser.add_argument("--temp-root", type=Path, required=True)
     parser.add_argument("--max-system-disk-loss", type=int, default=536870912)
     parser.add_argument("--max-cgroup-memory-bytes", type=int, default=75161927680)
+    parser.add_argument(
+        "--required-config-change",
+        action="append",
+        help=(
+            "Config path that must differ from the source. Repeat as needed; "
+            "defaults to the historical recovery requirements."
+        ),
+    )
     parser.add_argument("--skip-live-process-check", action="store_true")
     parser.add_argument(
         "--allow-short-smoke-without-ratio",

@@ -21,7 +21,7 @@ import numpy as np
 MILESTONE_TIERS = {
     "L1": ("log", "planks", "crafting_table"),
     "L2": ("wooden_pickaxe", "cobblestone"),
-    "L3": ("iron_ore", "iron_pickaxe"),
+    "L3": ("iron_ore", "iron_ingot", "iron_pickaxe"),
     "L4": ("diamond",),
 }
 MILESTONES = tuple(item for values in MILESTONE_TIERS.values() for item in values)
