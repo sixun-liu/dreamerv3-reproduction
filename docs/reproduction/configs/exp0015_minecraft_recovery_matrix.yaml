@@ -1,0 +1,42 @@
+schema_version: 1
+experiment_id: EXP-0015
+purpose: isolated_checkpoint_replay_step_recovery
+runtime:
+  path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2026-crossdomain
+  commit: 5168475b7a4413f9575933b4580e7073caea2114
+source:
+  experiment_id: EXP-0012
+  run: /root/autodl-tmp/Runs/EXP-0012__minecraft-diamond__s000__100k-env__20260812T080000Z
+  checkpoint_step: 100000
+  checkpoint_tree_sha256: 768e088455502cadbee875022f7754c7703b5df6708aa7f9fed4df4c70775fe0
+  checkpoint_agent_sha256: b24527f9053b4314d423e2f1bcc3f9e048970c5ad31f96d3da61efed6a08880d
+  replay_files: 100
+  replay_unique_stepids: 100000
+  replay_tree_sha256: f103990afb0a5f484aa965a03df110d0a0a8ae9c12f2a9c823757bac95127fc2
+recovery:
+  copy_method: cp --archive --reflink=always
+  source_step: 100000
+  added_environment_steps: 5040
+  absolute_final_step: 105040
+  environment_count: 2
+  seed: 0
+  debug: false
+  train_ratio: 32
+  from_checkpoint: ''
+verification:
+  - Source checkpoint and replay tree hashes remain unchanged after training.
+  - All 100000 source stepids remain and exactly 5040 disjoint stepids are added.
+  - The new stepid subset contains at least two distinct is_first chunk prefixes.
+  - Final checkpoint step is exactly 105040 and agent parameters changed.
+  - New metrics contain only steps above 100000 and include finite loss and ratio32 evidence.
+  - No OOM, root-disk leak, temporary Minecraft tree, Java, Xvfb, or GPU process remains.
+forbidden:
+  - from_checkpoint_agent_only
+  - in_place_source_resume
+  - source_hardlinks
+  - source_run_mutation
+  - policy_quality_claim
+  - training_beyond_105040
+storage:
+  run_root: /root/autodl-tmp/Runs/EXP-0015__minecraft-recovery__s000__100k-to-105040-env__20260812T071500Z
+  temp_and_cache_root: work
