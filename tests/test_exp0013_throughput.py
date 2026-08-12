@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from cleanup_exp0013_temp import process_references  # noqa: E402
+from build_exp0013_review import build  # noqa: E402
 from generate_exp0013_configs import render  # noqa: E402
 from sample_exp0013_resources import descendants  # noqa: E402
 from verify_exp0013_throughput import natural_stop_step, verify  # noqa: E402
@@ -25,6 +26,48 @@ BASELINE = ROOT / "docs/reproduction/configs/exp0012_minecraft_smoke_s31415_4096
 
 
 class Exp0013ThroughputTest(unittest.TestCase):
+
+    def test_review_keeps_expansion_verdict_bounded(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            analysis = {
+                "experiment_id": "EXP-0013",
+                "arm": "envs2",
+                "expand_recommended": False,
+                "resource_gate_passed": True,
+                "replay_ratio_ok": True,
+                "requested_environment_steps": 5040,
+                "end_to_end_steps_per_second": 17.0,
+                "historical_wall_steps_per_second": 24.0,
+                "end_to_end_speedup_vs_historical_long_run": 0.7,
+                "policy_fps_tail_mean": 28.0,
+                "historical_policy_fps_mean": 25.5,
+                "policy_speedup_vs_historical": 1.09,
+                "target_policy_speedup_met": False,
+                "resource": {},
+            }
+            integrity = {"passed": True, "config_semantically_equal": True}
+            completed = {
+                "experiment_id": "EXP-0013",
+                "arm": "envs2",
+                "training_wall_seconds": 296,
+            }
+            paths = []
+            for name, payload in (
+                ("analysis.json", analysis),
+                ("integrity.json", integrity),
+                ("completed.json", completed),
+            ):
+                path = root / name
+                path.write_text(json.dumps(payload), encoding="utf-8")
+                paths.append(path)
+            summary = build(*paths)
+            self.assertEqual(summary["decision"], "negative")
+            self.assertEqual(
+                summary["verdict"], "envs2_safe_but_expansion_gate_failed"
+            )
+            self.assertFalse(summary["expand_recommended"])
+            self.assertIn("same 5040-step budget", summary["next_discriminating_question"])
 
     def test_driver_quantum_exact_for_all_arms(self) -> None:
         for quantum in (10, 12, 16):
