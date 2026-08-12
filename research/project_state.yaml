@@ -1,18 +1,18 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T05:59:31Z'
+updated_at: '2026-08-12T06:09:46Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在现有硬件和存储条件下建立可复现、资源安全且高效的DreamerV3 Minecraft训练方案，并依据实测性价比闭环适当规模的增量训练、评测与材料。
-primary_problem: EXP-0012已建立单环境100K基线；当前需把MineRL临时写入迁移至数据盘并通过有界多环境探针找到稳定吞吐甜点，再按证据决定恢复与增量训练预算。
+primary_problem: EXP-0013已验证双环境资源安全但未通过历史基线扩档门；当前需用5040步envs=1/debug=false同预算对照归因环境并发收益，再固定执行配置并进入EXP-0012等价恢复。
 active_experiment_id: null
 active_candidate: null
 canonical_baseline:
   id: DV3-2026-MINECRAFT-DIAMOND-50M-100K
   name: DreamerV3 2026 author reimplementation Minecraft Diamond size50m reduced
-  repo_commit: e093341ad6298e600e201da29a594b8ac84583c9
+  repo_commit: e3d99849a1904ee510be9d60e6f9d2d7846a2de4
   config: runtime5168475; minecraft+size50m; MineRL mirror0.4.4; 64x64 RGB; break_speed100; envs1; ratio32; seed0; hard100K environment steps
   evaluation_protocol: 训练逐回合原始回报与inventory里程碑；终点checkpoint固定agent seed独立评测3局并固定第0局视频；wrapper不暴露world seed，环境随机性明确记录。
 parked_lanes:
@@ -22,8 +22,8 @@ parked_lanes:
 - script=parallel有限停止、三部分checkpoint与跨模式恢复验证
 stage_exit_gates:
 - Minecraft临时实例、日志和可控缓存不再消耗系统盘，且多环境L0通过。
-- 完成自适应多环境吞吐探针，找到稳定甜点或形成证据充分的无增益裁决。
-- 若探针通过成本门，完成EXP-0012等价恢复、一个有界增量训练及独立评测；否则明确停车。
+- 完成同预算单/双环境吞吐归因，固定资源安全的执行配置。
+- 完成EXP-0012等价恢复、一个有界增量训练及独立评测，或依据成本证据明确停车。
 - 固化可复用运行脚本、资源账、恢复方法、展示材料和受限结论。
 repository_manifest: research/repositories.yaml
 workspace:
@@ -52,8 +52,8 @@ workspace:
     to: /root/autodl-tmp/ThirdParty
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
-  branch: exp/EXP-0013-minecraft-throughput
-  commit: 4d7e1bdc45eade47bd843f362b5f87c2e77557da
+  branch: exp/EXP-0014-minecraft-paired-throughput
+  commit: e3d99849a1904ee510be9d60e6f9d2d7846a2de4
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
@@ -61,8 +61,8 @@ human_review:
 repository_snapshots:
   control:
     repo: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
-    branch: exp/EXP-0013-minecraft-throughput
-    commit: e093341ad6298e600e201da29a594b8ac84583c9
+    branch: exp/EXP-0014-minecraft-paired-throughput
+    commit: e3d99849a1904ee510be9d60e6f9d2d7846a2de4
     tracked_clean: true
     worktree_clean: true
     untracked_count: 0
