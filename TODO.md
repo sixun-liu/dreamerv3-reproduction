@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-08-12T06:35:22Z
+> Updated: 2026-08-12T07:01:00Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,9 +8,8 @@
 
 ## Now
 
-- [ ] [codex] 审计 runtime 的 `from_checkpoint`、step 终点与 replay 恢复语义；trigger: EXP-0014 已关闭。
-- [ ] [codex] 另开 EXP-0012 checkpoint/replay/step 等价恢复 cycle；trigger: 恢复协议审计完成。
-- [ ] [codex] 运行隔离的 `envs=2` 恢复 smoke 并核验 transition 连续性；trigger: freeze 与 launch gate 通过。
+- [ ] [codex] 另开 EXP-0012 checkpoint/replay/step 等价恢复 cycle；trigger: 源码语义与源 run 指纹已核验。
+- [ ] [codex] 运行隔离的 `envs=2` 恢复 smoke，核验源哈希、stepid 集合和双 worker 新链；trigger: freeze 与 launch gate 通过。
 - [ ] [codex] 依据恢复实测 ETA 冻结有界增量预算、独立评测和材料；trigger: 恢复完整性通过。
 
 ## Waiting
