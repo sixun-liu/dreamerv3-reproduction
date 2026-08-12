@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T11:24:21Z'
+updated_at: '2026-08-12T11:34:49Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -53,8 +53,8 @@ workspace:
     to: /root/autodl-tmp/ThirdParty
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
-  branch: exp/EXP-0020-minecraft-exact-200k
-  commit: 4a05ca58d94501453c32f04b58dfd615c970c29b
+  branch: exp/EXP-0021-minecraft-parallel-eval
+  commit: a6bcf4b0a7e90e109714d07c432ff6ec099b5299
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
