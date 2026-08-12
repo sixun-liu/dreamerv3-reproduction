@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-08-12T09:18:00Z
+> Updated: 2026-08-12T09:44:00Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,8 +8,7 @@
 
 ## Now
 
-- [ ] [codex] 完成 patched runtime 的 `envs=4/5` 同预算局部对照并冻结实用最优配置；trigger: EXP-0018 精确停止通过。
-- [ ] [codex] 从原始 EXP-0012 新输出重跑绝对 200K 正式训练；trigger: 局部缩放选择完成。
+- [ ] [codex] 从原始 EXP-0012 新输出重跑绝对 200K 正式训练；trigger: EXP-0019 已选择 `envs=4`。
 - [ ] [codex] 沿用固定 agent seed 10000 的三回合独立评测与 episode-0 视频；trigger: 新 200K 完整性通过。
 - [ ] [codex] 对比 100K/200K 里程碑、评测、资源账并生成审查/日报材料；trigger: 独立评测完成。
 

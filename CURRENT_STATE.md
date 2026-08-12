@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-08-12T09:18:00Z
+> Updated: 2026-08-12T09:44:00Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,19 +8,17 @@
 
 ## 一句话判断
 
-EXP-0018 已证明 patched runtime 能从 `100000` 精确结束于 `100040` 并恰好新增 40 个
-transition；当前 `envs=4` 是已测最优档，正式重跑前只补一个可达的 `envs=5` 局部对照。
+EXP-0019 已排除 `envs=5`：它相对 `envs=4` 稳态 FPS 低 `6.67%`、预测新增 100K 时间
+高 `6.51%`，因此 `envs=4` 是当前 `script=train` 路线已测 `2/4/5/8` 档的实用最优。
 
 ## 当前主要矛盾
 
-EXP-0017 长跑显示 `envs=4` 的 120K--195K policy FPS 中位为 `68.90`，GPU 利用率均值
-`16.85%`、中位 `1%`，但显存峰值 `24645 MiB`；这是同步环境与 learner 交替等待，不是显存不足。
-EXP-0016 中 `envs=8` 已因 CPU 配额争用退化，故不能靠继续增加环境数填满 GPU。精确停止根因
-和补丁已由 EXP-0018 的单测与真实 Minecraft smoke 闭合，原始短 smoke 的 ratio32 日志不足已与
-checkpoint/replay 完整性门分离。
+EXP-0019 的同预算对照中，`envs=4/5` 稳态 FPS 分别为 `61.39/57.30`，预测新增 100K
+分别为 `30.33/32.30` 分钟。`envs=5` 平均 CPU 从 `7.60` 增至 `8.80` 核，throttled
+CPU-sec/wall-sec 从 `2.44` 增至 `3.84`，峰值内存从 `28.70` 增至 `34.07 GiB`；两臂显存峰值
+同为约 `24.64 GiB`。这说明瓶颈是本地 Minecraft/同步 Driver 的 CPU 与尾延迟，而不是显存容量。
 
 ## 下一项决策
 
-只比较同一 patched runtime 下的 `envs=4` 与 `envs=5`。若 `envs=5` 未带来至少 `5%` 的稳定
-policy FPS 和预测 ETA 收益，则冻结 `envs=4`；随后从原始 EXP-0012 新输出重跑正式 200K，
-并沿用固定三回合评测。`script=parallel` 不混入本轮。
+从原始 EXP-0012 新输出，以 patched runtime `6723fc1`、`envs=4` 和独立冷缓存精确重跑到
+200K；完整性通过后沿用固定三回合评测。`script=parallel`、NUMA/taskset 和更多环境数不混入本轮。

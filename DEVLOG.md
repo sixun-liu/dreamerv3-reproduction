@@ -346,3 +346,17 @@
   再从原始 EXP-0012 新输出重跑正式 200K。
 - Approval: 用户批准当前长期 goal；本 cycle 为 instrumentation，不评价策略质量
 - Git: runtime `6723fc1`；control analysis `0b10203`
+
+### 2026-08-12T09:43:08Z | result | EXP-0019-minecraft-local-scaling
+
+- Actor: codex
+- Summary: patched runtime 下 `envs=4/5` 各自从同一只读 100K 源精确新增 5040 步；固定窗口
+  policy FPS 为 `61.39/57.30`，`envs=5` 仅为 `envs=4` 的 `93.33%`，预测新增 100K 时间
+  从 `30.33` 恶化至 `32.30` 分钟，未通过预注册 `5%/5%` 双门。
+- Evidence: `EVT-0107`--`EVT-0109`；`ART-0097`--`ART-0098`；两臂 checkpoint/replay、
+  ratio32、源隔离、有限性、OOM、磁盘与进程清场全绿。`envs=5` 平均 CPU/峰值内存/throttling
+  均更高；图像已由 codex 检查。
+- Next: 固定 `envs=4` 并停止本地同步环境数搜索；从原始 EXP-0012 新输出，以 runtime
+  `6723fc1` 精确训练到 200K，再做固定三回合评测和材料闭环。
+- Approval: 用户批准当前长期 goal；human review pending
+- Git: control/runtime freeze `9a1fc48`/`6723fc1`
