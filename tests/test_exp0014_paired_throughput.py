@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from analyze_exp0014_paired_throughput import compare, summarize_arm  # noqa: E402
+from build_exp0014_review import build_summary  # noqa: E402
 from generate_exp0014_config import render  # noqa: E402
 from minecraft_temp_cleanup import validate_temp_root  # noqa: E402
 
@@ -47,6 +48,28 @@ def system_rows() -> list[dict[str, str]]:
 
 
 class Exp0014PairedThroughputTest(unittest.TestCase):
+
+    def test_review_maps_valid_selection_to_promote(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "comparison.json"
+            path.write_text(
+                __import__("json").dumps(
+                    {
+                        "experiment_id": "EXP-0014",
+                        "arms": {"envs1": {}, "envs2": {}},
+                        "comparison": {
+                            "comparison_valid": True,
+                            "envs2_preferred": True,
+                            "selected_environment_count": 2,
+                            "verdict": "envs2_preferred",
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+            summary = build_summary(path)
+            self.assertEqual(summary["decision"], "promote")
+            self.assertEqual(summary["selected_environment_count"], 2)
 
     def test_config_changes_only_declared_runtime_fields(self) -> None:
         source = yaml.safe_load(BASELINE.read_text(encoding="utf-8"))
