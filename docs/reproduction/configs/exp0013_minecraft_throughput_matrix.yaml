@@ -1,0 +1,64 @@
+schema_version: 1
+experiment_id: EXP-0013
+purpose: minecraft_local_multi_environment_throughput_probe
+runtime:
+  path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-runtime-2026-crossdomain
+  commit: 5168475b7a4413f9575933b4580e7073caea2114
+environment:
+  python: /root/autodl-tmp/Envs/dv3-minecraft-2026/bin/python
+  task: minecraft_diamond
+  configs: [minecraft, size50m]
+  minerl_version: 0.4.4
+  seed: 31415
+training:
+  script: train
+  debug: false
+  steps: 5040
+  train_ratio: 32
+  batch_size: 16
+  batch_length: 64
+  log_every_seconds: 10
+  report_every_seconds: 120
+  save_every_seconds: 300
+  save_at_end: true
+matrix:
+  initial_envs: 2
+  conditional_envs: [4, 8]
+  forbidden_envs: [16, 64]
+  driver_step_quantum:
+    2: 10
+    4: 12
+    8: 16
+storage:
+  data_root: /root/autodl-tmp
+  run_root: /root/autodl-tmp/Runs/EXP-0013__minecraft-throughput__s31415__5040-env__20260812T060000Z
+  variables:
+    TMPDIR: work/tmp
+    TMP: work/tmp
+    TEMP: work/tmp
+    MALMO_MINECRAFT_OUTPUT_LOGDIR: work/malmo
+    JAX_COMPILATION_CACHE_DIR: work/jax-cache
+    XDG_CACHE_HOME: work/cache
+    MESA_SHADER_CACHE_DIR: work/mesa-cache
+    CUDA_CACHE_PATH: work/cuda-cache
+resource_limits:
+  cpu_quota_cores: 16
+  memory_bytes: 96636764160
+  pids: 20480
+  system_disk_launch_min_bytes: 5368709120
+  system_disk_stop_min_bytes: 3221225472
+  data_disk_launch_min_bytes: 10737418240
+gates:
+  historical_baseline_steps_per_second: 24.67308166790032
+  historical_baseline_policy_fps_mean: 25.50
+  expansion_min_policy_speedup: 1.10
+  target_policy_speedup: 1.50
+  envs8_max_sampled_memory_bytes: 75161927680
+  max_system_disk_loss_bytes: 536870912
+  replay_ratio_tail_min: 28.0
+  replay_ratio_tail_max: 36.0
+controls:
+  - Do not load or overwrite EXP-0012.
+  - Do not change model, task, reward, wrapper, batch, or train ratio.
+  - Treat all outputs as diagnostic-only infrastructure evidence.
+  - Expand one environment-count arm at a time after reviewing the previous gate.
