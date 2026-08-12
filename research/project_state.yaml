@@ -1,18 +1,18 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T09:43:08Z'
+updated_at: '2026-08-12T09:48:06Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 在现有硬件和存储条件下建立可复现、资源安全且高效的DreamerV3 Minecraft训练方案，并依据实测性价比闭环适当规模的增量训练、评测与材料。
-primary_problem: EXP-0018已闭合多环境精确停止；当前只需在正式200K前判断envs5是否相对已测最优envs4带来至少5%的同预算局部吞吐收益。
+primary_problem: EXP-0018已验证精确停止且EXP-0019已选择envs4；当前从原始EXP-0012独立重跑精确200K正式增量，并用冻结三回合评测判断L1保持与wooden-pickaxe推进。
 active_experiment_id: null
-active_candidate: patched-runtime-envs4-or-envs5
+active_candidate: patched-runtime-envs4-exact-200k
 canonical_baseline:
   id: DV3-2026-MINECRAFT-DIAMOND-50M-100K
   name: DreamerV3 2026 author reimplementation Minecraft Diamond size50m reduced
-  repo_commit: df978c48ced6972b9a6dcb45ff35e9cd8ec7583f
+  repo_commit: cd5bfeba70845c6683d4b7800717fa58326fe01b
   config: runtime5168475 + exact-stop patch6723fc1; minecraft+size50m; MineRL mirror0.4.4; 64x64 RGB; break_speed100; ratio32; seed0; hard100K environment steps
   evaluation_protocol: 训练逐回合原始回报与inventory里程碑；终点checkpoint固定agent seed10000独立评测3局并固定第0局视频；wrapper不暴露world seed，环境随机性明确记录。
 parked_lanes:
@@ -20,12 +20,12 @@ parked_lanes:
 - DMC Vision、Atari100K与Minecraft的多seed/full-suite扩展
 - Minecraft 1M/5M/100M论文尺度预算
 - script=parallel有限停止、三部分checkpoint与跨模式恢复验证
-- NUMA/taskset与CPU亲和性微调；仅在长预算成本足以覆盖系统调优时重开
+- NUMA/taskset、CPU亲和性、共享编译缓存与更多本地环境数；当前实用最优已收敛为envs4
 stage_exit_gates:
 - Minecraft临时实例、日志和可控缓存不再消耗系统盘，且多环境L0通过。
-- 完成envs4/5同预算局部缩放，冻结资源安全且接近峰值吞吐的最小环境数。
+- 完成envs2/4/5/8同预算局部缩放，固定资源安全且接近峰值吞吐的envs4。
 - 完成EXP-0012等价恢复、一个新增100K至绝对200K的有界训练及独立评测，或依据完整性/成本证据明确停车。
-- 固化可复用运行脚本、资源账、恢复方法、展示材料和受限结论。
+- 固化可复用一键流水线、资源账、恢复方法、展示材料和受限结论。
 repository_manifest: research/repositories.yaml
 workspace:
   path_aliases:
@@ -54,7 +54,7 @@ workspace:
 canonical_repo:
   path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
   branch: exp/EXP-0019-minecraft-local-scaling
-  commit: b7c4b54c899103a1c5342c4751ddd4f24c3c08e5
+  commit: cd5bfeba70845c6683d4b7800717fa58326fe01b
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/Artifacts/dreamerv3/review
@@ -63,7 +63,7 @@ repository_snapshots:
   control:
     repo: /root/autodl-tmp/Code/DreamerV3/dreamerv3-reproduction
     branch: exp/EXP-0019-minecraft-local-scaling
-    commit: df978c48ced6972b9a6dcb45ff35e9cd8ec7583f
+    commit: cd5bfeba70845c6683d4b7800717fa58326fe01b
     tracked_clean: true
     worktree_clean: true
     untracked_count: 0
