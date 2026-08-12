@@ -38,7 +38,7 @@ def build(run_root: Path, output_dir: Path) -> dict:
 
     output_dir.mkdir(parents=True, exist_ok=True)
     figure = output_dir / "recovery_scaling.png"
-    fig, axes = plt.subplots(2, 2, figsize=(10, 7))
+    fig, axes = plt.subplots(2, 2, figsize=(10, 7.5))
     colors = ["#2A6F97" if row["environment_count"] == selected else "#8D99AE" for row in ordered]
     panels = (
         (axes[0, 0], fps, "Steady policy FPS", "Higher is better"),
@@ -48,13 +48,22 @@ def build(run_root: Path, output_dir: Path) -> dict:
     )
     for axis, values, title, subtitle in panels:
         bars = axis.bar(labels, values, color=colors)
-        axis.set_title(title)
-        axis.text(0.5, 1.01, subtitle, transform=axis.transAxes, ha="center", fontsize=9, color="#555555")
+        axis.set_title(title, pad=24)
+        axis.text(
+            0.5,
+            1.015,
+            subtitle,
+            transform=axis.transAxes,
+            ha="center",
+            fontsize=9,
+            color="#555555",
+        )
+        axis.set_ylim(0, max(values) * 1.16)
         axis.grid(axis="y", alpha=0.25)
         for bar, value in zip(bars, values, strict=True):
             axis.text(bar.get_x() + bar.get_width() / 2, value, f"{value:.2f}", ha="center", va="bottom", fontsize=9)
     fig.suptitle(f"EXP-0016 Minecraft recovery scaling | selected envs={selected}", fontsize=14)
-    fig.tight_layout()
+    fig.tight_layout(rect=(0, 0, 1, 0.96), h_pad=2.4)
     fig.savefig(figure, dpi=180)
     plt.close(fig)
     summary = {
