@@ -1,0 +1,40 @@
+schema_version: 1
+experiment_id: EXP-0018
+purpose: exact_multi_environment_stop_instrumentation
+runtime:
+  path: /root/autodl-tmp/Code/DreamerV3/dreamerv3-exp0018-exact-stop
+  base_commit: 5168475b7a4413f9575933b4580e7073caea2114
+  patched_commit: 6723fc1620636cc8a52e0ddc0b7a9cbe946625b0
+  bundle: /root/autodl-tmp/Artifacts/dreamerv3/runtime-bundles/EXP-0018-exact-step-stop.bundle
+  bundle_sha256: c7e06796c1ba1877c1e9c97bb9626e708204c76388d369ee1d5b405e315f259f
+intervention:
+  old_driver_request: 10
+  new_driver_request: min(10, target_step - current_step)
+  reachable_target_required: remaining_steps_mod_environment_count_equals_zero
+source:
+  run: /root/autodl-tmp/Runs/EXP-0012__minecraft-diamond__s000__100k-env__20260812T080000Z
+  step: 100000
+  checkpoint_tree_sha256: 768e088455502cadbee875022f7754c7703b5df6708aa7f9fed4df4c70775fe0
+  replay_tree_sha256: f103990afb0a5f484aa965a03df110d0a0a8ae9c12f2a9c823757bac95127fc2
+smoke:
+  environment_count: 4
+  added_environment_steps: 40
+  absolute_final_step: 100040
+  old_runtime_predicted_final_step: 100048
+  train_ratio: 32
+  seed: 0
+gates:
+  unit_tests_pass: true
+  source_unchanged: true
+  checkpoint_step: 100040
+  target_unique_stepids: 100040
+  new_unique_stepids: 40
+  no_oom: true
+  maximum_cgroup_memory_bytes: 77309411328
+  cleanup_required: true
+forbidden:
+  - use_score_inventory_or_visual_outcome_for_verdict
+  - continue_from_exp0017_overshoot_output
+  - rerun_same_output
+storage:
+  run: /root/autodl-tmp/Runs/EXP-0018__minecraft-exact-stop__s000__100k-to-100040-env__20260812T090000Z
