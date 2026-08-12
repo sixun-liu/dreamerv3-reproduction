@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-08-05T22:08:00Z
+> Updated: 2026-08-12T02:57:14Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -256,3 +256,18 @@
 - Next: 结果盲冻结后运行真实 32-step L0；通过时再进入 size50m 4096-step 模型资源 smoke。
 - Approval: user-approved cross-domain long run；100K hard limit
 - Git: runtime `5168475`；control preparation `fde4ce6`
+
+## 2026-08-12
+
+### 2026-08-12T02:57:14Z | result | EXP-0012-minecraft-reduced
+
+- Actor: codex
+- Summary: 2026 作者重实现的 Minecraft Diamond size50m 单 seed 精确完成 100K environment
+  steps；训练与三回合终点评测均观察到完整 L1。训练出现一次 cobblestone，但 wooden_pickaxe
+  从未出现，因此 L2 链未闭合；裁决 `promising_unresolved`，不构成论文约 100M Diamond 复现。
+- Evidence: `EVT-0085`--`EVT-0086`；`ART-0071`--`ART-0081`；训练/评测 checkpoint、replay、
+  metrics、资源、曲线与固定 episode0 视频均通过完整性检查。
+- Next: 用户审查本轮主图与视频后，在已有 replay 的 wooden-pickaxe 瓶颈分析和重新授权的更大
+  预算之间只选择一个有界问题；不自动追加训练。
+- Approval: user-approved cross-domain long run；scientific human review pending
+- Git: runtime `5168475`；formal/evaluation freeze `f76236e`；analysis `3842dda`
