@@ -10,6 +10,9 @@ from pathlib import Path
 
 
 L1_ITEMS = ("log", "planks", "crafting_table")
+PLACEHOLDER_README_SHA256 = (
+    "420afee68abd5061ff52add09d5d01fcdece7605d09ef20a27299f4aa8a1c138"
+)
 
 
 def sha256(path: Path) -> str:
@@ -26,8 +29,11 @@ def main() -> None:
     parser.add_argument("--evaluation", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
+    placeholder = args.output_dir / "README.md"
     if args.output_dir.exists():
-        raise FileExistsError(f"Refusing to overwrite: {args.output_dir}")
+        existing = sorted(args.output_dir.iterdir())
+        if existing != [placeholder] or sha256(placeholder) != PLACEHOLDER_README_SHA256:
+            raise FileExistsError(f"Refusing to overwrite: {args.output_dir}")
 
     training = json.loads(args.training_analysis.read_text(encoding="utf-8"))
     evaluation = json.loads(args.evaluation.read_text(encoding="utf-8"))
@@ -103,7 +109,7 @@ def main() -> None:
         ],
         "human_visual_confirmation": "pending",
     }
-    args.output_dir.mkdir(parents=True)
+    args.output_dir.mkdir(parents=True, exist_ok=True)
     summary_path = args.output_dir / "review_summary.json"
     summary_path.write_text(
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
@@ -162,6 +168,13 @@ def main() -> None:
 - 人工视觉审查：`pending`。
 """
     (args.output_dir / "RESULT.md").write_text(result, encoding="utf-8")
+    placeholder.write_text(
+        "# EXP-0012 Review\n\n"
+        "- 受限结论：`RESULT.md`\n"
+        "- 机器可读摘要：`review_summary.json`\n"
+        "- 人工视觉确认：`pending`\n",
+        encoding="utf-8",
+    )
     print(json.dumps(summary, ensure_ascii=False))
 
 

@@ -20,7 +20,9 @@ if [[ ! -f "${TRAIN_ROOT}/.formal.completed" || \
   echo "Formal training or evaluation completion is missing" >&2
   exit 20
 fi
-if [[ -e "${TRAINING_OUTPUT}" || -e "${REVIEW_OUTPUT}" ]]; then
+if [[ -e "${TRAINING_OUTPUT}" || \
+      -e "${REVIEW_OUTPUT}/review_summary.json" || \
+      -e "${REVIEW_OUTPUT}/RESULT.md" ]]; then
   echo "Refusing to overwrite EXP-0012 postprocess outputs" >&2
   exit 21
 fi
