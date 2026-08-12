@@ -45,6 +45,21 @@
 4. 独立评测与材料：固定 agent seed，逐回合报告回报和里程碑；明确 world seed 不可控；保留曲线、
    首个预注册回合视频和资源账。
 
+## 终点分析与评测冻结
+
+- 训练里程碑从按时间和 successor 链校验后的 replay chunk 读取，以 L0 artifact 中冻结的 391 维
+  inventory key 顺序解释 `inventory_max`；必须同时核对 replay 完整回合的 return/end step 与
+  `scores.jsonl` 顺序一致。完整回合和 100K 边界截断轨迹分开报告；物品实际出现可计入
+  `first_global_step`，但截断轨迹不得伪装成 complete episode。
+- 4096-step smoke 只用于解析与资源门验证，即便其轨迹出现物品，也不进入 seed0 formal 的性能裁决。
+- 终点 checkpoint 使用 agent seed 10000、采样式 eval policy 连续评测 3 个完整回合；每回合保持
+  36000-step 时限。runtime 未暴露 world seed，因此三个新世界不可称为固定环境 seed 或 paired
+  evaluation。
+- 视频固定选择 episode index 0，不挑最好回合；按 stride 4 流式编码 64x64 H264，并保留首帧、
+  帧数和相邻动态帧检查。独立评测回报不与 training curve 或论文曲线作样本等价比较。
+- 受限裁决：formal 训练或三回合评测任一出现 `log/planks/crafting_table`，记为 100K 范围内 L1
+  early milestone；全部未出现则记为该预算内阴性。两种结果均不得外推为论文 Diamond 数值结论。
+
 ## 里程碑
 
 - L1：`log`、`planks`、`crafting_table`。
