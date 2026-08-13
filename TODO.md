@@ -8,7 +8,6 @@
 
 ## Now
 
-- [ ] [codex] 完成 Quickstart 发布前检查、提交并推送 `release/quickstart`。
 - [ ] [user] 审查 README 的三域结论边界与 Quickstart 使用顺序。
 
 ## Next

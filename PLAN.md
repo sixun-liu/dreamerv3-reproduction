@@ -15,7 +15,7 @@
 - [x] 提供统一 `check`、`l0`、`smoke`、`pilot/formal` 启动入口，默认不触发长实验。
 - [x] 每次运行隔离保存实际命令、配置、日志、checkpoint、Replay 和完整性报告。
 - [x] 提供 runtime commit、依赖、ROM、GPU 和磁盘的运行前检查。
-- [ ] GitHub Actions 通过 shell 语法、dry-run、Ruff 和 quickstart verifier 单测。
+- [x] GitHub Actions 通过 shell 语法、dry-run、Ruff 和 quickstart verifier 单测。
 - [ ] 发布分支推送并审查后，再决定是否快进 `main`。
 - [ ] 公开复用前确定仓库许可证。
 
