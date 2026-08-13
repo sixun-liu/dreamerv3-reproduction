@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-08-12T14:36:00Z
+> Updated: 2026-08-13T06:42:41Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,22 +8,23 @@
 
 ## 一句话判断
 
-EXP-0023 已从精确 200K 有界推进到精确 500K；新增 replay 与固定三局评测均出现木镐和圆石，
-预注册 L2 推进假说通过，训练、评测、视频、资源和清场完整性全部通过。
+跨域实验已在 DMC Vision、Atari100K Breakout 和 Minecraft 三条路径形成有界结果。近期暂停新增计算，
+当前重点转为规范发布仓库、串联 DreamerV3 理解并准备后续讲解材料。
 
-## 当前主要矛盾
+## 已冻结的实验边界
 
-EXP-0023 精确新增 `300000` 个唯一 transition；新增 replay 的 `185/304` 条轨迹出现 wooden_pickaxe、
-`120/304` 条出现 cobblestone，固定三局中两局达到两项里程碑。另有 `5/304` 条新增轨迹出现
-iron_ore 和 iron_ingot，但没有 iron_pickaxe 或 diamond，因此只作为 L3 前置信号，不晋级为稳定能力。
-500K 仍远低于论文 Diamond 预算，且 Minecraft 世界 seed 不可控，200K/500K 三局比较只作描述。
+- DMC Vision Walker 完成单 seed、1M environment steps 的像素控制数值对齐实例。
+- Breakout 完成 100K decisions 的降规模作者重实现，观察到学习趋势，但不是论文 200M 严格复现。
+- Minecraft 推进至精确 500K；固定三局中 `2/3` 局达到木镐和圆石。训练 Replay 的铁矿和铁锭信号仅为
+  `5/304`，固定评测为 `0/3`，因此不能表述为稳定炼铁或 Diamond 复现。
 
-当前 `size50m` 实际 optimizer 参数为 `46,812,213`。约 `24.6 GiB` GPU 分配主要受 JAX 预分配
-影响；本轮新增 300K 用时 `87.38` 分钟，峰值 RAM/VRAM 为 `53.61/24.07 GiB`。这建立了 50M
-时间与资源基线，但不能证明 100M 可行、训练更快或更省总墙钟。
+## 当前工作
 
-## 下一项决策
+发布分支统一三条代表路径的 `check`、`smoke` 和 `formal` 入口。启动器在正式运行前检查 runtime commit、
+依赖、GPU 和磁盘，运行后保存命令、配置、日志、checkpoint、Replay 与结构完整性报告。默认 smoke 不承诺
+策略质量，正式长预算必须显式选择。
 
-下一 cycle 只比较 `size50m/size100m` 的初始化、活跃显存、编译峰值和约 5K 同预算吞吐。100M
-通过资源安全和成本门后，才另行预注册从零、等交互预算学习对照，分别报告每步墙钟、交互到里程碑
-和墙钟到里程碑；不继续搜索环境数，也不自动追加到 1M 或测试 200M/400M。
+## 暂停项
+
+`size50m/size100m` 对照、Minecraft 1M 以上续训、多 seed 和 full-suite 扩展全部保留为候选，不在当前
+发布阶段自动启动。只有出现新的明确研究问题、预算和验收标准时才重新预注册。

@@ -1,53 +1,34 @@
 # PLAN
 
-> Updated: 2026-08-12T14:36:00Z
+> Updated: 2026-08-13T06:42:41Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml
 
-- Stage: `exploration`
-- 北极星：在现有硬件和存储条件下建立可复现、资源安全且高效的 DreamerV3 Minecraft 训练方案，
-  并依据实测性价比闭环适当规模的增量训练、评测与材料。
-- 当前问题：精确 500K 已支持 L2 圆石推进并出现有限 L3 前置信号；下一步独立检验
-  `size100m` 在当前 32 GiB GPU 上是否资源安全，以及相对 50M 的每步墙钟成本。
+- Stage: `writing`
+- 北极星：将已经完成的 DreamerV3 跨域复现整理成可审查、可复跑、结论边界清楚的公开仓库，并把
+  实验理解沉淀为后续 PPT 与教学材料。
+- 当前问题：历史实验入口较分散，外部使用者难以判断应先检查什么、运行什么以及怎样确认结构性跑通。
 
-## 阶段退出门
+## 发布门
 
-- [x] EXP-0010 DMC Vision 完成 100K gate、1M 续训、独立评测和图像材料。
-- [x] EXP-0011 Atari100K Breakout 完成 100K decisions、独立评测和 DQN 协议差异表。
-- [x] EXP-0012 Minecraft 完成依赖/L0、size50m smoke、100K 训练、独立评测与审查材料。
-- [x] Minecraft 临时实例、日志和可控缓存不再消耗系统盘，且多环境 L0 通过。
-- [x] 完成同预算单/双环境吞吐归因，选择资源安全的 `envs=2` 候选配置。
-- [x] 完成 EXP-0012 checkpoint/replay/step 的隔离等价恢复与资源验证。
-- [x] 完成恢复场景 `envs=2/4/8` 阶梯，选择 `envs=4` 为当前硬件的最高性价比档。
-- [x] 修复并以低成本真实恢复 smoke 验证多环境精确停止；EXP-0017 的 `200008` 输出不晋级。
-- [x] 完成 `envs=4/5` 局部缩放对照并冻结当前硬件的实用最优档；不追求显存占满。
-- [x] 完成一个有界增量训练及独立评测；精确 200K、木镐推进和无圆石边界均已闭环。
-- [x] 固化可复用运行脚本、资源账、恢复方法、展示材料和受限结论。
-- [x] 修复运行时 inventory 里程碑映射，并将固定三回合评测从 `1972s` 降至 `796s`。
-- [x] 从精确 200K 有界推进到 500K；新增 replay 和固定三局均出现木镐/圆石，完整性全绿。
+- [x] 冻结 DMC Vision、Breakout 和 Minecraft 三条代表路径的实验范围与结论边界。
+- [x] 提供统一 `check`、`l0`、`smoke`、`pilot/formal` 启动入口，默认不触发长实验。
+- [x] 每次运行隔离保存实际命令、配置、日志、checkpoint、Replay 和完整性报告。
+- [x] 提供 runtime commit、依赖、ROM、GPU 和磁盘的运行前检查。
+- [ ] GitHub Actions 通过 shell 语法、dry-run、Ruff 和 quickstart verifier 单测。
+- [ ] 发布分支推送并审查后，再决定是否快进 `main`。
+- [ ] 公开复用前确定仓库许可证。
 
-## 活动路线
+## 当前路线
 
-1. `EXP-0012` 保持 canonical 100K baseline；EXP-0023 是精确 500K 已验证 candidate，不改写历史基线。
-2. 同步训练固定 patched runtime `6723fc1`、`envs=4`、ratio32 和数据盘隔离；已测 `2/4/5/8`
-   档不再扩搜，也不以显存占满为目标。
-3. EXP-0020 精确新增 100K 用时 `32.18` 分钟；工程完整性全绿，新增 replay 与固定评测均出现
-   wooden pickaxe，但 cobblestone 为 0，因此只支持木镐推进，不支持完整 L2 或论文 Diamond 主张。
-4. EXP-0021 因外部静态 inventory 顺序造成伪里程碑，以 `invalid_provenance` 结案；其调度、资源和
-   视频局部证据保留，但不得引用其里程碑或 green verdict。
-5. EXP-0022 改由每个环境的运行时 `_inv_keys` 导出里程碑，完整性全绿；完整三局 `796s`，墙钟
-   `2.48x`、动作归一吞吐 `1.42x`，后续默认采用并行 evaluator，串行路径保留作抽验。
-6. EXP-0023 精确新增 300K 用时 `87.38` 分钟；新增 replay 为木镐 `185/304`、圆石 `120/304`
-   条轨迹，固定评测两局达到圆石；铁矿/铁锭 `5/304` 只作有限 L3 前置信号。
-7. 下一 cycle 独立比较 50M/100M 初始化、活跃内存与约 5K 吞吐；先回答硬件可行性和每步成本，
-   通过后才另立从零等交互预算学习对照回答样本效率与 wall-time-to-milestone。
+1. 完成 Quickstart、自动验收和轻量 CI 的发布前验证。
+2. 核对 README、结果总表和三个实验协议之间的数字与口径。
+3. 推送独立发布分支供审查；确认许可证后再更新默认分支。
+4. 以 DQN 到 DreamerV3 的知识桥和三域实验为主线准备后续讲解材料。
 
-## Parked Lanes
+## 暂停路线
 
-- EXP-0009 Figure 18 paired seeds 1、2，以及 10M/14-task 扩展。
-- 三个新域的多 seed 与 full-suite 扩展。
-- Minecraft 1M、5M 与约 100M 论文尺度预算；EXP-0023 不自动续训。
-- 模型 `size200m/400m` 与 50M/100M 正式学习对照；先做 100M 初始化、活跃内存和约 5K 吞吐 gate。
-- `script=parallel` 的有限停止、三部分 checkpoint 与跨模式恢复验证。
-- NUMA/taskset、CPU 亲和性和共享编译缓存微调；当前新增 100K 仅约 29--31 分钟，收益不足以
-  抵消额外系统复杂度和可迁移性成本。
+- Minecraft 1M、5M 与论文尺度 Diamond 预算。
+- `size50m/size100m` 学习效率对照及 `size200m/400m` 探针。
+- 三个域的多 seed、full-suite 和更多消融。
+- 仅为继续占满 GPU 而做的环境数、NUMA 或编译缓存微调。

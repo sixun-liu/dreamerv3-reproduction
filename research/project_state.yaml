@@ -1,14 +1,14 @@
 schema_version: 4
 project_id: dreamerv3-paper-reproduction
-updated_at: '2026-08-12T14:43:00Z'
+updated_at: '2026-08-13T06:42:41Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
-stage: exploration
-north_star: 在现有硬件和存储条件下建立可复现、资源安全且高效的DreamerV3 Minecraft训练方案，并依据实测性价比闭环适当规模的增量训练、评测与材料。
-primary_problem: EXP-0023已闭环精确500K的L2推进；当前需独立检验size50m/size100m初始化、活跃显存、编译峰值和约5K同预算吞吐，再裁决是否进入从零等交互预算学习对照。
+stage: writing
+north_star: 将已完成的DreamerV3跨域复现整理成可审查、可复跑、结论边界清楚的公开仓库，并沉淀为后续讲解材料。
+primary_problem: 历史实验入口较分散；当前需完成三条代表路径的统一快速启动、自动验收、发布检查与文档审查，暂停新增计算。
 active_experiment_id: null
-active_candidate: patched-runtime-envs4-exact-500k-l2-progress
+active_candidate: release-quickstart-crossdomain
 canonical_baseline:
   id: DV3-2026-MINECRAFT-DIAMOND-50M-100K
   name: DreamerV3 2026 author reimplementation Minecraft Diamond size50m reduced

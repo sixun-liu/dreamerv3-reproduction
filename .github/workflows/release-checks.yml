@@ -1,0 +1,37 @@
+name: Release checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quickstart:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install validation dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Check launcher syntax and resolved commands
+        run: |
+          bash -n scripts/quickstart.sh
+          ./scripts/quickstart.sh dmc-vision smoke --dry-run
+          ./scripts/quickstart.sh dmc-vision formal --dry-run
+          ./scripts/quickstart.sh breakout l0 --dry-run
+          ./scripts/quickstart.sh breakout smoke --dry-run
+          ./scripts/quickstart.sh breakout formal --dry-run
+          ./scripts/quickstart.sh minecraft l0 --dry-run
+          ./scripts/quickstart.sh minecraft smoke --dry-run
+          ./scripts/quickstart.sh minecraft formal --dry-run
+      - name: Lint quickstart code
+        run: |
+          ruff check scripts/verify_quickstart.py tests/test_quickstart_verifier.py
+          ruff format --check scripts/verify_quickstart.py tests/test_quickstart_verifier.py
+      - name: Test quickstart verifier
+        run: pytest -q tests/test_quickstart_verifier.py
